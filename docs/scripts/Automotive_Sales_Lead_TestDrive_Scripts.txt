@@ -1,0 +1,720 @@
+================================================================================
+VOXBHARAT — CALL SCRIPTS
+Industry: Automotive | Workflow: Sales Lead / Test Drive
+Total Scripts: 5
+================================================================================
+MANDATORY PARAMETERS TO CAPTURE (ALL SCRIPTS):
+  1. Desired Vehicle Trim / Color
+  2. Financing Interest Level
+  3. Scheduled Visit Time
+  4. Expected Purchase Date
+  5. Funding Status (Self Finance or Loan)
+================================================================================
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT SL-01: TATA NEXON EV — FIRST-TIME EV BUYER, SELF-FINANCE
+────────────────────────────────────────────────────────────────────────────────
+Industry        : Automotive
+Workflow        : Sales Lead / Test Drive
+Complexity      : Intermediate
+Duration        : ~6 minutes
+Language        : English (Hinglish variation included)
+Company Ref     : Tata Motors EV / Tata.ev showroom
+
+PARAMETERS CAPTURED IN THIS SCRIPT:
+  ✔ Desired Vehicle Trim/Color  → Nexon EV Fearless+ (mid variant) | Pristine
+                                   White
+  ✔ Financing Interest Level    → Low — prefers self-finance
+  ✔ Scheduled Visit Time        → Saturday 5th April, 12:00 PM
+  ✔ Expected Purchase Date      → Within 30 days (April 2026)
+  ✔ Funding Status              → Self Finance (savings)
+
+--------------------------------------------------------------------------------
+DIALOGUE
+--------------------------------------------------------------------------------
+AGENT : "Welcome to Tata Motors! I'm Neha, your virtual assistant. Looking
+         for a new car today?"
+
+USER  : "Yes, I've been researching the Nexon EV for a while. I think I'm
+         ready to book a test drive."
+
+[SYSTEM: Intent = test_drive_booking | Vehicle = Tata Nexon EV |
+         Buyer stage = research complete, ready to decide]
+
+AGENT : "Excellent — the Nexon EV is India's best-selling electric vehicle.
+         You've done your research, so you probably know the range. To help
+         match you to the right variant, can I ask — are you looking at the
+         Creative (entry), Fearless, Fearless+, or the Max (long range)?"
+
+USER  : "I was thinking Fearless+ actually. Good mix of features and price."
+
+[SYSTEM: Desired Trim → Nexon EV Fearless+ (₹17.49L ex-showroom) ✔ (partial)]
+
+AGENT : "Great choice — the Fearless+ gives you the ventilated front seats,
+         10.25-inch touchscreen, wireless charging, and the full iRA
+         connected tech suite. Do you have a preferred colour? Fearless+
+         is available in Pristine White, Daytona Grey, Magnetic Red, and
+         Intensi-Teal."
+
+USER  : "Pristine White. Classic look."
+
+[SYSTEM: Desired Vehicle Trim/Color = Nexon EV Fearless+, Pristine White ✔]
+
+AGENT : "Wonderful choice. Now, in terms of the purchase — are you planning
+         to self-finance this, or would you be interested in an EMI or loan
+         option?"
+
+USER  : "I have savings. I'll pay outright — no loan needed."
+
+[SYSTEM: Funding Status = Self Finance ✔
+         Financing Interest Level = Low (not interested in loan) ✔]
+
+AGENT : "Understood — paying outright also gives you room to negotiate a
+         better deal with the dealership since there are no processing fees.
+         When are you looking to make the purchase — this month, next month,
+         or still evaluating?"
+
+USER  : "I'd like to wrap it up this month if the test drive goes well."
+
+[SYSTEM: Expected Purchase Date = Within April 2026 (within 30 days) ✔]
+
+AGENT : "That's great — let me book your test drive. You're in which city?"
+
+USER  : "Hyderabad."
+
+[SYSTEM: Tata EV showroom: Tata.ev Jubilee Hills, Hyderabad |
+         Saturday 5-Apr slots: 10 AM, 12 PM, 3 PM]
+
+AGENT : "Tata.ev showroom in Jubilee Hills, Hyderabad has availability.
+         What day and time works best?"
+
+USER  : "Saturday 5th April, around noon."
+
+[SYSTEM: Scheduled Visit Time = Saturday 5th April, 12:00 PM ✔
+         ALL 5 MANDATORY SLOTS FILLED ✔]
+
+AGENT : "Saturday 5th April at 12:00 PM is confirmed! Here's your summary:
+
+         Vehicle       : Tata Nexon EV Fearless+, Pristine White
+         Funding       : Self Finance
+         Purchase Plan : April 2026
+         Test Drive    : Saturday, 5th April 2026 at 12:00 PM
+         Showroom      : Tata.ev, Jubilee Hills, Hyderabad
+         Booking Ref   : TD20260405-NEV-001
+
+         Our EV specialist will take you through the Fearless+ features,
+         the iRA app demo, and the home charging wallbox setup. Since you're
+         self-financing and targeting April purchase, the advisor can also
+         discuss current month-end offers — typically manufacturers offer
+         ₹15,000–₹25,000 exchange bonuses on EVs to meet monthly targets.
+
+         Please carry your driving licence. See you Saturday!"
+
+USER  : "Is there any government subsidy for the Nexon EV?"
+
+AGENT : "The central FAME-II scheme ended in March 2024 and PM E-DRIVE
+         scheme applies to 2-wheelers and 3-wheelers primarily, not passenger
+         cars currently. However, some states like Maharashtra and Delhi
+         still offer road tax waivers and registration fee exemptions on EVs.
+         In Telangana, EVs have 100% road tax exemption — saving you approx.
+         ₹1.5–₹2 lakhs on the Nexon EV Fearless+. Our specialist will
+         confirm the current state benefits applicable to you."
+
+- - -
+DISTRACTION EXAMPLE
+- - -
+USER  : "My friend is pushing me to get a Hyundai Ioniq 5 instead."
+
+AGENT : "The Ioniq 5 is a premium EV — it's in a different price segment at
+         ₹44–46 lakhs. The Nexon EV Fearless+ at ₹17.49L is India's most
+         practical mass-market EV with a 2,000+ charging network. I'd say
+         experience both if budget allows. For Saturday, our specialist will
+         give you an honest comparison too. Shall we keep the booking?"
+
+- - -
+HINGLISH VARIATION
+- - -
+USER  : "Nexon EV lena hai — Fearless+ White. Self-finance karunga.
+         Is month lena chahta hoon."
+AGENT : "Saturday 5 April noon Jubilee Hills confirm. Telangana mein
+         road tax exempt hai — ₹1.5-2 lakh bachenge. EV specialist
+         sabkuch explain karega test drive ke time."
+
+RESOLUTION  : Test drive booked ✔ | All 5 parameters captured ✔
+              State EV benefit (Telangana road tax) flagged ✔
+              Month-end offer opportunity mentioned ✔
+SUCCESS METRICS: All mandatory parameters captured, EV-specific state benefit
+                 correctly quoted, high-intent buyer confirmed for visit
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT SL-02: HYUNDAI CRETA — FAMILY UPGRADE, LOAN REQUIRED
+────────────────────────────────────────────────────────────────────────────────
+Industry        : Automotive
+Workflow        : Sales Lead / Test Drive
+Complexity      : Intermediate
+Duration        : ~6 minutes
+Language        : English (Hinglish variation included)
+Company Ref     : Hyundai India / Hyundai HMFL Finance
+
+PARAMETERS CAPTURED IN THIS SCRIPT:
+  ✔ Desired Vehicle Trim/Color  → Creta SX(O) Executive Petrol AT | Abyss
+                                   Black Pearl
+  ✔ Financing Interest Level    → High — wants EMI, Hyundai Finance preferred
+  ✔ Scheduled Visit Time        → Sunday 6th April, 11:00 AM
+  ✔ Expected Purchase Date      → First week of May 2026
+  ✔ Funding Status              → Loan (Hyundai HMFL or bank)
+
+--------------------------------------------------------------------------------
+DIALOGUE
+--------------------------------------------------------------------------------
+AGENT : "Hyundai India, good afternoon! I'm Kiran. How can I help you today?"
+
+USER  : "We're planning to buy a Creta for the family. I want to schedule a
+         test drive and understand the EMI options."
+
+[SYSTEM: Intent = test_drive + financing_inquiry | Vehicle = Hyundai Creta |
+         Family buyer | Finance interest = HIGH]
+
+AGENT : "Wonderful — the new Creta is a fantastic family car. Let's get you
+         set up for a test drive and also discuss financing. Which variant
+         are you most interested in — or would you like our advisor to walk
+         you through the range?"
+
+USER  : "I've been looking online — I think the SX(O) Executive or the top
+         variant. Petrol automatic, since my wife prefers automatic."
+
+[SYSTEM: Trim preference = SX(O) Executive or SX(O) Petrol AT — narrowing ✔]
+
+AGENT : "Good choice — the SX(O) Executive Petrol AT at ₹17.82 lakhs
+         ex-showroom Delhi is very popular. It has ADAS (Level 2 safety
+         assist), Bose 8-speaker system, panoramic sunroof, and 10.25-inch
+         dual display. Do you have a colour preference?"
+
+USER  : "My wife likes the dark colours. Abyss Black Pearl if available."
+
+[SYSTEM: Desired Vehicle Trim/Color = Creta SX(O) Executive Petrol AT,
+         Abyss Black Pearl ✔]
+
+AGENT : "Abyss Black Pearl is one of the most popular colours for the Creta —
+         looks stunning. Now, for financing — are you planning to self-finance
+         or take a loan? And do you have a down payment in mind?"
+
+USER  : "Loan definitely. We can put around 3-4 lakhs down. What EMI would
+         that give us?"
+
+[SYSTEM: Funding Status = Loan ✔
+         Financing Interest Level = High — wants EMI breakdown ✔
+         Down payment = ₹3-4 lakhs]
+
+AGENT : "For an on-road price of approximately ₹20.5 lakhs in Delhi (including
+         taxes and registration), with a ₹4 lakh down payment, the loan amount
+         would be ₹16.5 lakhs. Through Hyundai HMFL Finance:
+         • 7-year tenure at 9.0% p.a.: EMI ≈ ₹26,530/month
+         • 5-year tenure at 8.75% p.a.: EMI ≈ ₹34,200/month
+         Some banks like HDFC and SBI offer pre-approved rates as low as
+         8.50%. Our finance manager at the showroom can run a proper
+         comparison for you."
+
+USER  : "The 7-year EMI sounds manageable. When should we come?"
+
+AGENT : "When are you looking to complete the purchase?"
+
+USER  : "Early May — maybe the first week of May. We want to do the test
+         drive first."
+
+[SYSTEM: Expected Purchase Date = First week of May 2026 ✔]
+
+AGENT : "First week of May gives us good lead time for colour availability
+         and registration. Which city are you in?"
+
+USER  : "Delhi — South Delhi, Saket area."
+
+[SYSTEM: Nearest Hyundai showroom: Hyundai Sunder Motors or Modi Hyundai,
+         South Delhi | Sunday 6-Apr: 10 AM, 11 AM, 2 PM available]
+
+AGENT : "Our South Delhi showroom at Okhla has slots Sunday 6th April.
+         What time works for your family?"
+
+USER  : "Sunday 11 AM would be perfect — kids are free."
+
+[SYSTEM: Scheduled Visit Time = Sunday 6th April, 11:00 AM ✔
+         ALL 5 MANDATORY SLOTS FILLED ✔]
+
+AGENT : "Sunday 6th April at 11:00 AM confirmed! Summary:
+
+         Vehicle       : Hyundai Creta SX(O) Executive Petrol AT
+         Colour        : Abyss Black Pearl
+         Funding       : Loan (HMFL / Bank comparison)
+         Down Payment  : ₹4 lakhs approx.
+         EMI Option    : ₹26,530/month (7 yr) or ₹34,200/month (5 yr)
+         Purchase Plan : First week of May 2026
+         Test Drive    : Sunday, 6th April 2026 at 11:00 AM
+         Showroom      : Hyundai South Delhi (Okhla)
+         Booking Ref   : TD20260406-CRE-002
+
+         Our product specialist and finance manager will both be available.
+         Please bring driving licences for all family members who want to
+         drive. See you Sunday with the family!"
+
+- - -
+DISTRACTION EXAMPLE
+- - -
+USER  : "My father-in-law wants to know why not a Toyota — he says Toyota
+         is more reliable."
+
+AGENT : "Toyota does make excellent cars! The Urban Cruiser Hyryder shares
+         the same platform as the Grand Vitara and offers strong hybrid.
+         What I can say is the Creta has been India's best-selling SUV 3
+         years running and has a 5-star GNCAP safety rating. Our specialist
+         Sunday can walk through the Creta's quality benchmarks. Want me
+         to include a reliability comparison document in your visit prep?"
+
+RESOLUTION  : Test drive booked ✔ | All 5 parameters captured ✔
+              EMI breakdown provided ✔ | Finance manager flagged for visit ✔
+SUCCESS METRICS: Family buying decision supported, finance pathway outlined,
+                 EMI figures accurately quoted
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT SL-03: MARUTI GRAND VITARA STRONG HYBRID — ECO-CONSCIOUS BUYER,
+               COMPARING OPTIONS, SELF-FINANCE
+────────────────────────────────────────────────────────────────────────────────
+Industry        : Automotive
+Workflow        : Sales Lead / Test Drive
+Complexity      : Complex (comparison situation)
+Duration        : ~7 minutes
+Language        : English (Hinglish variation included)
+Company Ref     : Maruti Suzuki NEXA / Grand Vitara
+
+PARAMETERS CAPTURED IN THIS SCRIPT:
+  ✔ Desired Vehicle Trim/Color  → Grand Vitara Alpha+ Strong Hybrid | Grandeur
+                                   Grey
+  ✔ Financing Interest Level    → None — self-finance, cash purchase
+  ✔ Scheduled Visit Time        → Tuesday 8th April, 6:00 PM (post-work)
+  ✔ Expected Purchase Date      → 15th–20th April 2026
+  ✔ Funding Status              → Self Finance (full payment)
+
+--------------------------------------------------------------------------------
+DIALOGUE
+--------------------------------------------------------------------------------
+AGENT : "Welcome to Maruti Suzuki NEXA! I'm Priyanka, your virtual assistant.
+         How can I help you today?"
+
+USER  : "I'm looking at the Grand Vitara strong hybrid. I want good mileage
+         and I'm comparing it with the Hyundai Creta hybrid. Can you help
+         me understand why the Grand Vitara is better?"
+
+[SYSTEM: Intent = sales_lead + comparison | Vehicle = Grand Vitara Strong
+         Hybrid | Competitor = Hyundai Creta SH | Buyer is comparison-shopping]
+
+AGENT : "Absolutely — and you're looking at the right two cars. Let me focus
+         on the Grand Vitara's strengths; I'll let the Creta speak for itself
+         separately. For the hybrid, are you interested in the Alpha or the
+         Alpha+ trim?"
+
+USER  : "Alpha+. I want all the features."
+
+[SYSTEM: Trim = Grand Vitara Alpha+ Strong Hybrid (₹19.99L ex-showroom) ✔
+         partial]
+
+AGENT : "Good choice. The Alpha+ Strong Hybrid at ₹19.99 lakhs ex-showroom
+         gives you: Toyota's proven 1.5L Atkinson-cycle hybrid motor (borrowed
+         from Innova tech), 27.97 kmpl ARAI rating — real-world 22–24 kmpl
+         in city, head-up display, panoramic sunroof, 360-degree camera,
+         wireless Android Auto/Apple CarPlay, and connected car tech with
+         suzukiconnect. Do you have a colour preference?"
+
+USER  : "I like the Grandeur Grey. Looks premium."
+
+[SYSTEM: Desired Vehicle Trim/Color = Grand Vitara Alpha+ Strong Hybrid,
+         Grandeur Grey ✔]
+
+AGENT : "Grandeur Grey is a great pick — it's very popular and doesn't show
+         dust easily! Now, will you be financing this or paying cash?"
+
+USER  : "Cash purchase. I have the funds ready."
+
+[SYSTEM: Funding Status = Self Finance ✔
+         Financing Interest Level = None ✔]
+
+AGENT : "Cash purchases often get better negotiating power — especially on
+         accessories and on-road costs. The Alpha+ Strong Hybrid on-road in
+         most cities will be ₹22–24 lakhs including registration, insurance,
+         and accessories. With a cash purchase, you could potentially get
+         ₹50,000–₹80,000 in benefits depending on the dealership's monthly
+         target situation.
+
+         When are you looking to make the final purchase?"
+
+USER  : "I want to drive it home by 15th to 20th April. Auspicious date
+         for us."
+
+[SYSTEM: Expected Purchase Date = 15th–20th April 2026 ✔]
+
+AGENT : "That's a great target — gives us about 2–3 weeks to sort the
+         paperwork and delivery. Let me book a test drive. You're in
+         which city?"
+
+USER  : "Pune. I can only come on weekday evenings or weekends."
+
+[SYSTEM: Maruti NEXA showrooms Pune: Baner NEXA, Wakad NEXA |
+         Tuesday 8-Apr: 5 PM and 6 PM slots]
+
+AGENT : "Maruti NEXA Baner, Pune has evening slots on weekdays. Tuesday 8th
+         April at 5 PM or 6 PM — which works?"
+
+USER  : "6 PM on Tuesday. I finish work at 5:30."
+
+[SYSTEM: Scheduled Visit Time = Tuesday 8th April, 6:00 PM ✔
+         ALL 5 MANDATORY SLOTS FILLED ✔]
+
+AGENT : "Tuesday 8th April at 6:00 PM at Maruti NEXA Baner confirmed:
+
+         Vehicle       : Grand Vitara Alpha+ Strong Hybrid, Grandeur Grey
+         Funding       : Self Finance (cash purchase)
+         Purchase Plan : 15th–20th April 2026
+         Test Drive    : Tuesday, 8th April 2026 at 6:00 PM
+         Showroom      : Maruti NEXA Baner, Pune
+         Booking Ref   : TD20260408-GV-003
+
+         Our NEXA product expert will also walk you through the hybrid
+         system in detail — how it self-charges, when the electric motor
+         kicks in, and what the real-world mileage looks like on Pune roads.
+         Since you're targeting 15th–20th April, they'll also check Grandeur
+         Grey inventory to confirm stock and delivery timeline.
+
+         One tip: for a cash purchase targeting a religious date, confirm
+         the colour stock early — Alpha+ Grey is high-demand and may need
+         to be sourced from another warehouse."
+
+USER  : "What about the Hyundai Creta hybrid — why is the Grand Vitara
+         better?"
+
+AGENT : "Honest comparison: both are excellent. Grand Vitara Strong Hybrid
+         advantages — Toyota drivetrain (proven 10+ years in Camry and
+         Innova Hycross), 27.97 vs 20.5 kmpl ARAI, more refined ride due
+         to 4-link rear suspension, suzukiconnect app. Creta SH advantage —
+         more feature-loaded interior, bigger brand recall, more colours.
+         At your budget level, the Grand Vitara gives better long-term fuel
+         savings — over 5 years at 15,000 km/year, you'd save approximately
+         ₹1.5–2 lakhs in fuel vs the non-hybrid Creta. Our specialist will
+         have the detailed comparison sheet ready Tuesday."
+
+- - -
+DISTRACTION EXAMPLE
+- - -
+USER  : "My colleague says I should just buy a Swift and invest the rest."
+
+AGENT : "That's actually sound financial thinking! A Swift at ₹7 lakhs vs
+         Grand Vitara at ₹20 lakhs — the ₹13 lakh difference invested at
+         12% returns grows significantly. But if you need the SUV for road
+         trips and family comfort, the Grand Vitara makes sense. Our
+         specialist can help you weigh that Tuesday. Shall we confirm the
+         booking?"
+
+RESOLUTION  : Test drive booked ✔ | All 5 parameters captured ✔
+              Honest competitor comparison provided ✔
+              Inventory warning for colour proactively given ✔
+SUCCESS METRICS: Comparison handled honestly without losing lead, cash
+                 purchase advantage highlighted, delivery timeline validated
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT SL-04: MAHINDRA SCORPIO-N — BUSINESS PURCHASE, CORPORATE LOAN
+────────────────────────────────────────────────────────────────────────────────
+Industry        : Automotive
+Workflow        : Sales Lead / Test Drive
+Complexity      : Complex
+Duration        : ~7 minutes
+Language        : English (Hinglish variation included)
+Company Ref     : Mahindra India / Mahindra Finance
+
+PARAMETERS CAPTURED IN THIS SCRIPT:
+  ✔ Desired Vehicle Trim/Color  → Scorpio-N Z8 L Diesel AT | Dazzling Silver
+  ✔ Financing Interest Level    → High — corporate/business loan, tax benefit
+  ✔ Scheduled Visit Time        → Thursday 10th April, 4:00 PM
+  ✔ Expected Purchase Date      → End of April (financial year consideration)
+  ✔ Funding Status              → Loan (business/commercial vehicle loan)
+
+--------------------------------------------------------------------------------
+DIALOGUE
+--------------------------------------------------------------------------------
+AGENT : "Mahindra India, good afternoon. I'm Suresh. How can I help you?"
+
+USER  : "I want to buy a Scorpio-N for my company. I'm looking at it as a
+         business expense — can you help with the process and financing?"
+
+[SYSTEM: Intent = B2B_vehicle_purchase + test_drive | Vehicle = Scorpio-N |
+         Purpose = Business use | Finance interest = HIGH (corporate loan)]
+
+AGENT : "Absolutely — Scorpio-N is a very popular choice for business
+         purchases, and there are specific financing and tax benefits for
+         commercial use. Which variant are you interested in?"
+
+USER  : "The top diesel automatic — Z8 L I think. The one with 6 airbags and
+         all features."
+
+[SYSTEM: Trim = Scorpio-N Z8 L Diesel AT 4WD (₹24.49L ex-showroom) ✔ partial]
+
+AGENT : "Good choice — the Z8 L Diesel AT is the flagship with the 2.2L mHawk
+         diesel, 6-speed AT, terrain modes, Sony 360 audio, panoramic roof,
+         and ADAS. It's ₹24.49 lakhs ex-showroom. Do you have a colour
+         preference for the company vehicle?"
+
+USER  : "Something professional — Silver or White."
+
+AGENT : "Dazzling Silver is the most popular professional choice for the
+         Scorpio-N — looks authoritative and formal. Or Deep Forest Green
+         if you want something distinctive. Shall I note Dazzling Silver?"
+
+USER  : "Yes, Dazzling Silver."
+
+[SYSTEM: Desired Vehicle Trim/Color = Scorpio-N Z8 L Diesel AT 4WD,
+         Dazzling Silver ✔]
+
+AGENT : "For the business financing — are you planning to put it on the
+         company's books and take a business loan, or a personal auto loan?"
+
+USER  : "Business loan. The accountant said we can claim depreciation and
+         interest as a business expense. We want to do it before April end
+         for the current financial year."
+
+[SYSTEM: Funding Status = Business/Corporate Loan ✔
+         Financing Interest Level = High (tax optimization motive) ✔
+         Expected Purchase Date = Before 30th April 2026 (FY end) ✔]
+
+AGENT : "That's smart tax planning — under the Income Tax Act, for a vehicle
+         used for business purposes, you can claim depreciation of 30% in the
+         first year under Written Down Value (WDV) method, plus interest on
+         the loan as a business expense. For a ₹24.49 lakh vehicle, 30%
+         depreciation in Year 1 = ₹7.35 lakhs reduction in taxable income.
+
+         Mahindra Finance offers commercial auto loans at 9.5–11.5% p.a.
+         for business purchases. Our finance manager can also connect you
+         with SBI, HDFC, and Axis Bank for commercial vehicle loans.
+
+         Since you're targeting April-end, I'd recommend booking a test
+         drive this week — delivery and registration can take 7–10 days.
+         What day works for you?"
+
+USER  : "Thursday 10th April, around 4 PM."
+
+[SYSTEM: Scheduled Visit Time = Thursday 10th April, 4:00 PM ✔
+         ALL 5 MANDATORY SLOTS FILLED ✔]
+
+AGENT : "Thursday 10th April at 4:00 PM confirmed. You're in which city?"
+
+USER  : "Mumbai — Andheri."
+
+[SYSTEM: Mahindra showroom: Mahindra Andheri East | Thursday 4 PM confirmed]
+
+AGENT : "Mahindra Authorised Showroom, Andheri East — Thursday 4:00 PM:
+
+         Vehicle       : Mahindra Scorpio-N Z8 L Diesel AT 4WD
+         Colour        : Dazzling Silver
+         Funding       : Business Loan (commercial)
+         Tax Benefit   : 30% WDV depreciation + interest deduction
+         Purchase Plan : Before 30th April 2026 (FY end)
+         Test Drive    : Thursday, 10th April 2026 at 4:00 PM
+         Showroom      : Mahindra Authorised, Andheri East, Mumbai
+         Booking Ref   : TD20260410-SN-004
+
+         Please bring your company's GST registration certificate and
+         company PAN — our finance manager will pre-fill the commercial
+         loan application so you can finalize in one visit.
+
+         Important: Dazzling Silver Z8 L is in high demand. I'll flag stock
+         availability with the showroom immediately — if local stock is
+         exhausted, we may need to source from the Nashik plant which takes
+         5–7 days, still within your April 30 deadline."
+
+USER  : "Can I claim GST input credit on this?"
+
+AGENT : "Yes — if the Scorpio-N is used exclusively for business purposes
+         and your company is GST-registered, you can claim ITC on the GST
+         paid (28% on vehicles). However, there are restrictions — if the
+         vehicle has mixed personal and business use, ITC is not available.
+         Your CA will need to confirm the usage classification. Our finance
+         manager will also brief you on this Thursday."
+
+- - -
+HINGLISH VARIATION
+- - -
+USER  : "Company ke liye Scorpio-N lena hai, April end se pehle.
+         Business loan chahiye tax benefit ke liye."
+AGENT : "Z8 L Diesel AT Silver, Thursday 10 April 4 PM Andheri confirm.
+         30% depreciation pehle saal mein ₹7.35 lakh tax benefit hoga.
+         GST ITC bhi claim kar sakte ho business use par."
+
+RESOLUTION  : Test drive booked ✔ | All 5 parameters captured ✔
+              Tax benefit (depreciation + interest) correctly explained ✔
+              GST ITC eligibility flagged ✔
+SUCCESS METRICS: B2B buyer's financial motivation addressed, FY deadline
+                 urgency acknowledged, stock check flagged proactively
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT SL-05: KIA SELTOS — YOUNG PROFESSIONAL, TRADE-IN EXISTING CAR,
+               FINANCE REQUIRED
+────────────────────────────────────────────────────────────────────────────────
+Industry        : Automotive
+Workflow        : Sales Lead / Test Drive
+Complexity      : Complex (trade-in + finance)
+Duration        : ~7 minutes
+Language        : English (Hinglish variation included)
+Company Ref     : Kia India / Kia Finance / Kia Connect
+
+PARAMETERS CAPTURED IN THIS SCRIPT:
+  ✔ Desired Vehicle Trim/Color  → Kia Seltos HTX+ Diesel MT | Imperial Blue
+  ✔ Financing Interest Level    → High — wants EMI, trade-in value to be
+                                   adjusted in down payment
+  ✔ Scheduled Visit Time        → Saturday 5th April, 10:00 AM
+  ✔ Expected Purchase Date      → Within 2 weeks (by 15th April)
+  ✔ Funding Status              → Loan (bank, trade-in as part down payment)
+
+--------------------------------------------------------------------------------
+DIALOGUE
+--------------------------------------------------------------------------------
+AGENT : "Kia India, good afternoon! I'm Divya. How can I help you today?"
+
+USER  : "Hi, I want to book a test drive for the Seltos. I also have a
+         Maruti Alto that I want to trade in. Will Kia do that?"
+
+[SYSTEM: Intent = test_drive + trade_in_inquiry | Vehicle of interest = Kia
+         Seltos | Trade-in vehicle = Maruti Alto]
+
+AGENT : "Absolutely — Kia India has a structured trade-in program and it's
+         a great way to reduce your down payment. Let me help you with both.
+         Which Seltos variant are you interested in — the petrol or diesel,
+         and what trim level?"
+
+USER  : "Diesel. The HTX+ I think — it has the sunroof and the better
+         features but not the top model price."
+
+[SYSTEM: Trim = Kia Seltos HTX+ Diesel 1.5L MT (₹17.65L ex-showroom) ✔ partial]
+
+AGENT : "Good choice — the HTX+ Diesel at ₹17.65 lakhs ex-showroom gives
+         you the panoramic sunroof, ventilated front seats, Bose sound system,
+         and Kia Connect app. It's 18.3 kmpl ARAI — very fuel-efficient for
+         a compact SUV. Do you have a colour preference?"
+
+USER  : "I like Imperial Blue. Stands out."
+
+[SYSTEM: Desired Vehicle Trim/Color = Kia Seltos HTX+ Diesel MT, Imperial
+         Blue ✔]
+
+AGENT : "Imperial Blue is a beautiful choice — the contrast stitching inside
+         looks great against it. Now for financing — how are you planning to
+         fund the purchase? With the Alto trade-in, how are you thinking about
+         structuring the payment?"
+
+USER  : "I want to use the Alto's exchange value as my down payment, and take
+         a loan for the rest. My Alto is a 2019 model, good condition."
+
+[SYSTEM: Funding Status = Loan (exchange value as partial down payment) ✔
+         Trade-in: Maruti Alto 2019 | Financing Interest Level = High ✔]
+
+AGENT : "Perfect — a 2019 Maruti Alto in good condition would typically get
+         you an exchange value of ₹2.5–₹3.5 lakhs depending on mileage and
+         condition. Kia will have their evaluator check it at the showroom.
+         Plus, Kia often adds an additional exchange bonus of ₹15,000–₹25,000
+         on top of the evaluated price when you buy a new Kia.
+
+         For the Seltos HTX+ Diesel, on-road price in most cities would be
+         approximately ₹20–21 lakhs. With ₹3 lakhs exchange value and
+         ₹1 lakh own contribution, the loan amount would be around ₹17 lakhs.
+         At 9.5% for 5 years, EMI would be approximately ₹35,700/month.
+
+         Does that EMI range work for you?"
+
+USER  : "That's a bit high. Can I do 7 years?"
+
+AGENT : "At 7 years (84 months), EMI drops to approximately ₹27,100/month
+         but you pay more interest overall — about ₹5.8 lakhs vs ₹4.4 lakhs
+         in interest for 5 years. Our finance manager can model this properly
+         with your exact income profile. When are you looking to complete
+         the purchase?"
+
+USER  : "I want to do it within 2 weeks — by 15th April."
+
+[SYSTEM: Expected Purchase Date = By 15th April 2026 ✔]
+
+AGENT : "That's a comfortable timeline. Shall I book the test drive? Which
+         city are you in?"
+
+USER  : "Chennai — Anna Nagar area."
+
+[SYSTEM: Kia showroom: Kia Anna Nagar, Chennai | Saturday 5-Apr slots:
+         9 AM, 10 AM, 12 PM]
+
+AGENT : "Kia Anna Nagar, Chennai has slots Saturday 5th April. Morning
+         works?"
+
+USER  : "Yes, 10 AM on Saturday."
+
+[SYSTEM: Scheduled Visit Time = Saturday 5th April, 10:00 AM ✔
+         ALL 5 MANDATORY SLOTS FILLED ✔]
+
+AGENT : "Saturday 5th April at 10:00 AM, Anna Nagar confirmed:
+
+         Vehicle       : Kia Seltos HTX+ Diesel MT, Imperial Blue
+         Funding       : Loan (Alto trade-in as down payment)
+         Trade-in      : Maruti Alto 2019 (eval at showroom)
+         EMI Options   : ~₹35,700/month (5 yr) or ~₹27,100/month (7 yr)
+         Purchase Plan : By 15th April 2026
+         Test Drive    : Saturday, 5th April 2026 at 10:00 AM
+         Showroom      : Kia Anna Nagar, Chennai
+         Booking Ref   : TD20260405-SEL-005
+
+         Action items for your visit:
+         1. Bring your Maruti Alto's RC, insurance, and service history
+            for the trade-in evaluation
+         2. Carry your driving licence for the test drive
+         3. Our finance manager will compare 5-year vs 7-year EMI options
+            and check your bank pre-approvals
+
+         Imperial Blue HTX+ stock is subject to availability — I'm flagging
+         to the showroom to hold a unit for you. Is there anything else?"
+
+USER  : "Will the language of service be Tamil? My parents don't speak
+         Hindi well."
+
+AGENT : "Absolutely — Kia Anna Nagar showroom staff are fluent in Tamil and
+         English. Your parents are very welcome and the entire discussion can
+         be conducted in Tamil if preferred. I'll add that preference note to
+         your booking."
+
+- - -
+DISTRACTION EXAMPLE
+- - -
+USER  : "I also looked at the MG Hector. Is it better than the Seltos?"
+
+AGENT : "The MG Hector is a strong option in a slightly higher segment — it's
+         larger and has a bigger touchscreen. The Seltos advantages are better
+         fuel efficiency (18.3 vs 17 kmpl), stronger resale value, and Kia's
+         3-year/1 lakh km warranty. Our specialist Saturday can walk you through
+         a detailed comparison if you'd like. Shall I keep the 10 AM booking?"
+
+- - -
+HINGLISH VARIATION (Partial)
+- - -
+USER  : "Seltos HTX+ lena hai, Imperial Blue. Alto 2019 trade-in karunga
+         aur loan bhi chahiye. Chennai Anna Nagar — Saturday 10 AM."
+AGENT : "Alto ka exchange value ₹2.5-3.5 lakh milega + ₹15,000-25,000
+         bonus. Loan pe 5 saal mein EMI ~₹35,700 ya 7 saal mein ~₹27,100.
+         Booking confirm — TD20260405-SEL-005. Alto ke documents saath
+         laayein Saturday."
+
+RESOLUTION  : Test drive booked ✔ | All 5 parameters captured ✔
+              Trade-in value range correctly quoted ✔
+              Language preference (Tamil) noted ✔
+              Finance EMI options clearly explained ✔
+SUCCESS METRICS: Trade-in structured as down payment correctly explained,
+                 EMI range accurate, regional language preference accommodated
+
+
+================================================================================
+END OF FILE — AUTOMOTIVE SALES LEAD / TEST DRIVE SCRIPTS (SL-01 TO SL-05)
+================================================================================

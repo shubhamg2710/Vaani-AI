@@ -1,0 +1,551 @@
+================================================================================
+VOXBHARAT — CALL SCRIPTS (from 04_Call_Scripts.html)
+Industry: Automotive | Scripts 13–20
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT 13 — PERIODIC SERVICE BOOKING — MARUTI SWIFT
+────────────────────────────────────────────────────────────────────────────────
+Industry    : Automotive
+Use Case    : Inbound — Vehicle Service Scheduling
+Complexity  : Intermediate
+Duration    : ~4 min
+Company     : Maruti Suzuki Arena / TRUE SERVICE Program
+Language    : English + Hinglish
+
+PARAMETERS CAPTURED
+-------------------
+  registration_number, vehicle_model, last_service_km,
+  preferred_date, preferred_service_center,
+  pickup_drop_required, customer_address
+
+DIALOGUE
+--------
+AGENT : "Hello! Thank you for calling Maruti Suzuki customer care. I'm
+         Priya. How can I help you today?"
+
+USER  : "I want to book a service for my Swift."
+
+[SYSTEM] Intent: service_booking | Slot needed: registration_number
+
+AGENT : "I'd be happy to help schedule a service. Could you please share
+         your vehicle's registration number or tell me the make and model?"
+
+USER  : "It's a Maruti Swift. Registration is KA05MN4321."
+
+[SYSTEM] Vehicle: Maruti Suzuki Swift VXI 2022
+         Last service: 20,000 km Aug 2024
+         Current estimated mileage: ~30,500 km | Due: 30,000 km service
+
+AGENT : "Found it — your Maruti Swift VXI, 2021 model. It looks like your
+         last service was at 20,000 km in August 2024. It's now due for the
+         30,000 km periodic service. Is that the service you're looking to
+         book?"
+
+USER  : "Yes, exactly. The engine oil needs changing for sure."
+
+AGENT : "Definitely — the 30,000 km service includes engine oil and filter
+         change, air filter inspection, brake fluid check, tyre rotation,
+         and a full safety inspection. Approximate cost: ₹3,800–₹5,200
+         depending on the oil grade. Which service center do you prefer?"
+
+USER  : "The one in Koramangala, Bangalore."
+
+[SYSTEM] Service center: Maruti Suzuki Arena, Koramangala, Bangalore
+         Available slots: Sat 5-Apr: 9 AM, 11 AM, 2 PM
+
+AGENT : "Maruti Arena Koramangala has availability. What date and time
+         works best for you?"
+
+USER  : "This Saturday — 5th April. Morning time, around 10 AM."
+
+[SYSTEM] Preferred Date and Time: Saturday 5th April, 10:00 AM — Confirmed
+
+AGENT : "Saturday 5th April at 10:00 AM is available. And may I confirm
+         your contact number in case the service advisor needs to reach you?"
+
+USER  : "Yes, 9876543210."
+
+[SYSTEM] ALL SLOTS FILLED | Booking confirmed: SB20260405-SW-001
+         Pickup: 9:30 AM | Delivery: ~5 PM | SMS sent
+
+AGENT : "Perfect — all confirmed. Here's your booking summary:
+         Vehicle       : Maruti Swift VXI, 2021
+         Service       : 30,000 km Periodic Service
+         Date & Time   : Saturday, 5th April 2026 at 10:00 AM
+         Service Center: Maruti Arena, Koramangala, Bangalore
+         Contact       : 9876543210
+         Booking Ref   : SB20260405-SW-001
+         Pickup arranged from JP Nagar at 9:30 AM. Free within 10 km
+         via Maruti TRUE SERVICE. Delivery by ~5 PM."
+
+HINGLISH VARIATION
+------------------
+USER  : "Swift ki service book karni hai, 30,000 km ho gaye hain."
+AGENT : "Koramangala centre available hai Saturday 5 April 10 AM ko.
+         Pickup-drop free hai JP Nagar se. Contact number batayein?"
+USER  : "9876543210."
+AGENT : "Booking ho gayi — reference SB20260405-SW-001. SMS aayega."
+
+DISTRACTION EXAMPLE
+-------------------
+USER  : "By the way, do you think I should trade this in for a new Baleno?"
+AGENT : "The new Baleno is a great car! Our sales team would love to talk
+         to you about that. For now let me make sure your Swift's service
+         is all set — SB20260405-SW-001. For the Baleno inquiry, shall I
+         also connect you with our sales team?"
+
+RESOLUTION  : Service booked ✔ | Pickup arranged ✔ | SMS confirmation sent ✔
+SUCCESS METRICS: Booking confirmed in call, correct service type matched
+                 to mileage, pickup offered proactively
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT 14 — ROADSIDE ASSISTANCE — BREAKDOWN ON HIGHWAY
+────────────────────────────────────────────────────────────────────────────────
+Industry    : Automotive
+Use Case    : Inbound — Emergency RSA Dispatch
+Complexity  : Urgent
+Duration    : ~4 min
+Company     : Tata Motors Roadside Assistance (24x7)
+Language    : English
+
+PARAMETERS CAPTURED
+-------------------
+  registration_number, location (km marker / GPS),
+  issue_description, warning_lights_present,
+  caller_safety_status, RSA_vendor_ETA
+
+DIALOGUE
+--------
+AGENT : "Tata Motors Roadside Assistance, available 24x7. This is Rahul.
+         What is your emergency?"
+
+USER  : "My car has broken down on the highway! It won't start."
+
+[SYSTEM] Intent: roadside_assistance | Priority: URGENT
+         Fast-track flow activated
+
+AGENT : "I understand — let's get you help immediately. Please share your
+         vehicle registration number and your current location."
+
+USER  : "MH02CD5678. I'm on the Mumbai-Pune Expressway near km marker 42."
+
+[SYSTEM] Vehicle: Tata Nexon 2023 | RSA: Active
+         Nearest vendor: 12 km away ETA 25 min
+         Ticket: RSA20260329-5678
+
+AGENT : "Your Tata Nexon has active RSA coverage. Dispatching a mechanic
+         now — 12 km away, ETA approximately 25 minutes. Service request:
+         RSA20260329-5678. Can you describe the issue? Any warning lights?"
+
+USER  : "Engine stopped suddenly. Red battery warning light is showing."
+
+AGENT : "That sounds like a battery or alternator issue — usually fixable
+         roadside. Please keep hazard lights on and stay inside. Do NOT try
+         restarting repeatedly. The technician carries jump-start equipment
+         and a replacement battery. Are you safe? Is anyone with you?"
+
+USER  : "I'm alone but it's daytime and I'm on the shoulder."
+
+AGENT : "Good. The technician will call you 5 minutes before arrival —
+         sending their contact via SMS right now. If the issue isn't fixable
+         roadside, free towing to the nearest Tata Motors workshop within
+         50 km is arranged — all covered under your RSA. Stay safe."
+
+[SYSTEM] SMS sent: technician contact | Case monitored
+         Towing pre-authorised if needed
+
+RESOLUTION  : RSA dispatched ✔ | ETA communicated ✔ | Towing pre-authorised ✔
+SUCCESS METRICS: Dispatch time <3 min from call start, ETA accurate, safety
+                 confirmed, customer reassured
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT 15 — VEHICLE COMPLAINT — AC NOT COOLING (HYUNDAI CRETA)
+────────────────────────────────────────────────────────────────────────────────
+Industry    : Automotive
+Use Case    : Inbound — Warranty Complaint Registration
+Complexity  : Intermediate
+Duration    : ~5 min
+Company     : Hyundai India Authorised Service
+Language    : English
+
+PARAMETERS CAPTURED
+-------------------
+  registration_number, complaint_type,
+  symptom_description, symptom_onset_date,
+  warranty_status, preferred_workshop_city, appointment_date
+
+DIALOGUE
+--------
+AGENT : "Hyundai India customer care, good morning. I'm Anjali. How can I
+         help?"
+
+USER  : "My Creta's AC has not been cooling properly for the past 2 weeks."
+
+[SYSTEM] Auth via registration | Vehicle: Hyundai Creta SX 2023
+         Warranty: Active until June 2026
+         Complaint: CRM20260329-9812
+
+AGENT : "I understand — frustrating, especially in summer. Your Creta is
+         under warranty until June 2026, so AC repair is covered at zero
+         cost. Could you describe it — is it not cooling at all, or does it
+         start then blow warm air?"
+
+USER  : "It cools for 10–15 minutes, then starts blowing warm air."
+
+AGENT : "That symptom points to a refrigerant leak or compressor cycling
+         issue — both fully covered under warranty. I'm registering complaint
+         CRM20260329-9812. Which city are you in?"
+
+USER  : "Pune."
+
+[SYSTEM] Nearest authorised workshop: Baner, Pune
+         Next available: 31-Mar-2026 10 AM
+
+AGENT : "Booked at Hyundai Authorised Service, Baner, Pune — 31st March
+         at 10 AM. Zero cost under warranty. Estimated repair: 1–2 days.
+         SMS updates at every stage. Shall I arrange a complimentary
+         courtesy drop within Pune?"
+
+DISTRACTION EXAMPLE
+-------------------
+USER  : "This is the second issue with this car. I'm thinking of selling it."
+AGENT : "I completely understand your frustration. Let's get this AC issue
+         resolved first — a fully repaired car will also help its resale
+         value. Complaint is registered, workshop booked. Anything else
+         about the current issue?"
+
+RESOLUTION  : Complaint filed ✔ | Warranty confirmed (zero cost) ✔ |
+              Workshop booked ✔
+SUCCESS METRICS: Complaint CRM created, correct warranty assessment,
+                 appointment confirmed within call
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT 16 — TEST DRIVE BOOKING — TATA NEXON EV
+────────────────────────────────────────────────────────────────────────────────
+Industry    : Automotive
+Use Case    : Inbound — EV Pre-Sales Inquiry
+Complexity  : Basic
+Duration    : ~5 min
+Company     : Tata Motors / Tata.ev Showroom
+Language    : English
+
+PARAMETERS CAPTURED
+-------------------
+  model_of_interest, variant_preference, city,
+  preferred_date_slot, customer_name, contact_number,
+  existing_vehicle, finance_interest
+
+DIALOGUE
+--------
+AGENT : "Welcome to Tata Motors! I'm your virtual assistant. How can I help?"
+
+USER  : "I want to book a test drive for the Nexon EV."
+
+AGENT : "Great choice — the Nexon EV is India's best-selling electric car.
+         Two options: Nexon EV standard (~312 km ARAI, from ₹14.49L) and
+         Nexon EV Max (~437 km, up to ₹19.29L). Which interests you?"
+
+USER  : "What's the real-world range difference?"
+
+AGENT : "Real-world: standard gives 200–240 km per charge in city; Max
+         gives 280–320 km. Home charging with a 7.2 kW wallbox: ~6 hours
+         for a full charge, costing ₹150–180 — giving you ₹0.80–₹1 per km
+         versus ₹6–₹7 for petrol. Shall I book test drives for both?"
+
+USER  : "Yes please. I'm in Gurugram."
+
+[SYSTEM] Tata EV Hub, DLF Cyber City, Gurugram
+         Saturday 1-Apr slots: 10 AM, 12 PM, 3 PM
+
+AGENT : "Tata.ev showroom at DLF Cyber City, Gurugram has slots Saturday
+         1st April and Sunday 2nd April. Preferred time?"
+
+USER  : "Saturday 2 PM."
+
+[SYSTEM] Test drive booked: TD20260401-EV-3321 | 1-Apr 2 PM
+         DLF Cyber City | EV specialist assigned
+
+AGENT : "Confirmed! Reference TD20260401-EV-3321. Our EV specialist will
+         guide you through both variants. Please carry your driving licence.
+         We'll also demo the home charging wallbox. See you Saturday!"
+
+USER  : "Is there any government subsidy for the Nexon EV?"
+
+AGENT : "The central FAME-II scheme ended in March 2024. PM E-DRIVE scheme
+         applies to 2-wheelers/3-wheelers. However, Telangana and some
+         states still offer road tax waivers on EVs. In Haryana (Gurugram),
+         check current state EV policy — our specialist will confirm the
+         exact applicable benefits Saturday."
+
+RESOLUTION  : Test drive booked ✔ | Range/cost comparison accurately given ✔
+SUCCESS METRICS: Lead captured, test drive confirmed, EV specialist assigned,
+                 real-world range figures correctly quoted
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT 17 — CAR LOAN EMI QUERY & FORECLOSURE CHARGES
+────────────────────────────────────────────────────────────────────────────────
+Industry    : Automotive
+Use Case    : Inbound — Loan Account Management
+Complexity  : Intermediate
+Duration    : ~5 min
+Company     : Tata Capital Motors Finance
+Language    : English
+
+PARAMETERS CAPTURED
+-------------------
+  loan_account_number, outstanding_principal,
+  remaining_tenure_months, foreclosure_charge_calculated,
+  prepayment_amount_if_interested
+
+DIALOGUE
+--------
+AGENT : "Tata Capital Motors Finance, good afternoon. I'm Vikram. How can
+         I assist?"
+
+USER  : "I want to know my remaining EMIs and the foreclosure charges on
+         my car loan."
+
+[SYSTEM] Auth via OTP | Loan: TML202300019234
+         Borrower: Priya Sharma | Vehicle: Tata Harrier
+         Outstanding: ₹7,84,500 | Remaining: 34 EMIs | Rate: 9.25% p.a.
+
+AGENT : "Priya, your loan details:
+         • Loan Account : TML202300019234 | Vehicle: Tata Harrier
+         • Outstanding  : ₹7,84,500
+         • EMI          : ₹18,847/month | Remaining: 34 months (Jan 2029)
+         • Rate         : 9.25% p.a.
+         Foreclosure charge: 2% of outstanding + 18% GST
+           = ₹15,690 + ₹2,824 = ₹18,514.
+         Full settlement today: ₹8,03,014."
+
+USER  : "That's expensive. Is there a part-prepayment option?"
+
+AGENT : "Yes — you can prepay up to 25% of outstanding principal per year
+         (₹1,96,125) with zero prepayment charge. If you prepay ₹1 lakh
+         today, your new EMI would reduce to approximately ₹16,460/month,
+         saving ₹2,387 per month. Alternatively, keep EMI same and reduce
+         tenure by ~5 months. Which would you prefer?"
+
+USER  : "Reduce the EMI please."
+
+[SYSTEM] Part-prepayment initiated: ₹1,00,000
+         New EMI: ₹16,460 | Payment link sent via SMS
+
+AGENT : "Done — payment link for ₹1,00,000 sent to your mobile. Once paid,
+         your revised EMI of ₹16,460 is effective from next billing cycle.
+         Revised amortisation schedule will be emailed."
+
+RESOLUTION  : Loan details shared ✔ | Foreclosure calculated correctly ✔ |
+              Part-prepayment initiated ✔
+SUCCESS METRICS: Accurate foreclosure figure, customer understood savings
+                 from prepayment, payment link sent
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT 18 — WARRANTY CLAIM — AC FAILURE (HYUNDAI i20)
+────────────────────────────────────────────────────────────────────────────────
+Industry    : Automotive
+Use Case    : Inbound — Warranty Claim Filing
+Complexity  : Intermediate
+Duration    : ~5 min
+Company     : Hyundai India Authorised Service
+Language    : English
+
+PARAMETERS CAPTURED
+-------------------
+  registration_number, complaint_description,
+  vehicle_age_months, warranty_validity_confirmed,
+  workshop_city, appointment_date, claim_number_generated
+
+DIALOGUE
+--------
+AGENT : "Hyundai India customer care. I'm here to help — please share your
+         registration number."
+
+USER  : "DL8CAB3456. My i20's AC has completely stopped. The car is only
+         18 months old!"
+
+[SYSTEM] Vehicle: Hyundai i20 Asta 2024 | Age: 18 months | Mileage: 22,400 km
+         Warranty: 3 years/1,00,000 km — ACTIVE ✓
+
+AGENT : "Your Hyundai i20 is within its standard 3-year/1,00,000 km
+         warranty — complete AC failure is fully covered at zero cost.
+         Creating warranty claim WC20260329-3456 right now. You're in
+         Delhi — which part?"
+
+USER  : "Dwarka Sector 10."
+
+[SYSTEM] Nearest authorised: Hyundai Dwarka Sector 12
+         Next slot: 30-Mar-2026 9:30 AM
+
+AGENT : "Booked at Hyundai Authorised Service, Dwarka Sector 12 — 30th
+         March at 9:30 AM. The service advisor will inspect the AC
+         compressor, condenser, and refrigerant system. All parts and
+         labour covered under warranty. Estimated repair: 1–2 days. Shall I
+         arrange a complimentary courtesy drop within Dwarka?"
+
+USER  : "Yes please. Will this definitely be covered at zero cost?"
+
+AGENT : "Yes — your vehicle is 18 months old, well within the 3-year
+         warranty. AC failure from manufacturing defect is fully covered.
+         The only exception would be physical damage from an accident, which
+         you haven't mentioned. Claim WC20260329-3456 is raised — SMS updates
+         at every stage. Nothing to pay."
+
+RESOLUTION  : Warranty confirmed ✔ | Claim filed ✔ | Workshop booked ✔ |
+              Zero cost confirmed ✔
+SUCCESS METRICS: Customer reassured on cost, claim number provided,
+                 appointment within 2 days of call
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT 19 — AMC RENEWAL — MARUTI BALENO (OUTBOUND)
+────────────────────────────────────────────────────────────────────────────────
+Industry    : Automotive
+Use Case    : Outbound — Proactive AMC Renewal Reminder
+Complexity  : Basic
+Duration    : ~4 min
+Company     : Maruti Suzuki Arena
+Language    : English
+
+PARAMETERS CAPTURED
+-------------------
+  registration_number, amc_expiry_date, current_mileage,
+  amc_plan_selected, payment_confirmed
+
+DIALOGUE
+--------
+AGENT : "Hello, am I speaking with the owner of Maruti Baleno registered
+         DL01XY7890?"
+
+USER  : "Yes, who is calling?"
+
+AGENT : "This is Maruti Suzuki customer care. Your Baleno's Annual
+         Maintenance Contract expires on 30th April 2026 — just one month
+         away. Renewing now ensures uninterrupted coverage, and since your
+         car is at 47,000 km, the 50,000 km service is due soon. May I share
+         the renewal options?"
+
+USER  : "Sure, go ahead."
+
+AGENT : "Three AMC plans for your Baleno:
+         • Basic  (1 yr/10,000 km): ₹4,200
+           Covers: 3 services, engine oil & filter
+         • Standard (1 yr/20,000 km): ₹7,800
+           Covers: above + air filter, fuel filter, spark plug check
+         • Comprehensive (1 yr/30,000 km): ₹12,500
+           Covers: above + brake pads, coolant flush
+         At 47,000 km, the Standard plan covers your upcoming 50,000 km
+         service components."
+
+USER  : "Standard sounds right. Can I pay online?"
+
+[SYSTEM] Payment link generated | AMC Standard ₹7,800
+         Validity: 1-May-2026 to 30-Apr-2027 | SMS sent
+
+AGENT : "Secure payment link sent to your mobile for ₹7,800. Once paid,
+         your AMC confirmation and schedule will be emailed within 2 hours.
+         New AMC valid: 1st May 2026 to 30th April 2027."
+
+RESOLUTION  : AMC renewal initiated ✔ | Correct plan recommended ✔ |
+              Payment link sent ✔
+SUCCESS METRICS: Renewal conversion, Standard plan correctly matched to
+                 mileage, payment link delivered
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT 20 — NEW CAR INQUIRY — HYUNDAI CRETA vs TATA HARRIER
+────────────────────────────────────────────────────────────────────────────────
+Industry    : Automotive
+Use Case    : Inbound — Competitive Comparison + Showroom Visit Booking
+Complexity  : Complex
+Duration    : ~7 min
+Company     : Hyundai India
+Language    : English + Hinglish
+
+PARAMETERS CAPTURED
+-------------------
+  models_of_interest, budget_range, family_size,
+  primary_use, city, preferred_showroom_date,
+  finance_interest, trade_in_vehicle
+
+DIALOGUE
+--------
+AGENT : "Welcome to Hyundai India! I'm Neha, your virtual assistant.
+         Looking for a new car today?"
+
+USER  : "Yes, I want to compare the Creta and Tata Harrier. Budget around
+         ₹15–18 lakhs. Family of 4."
+
+[SYSTEM] Intent: new_car_inquiry | Models: Creta, Harrier | Budget: ₹15–18L
+
+AGENT : "Both are excellent — here's a quick comparison:
+         HYUNDAI CRETA 2024 (₹10.99L–₹20.15L):
+         • Compact SUV, 5-seater | Petrol, Diesel, Strong Hybrid options
+         • ADAS (Level 2), Bose audio, BlueLink connected car, panoramic roof
+         • Fuel efficiency: 17.4 kmpl petrol MT, 27+ kmpl strong hybrid
+         TATA HARRIER 2024 (₹14.99L–₹26.44L):
+         • Midsize SUV, 5-seater, more cabin space | Diesel only
+         • iRA connected tech, JBL audio, panoramic sunroof
+         What's your primary use — city commute or highway trips?"
+
+USER  : "Mostly highway, 400–500 km weekend trips. Family of 4."
+
+AGENT : "In ₹15–18L for highway + family of 4:
+         • Creta SX(O) Turbo Petrol DCT (~₹16.82L) — 7-speed DCT for
+           highway smoothness, ADAS safety
+         • Harrier Emotion Diesel (~₹16.50L) — larger boot (425L), more
+           rear legroom, diesel suits long distance
+         The Creta gives fuel flexibility; Harrier gives more space. I'd
+         recommend test-driving both. Which city are you in?"
+
+USER  : "Bangalore. Can you book a test drive Sunday?"
+
+[SYSTEM] Hyundai Whitefield, Bangalore
+         Sunday 2-Apr: 10 AM, 12 PM, 2 PM available
+
+AGENT : "Hyundai Whitefield has slots Sunday 2nd April — 10 AM, 12 PM,
+         or 2 PM. Preferred?"
+
+USER  : "Sunday 11 AM."
+
+[SYSTEM] Test drive booked: TD20260402-CRT-8814 | 2-Apr 11 AM
+         Hyundai Whitefield, Bangalore | Product expert assigned
+
+AGENT : "Confirmed — TD20260402-CRT-8814. Our product expert will walk you
+         through Creta SX(O) variants. I'll also WhatsApp you a Creta vs
+         Harrier feature comparison sheet. For Harrier, I'd also suggest
+         visiting a Tata showroom for a back-to-back comparison."
+
+DISTRACTION — Competitor Mention
+---------------------------------
+USER  : "What about Maruti Grand Vitara? My friend says it's better."
+
+AGENT : "Grand Vitara is a strong competitor — especially the strong hybrid
+         (27+ kmpl, same as Creta hybrid!). I represent Hyundai so I can best
+         detail the Creta for you. I'd genuinely recommend driving all three.
+         Shall I still confirm your Creta test drive for Sunday?"
+
+HINGLISH VARIATION
+------------------
+USER  : "Creta aur Harrier mein se kaun lena chahiye? Highway ke liye
+         15-17 lakh budget hai."
+AGENT : "Highway ke liye dono acchi hain. 15-17 lakh mein Creta SX(O) Turbo
+         DCT (~₹16.82L) mein ADAS safety milti hai, smooth drive hota hai.
+         Harrier Emotion (~₹16.50L) mein zyada space hai. Test drive dono
+         ki karein — Sunday Whitefield mein book kar deta hoon?"
+
+RESOLUTION  : Feature comparison shared ✔ | Test drive booked ✔ |
+              Lead captured ✔ | Competitor handled gracefully ✔
+SUCCESS METRICS: Accurate specs quoted (no hallucination), test drive
+                 confirmed, customer not lost despite competitor mention
+
+
+================================================================================
+END OF FILE — AUTOMOTIVE SCRIPTS 13 TO 20 (from 04_Call_Scripts.html)
+================================================================================

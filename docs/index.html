@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vaani AI — Real-Time Multilingual Conversational AI</title>
+<style>
+/* ── Reset ─────────────────────────────────────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ── Design Tokens ─────────────────────────────────────────────────────── */
+:root {
+  --bg:          #061A1E;   /* deep teal-black        */
+  --surface:     #0D2B32;   /* card surface           */
+  --surface-2:   #112F37;   /* hover / elevated       */
+  --border:      #1A3D47;   /* subtle border          */
+  --border-soft: #0F3039;
+
+  --saffron:     #F4923A;   /* primary accent         */
+  --saffron-dim: #C97728;   /* dim saffron            */
+  --teal:        #26C6DA;   /* secondary accent       */
+  --gold:        #E9C46A;   /* tertiary / warm        */
+  --green:       #4CAF7D;   /* success                */
+  --red:         #E05252;   /* warning                */
+
+  --text-1:  #F0EDE8;       /* primary text (warm white) */
+  --text-2:  #A8B8BC;       /* secondary text         */
+  --text-3:  #5A7A82;       /* muted                  */
+
+  --radius:  12px;
+  --radius-pill: 24px;
+
+  --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* ── Base ───────────────────────────────────────────────────────────────── */
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text-1);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
+.header {
+  padding: 64px 40px 52px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+
+/* subtle radial glow backgrounds */
+.header::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 60%, rgba(244,146,58,.07) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 80% 30%, rgba(38,198,218,.06) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 50% 100%, rgba(233,196,106,.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* fine dot-grid overlay — Indic geometric hint */
+.header::after {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(244,146,58,.18) 1px, transparent 1px);
+  background-size: 28px 28px;
+  opacity: .35;
+  pointer-events: none;
+}
+
+.header-inner { position: relative; z-index: 1; }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(244,146,58,.1);
+  border: 1px solid rgba(244,146,58,.3);
+  color: var(--saffron);
+  border-radius: var(--radius-pill);
+  padding: 5px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.logo-mark {
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg, var(--saffron), var(--gold));
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 800;
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(244,146,58,.35);
+  flex-shrink: 0;
+  letter-spacing: -1px;
+  font-family: 'Segoe UI', serif;
+}
+
+.logo-text h1 {
+  font-size: 44px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  background: linear-gradient(90deg, var(--saffron) 0%, var(--gold) 50%, var(--teal) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+}
+
+.logo-text .sub {
+  font-size: 13px;
+  color: var(--text-3);
+  letter-spacing: .8px;
+  margin-top: 2px;
+}
+
+.tagline {
+  font-size: 17px;
+  color: var(--text-2);
+  max-width: 560px;
+  margin: 0 auto 36px;
+  line-height: 1.7;
+}
+
+/* Stats strip */
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
+  max-width: 700px;
+  margin: 0 auto;
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.stat {
+  flex: 1;
+  min-width: 110px;
+  padding: 16px 12px;
+  text-align: center;
+  border-right: 1px solid var(--border);
+}
+.stat:last-child { border-right: none; }
+.stat .n { font-size: 22px; font-weight: 800; color: var(--saffron); line-height: 1; }
+.stat .l { font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+/* ── Container ──────────────────────────────────────────────────────────── */
+.container { max-width: 1100px; margin: 0 auto; padding: 52px 28px 64px; }
+
+/* ── Section label ──────────────────────────────────────────────────────── */
+.section-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--saffron);
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── Document grid ──────────────────────────────────────────────────────── */
+.doc-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 52px;
+}
+@media (max-width: 860px) { .doc-grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 520px) { .doc-grid { grid-template-columns: 1fr; } }
+
+/* Document card */
+.doc-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 20px 18px;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+  transition: background .2s, border-color .2s, transform .2s, box-shadow .2s;
+}
+.doc-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--bar, linear-gradient(90deg, var(--saffron), var(--gold)));
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.doc-card:hover {
+  background: var(--surface-2);
+  border-color: #2A5060;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0,0,0,.3);
+}
+
+.doc-num {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+.doc-icon { font-size: 26px; line-height: 1; margin: 2px 0; }
+.doc-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-1);
+  line-height: 1.35;
+}
+.doc-desc {
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.65;
+  flex: 1;
+}
+.doc-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 4px;
+}
+.tag {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 20px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--border);
+  color: var(--text-3);
+}
+.tag.s { background: rgba(38,198,218,.1);  color: var(--teal);    border-color: rgba(38,198,218,.2); }
+.tag.o { background: rgba(244,146,58,.1);  color: var(--saffron); border-color: rgba(244,146,58,.2); }
+.tag.g { background: rgba(76,175,125,.1);  color: var(--green);   border-color: rgba(76,175,125,.2); }
+.tag.y { background: rgba(233,196,106,.1); color: var(--gold);    border-color: rgba(233,196,106,.2); }
+
+.doc-arrow {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--saffron);
+  opacity: 0;
+  transition: opacity .2s;
+  margin-top: 2px;
+}
+.doc-card:hover .doc-arrow { opacity: 1; }
+
+/* ── Divider ────────────────────────────────────────────────────────────── */
+.divider { height: 1px; background: var(--border); margin: 48px 0; }
+
+/* ── Tech stack grid ────────────────────────────────────────────────────── */
+.stack-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 52px;
+}
+@media (max-width: 760px) { .stack-grid { grid-template-columns: repeat(2,1fr); } }
+
+.stack-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.stack-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 10px;
+}
+.stack-items {
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 2;
+}
+
+/* ── Pipeline strip ─────────────────────────────────────────────────────── */
+.pipeline {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
+  margin-bottom: 52px;
+  overflow: hidden;
+}
+.pipeline-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pipeline-box {
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-1);
+  text-align: center;
+  white-space: nowrap;
+}
+.pipeline-box span {
+  display: block;
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--text-3);
+  margin-top: 2px;
+}
+.pipeline-arrow {
+  font-size: 18px;
+  color: var(--saffron);
+  padding: 0 4px;
+  opacity: .7;
+}
+
+/* ── Footer ─────────────────────────────────────────────────────────────── */
+.footer {
+  text-align: center;
+  padding: 28px 20px;
+  color: var(--text-3);
+  font-size: 11px;
+  border-top: 1px solid var(--border);
+  letter-spacing: .4px;
+}
+
+/* ── Nav bar ─────────────────────────────────────────────────────────────── */
+.vb-nav {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  gap: 8px;
+  z-index: 9999;
+  font-family: var(--font);
+}
+.vb-nav button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(13,59,71,.85);
+  color: var(--text-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 9px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,.4);
+  backdrop-filter: blur(8px);
+  transition: background .18s, color .18s;
+  white-space: nowrap;
+}
+.vb-nav button:hover {
+  background: var(--saffron);
+  color: white;
+  border-color: var(--saffron);
+}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ──────────────────────────────────────────────────────────── -->
+<header class="header">
+  <div class="header-inner">
+    <div class="badge">Confidential · Internal + Customer Suite · v1.0</div>
+
+    <div class="logo">
+      <div class="logo-mark">वा</div>
+      <div class="logo-text">
+        <h1>Vaani AI</h1>
+        <div class="sub">वाणी — Voice of Intelligence</div>
+      </div>
+    </div>
+
+    <p class="tagline">
+      Real-Time Multilingual Conversational AI Platform<br>
+      Complete Documentation Suite — Design, Build &amp; Launch
+    </p>
+
+    <div class="stats">
+      <div class="stat"><div class="n">20+</div><div class="l">Languages</div></div>
+      <div class="stat"><div class="n">&lt;500ms</div><div class="l">Latency</div></div>
+      <div class="stat"><div class="n">6</div><div class="l">Documents</div></div>
+      <div class="stat"><div class="n">20</div><div class="l">Call Scripts</div></div>
+      <div class="stat"><div class="n">BFSI + Auto</div><div class="l">MVP Verticals</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- ── PIPELINE ─────────────────────────────────────────────────────────── -->
+<div class="container">
+  <div class="section-label">Cascaded STS Architecture</div>
+  <div class="pipeline">
+    <div class="pipeline-step">
+      <div class="pipeline-box">🎙️ Speech<span>User Input</span></div>
+    </div>
+    <div class="pipeline-arrow">→</div>
+    <div class="pipeline-step">
+      <div class="pipeline-box">🔊 ASR<span>Speech → Text</span></div>
+    </div>
+    <div class="pipeline-arrow">→</div>
+    <div class="pipeline-step">
+      <div class="pipeline-box">🧠 LLM + RAG<span>Understand &amp; Reason</span></div>
+    </div>
+    <div class="pipeline-arrow">→</div>
+    <div class="pipeline-step">
+      <div class="pipeline-box">🗣️ TTS<span>Text → Speech</span></div>
+    </div>
+    <div class="pipeline-arrow">→</div>
+    <div class="pipeline-step">
+      <div class="pipeline-box">🔈 Speech<span>Agent Response</span></div>
+    </div>
+  </div>
+
+  <!-- ── DOCUMENTS ──────────────────────────────────────────────────────── -->
+  <div class="section-label">All Documents</div>
+  <div class="doc-grid">
+
+    <a href="01_FRD.html" class="doc-card" style="--bar:linear-gradient(90deg,var(--saffron),var(--gold))">
+      <div class="doc-num">Document 01</div>
+      <div class="doc-icon">📋</div>
+      <div class="doc-title">Functional Requirements</div>
+      <div class="doc-desc">F1–F18 requirements covering ASR, LLM, TTS, anti-hallucination, self-learning, compliance, multi-tenant, analytics and API design.</div>
+      <div class="doc-tags">
+        <span class="tag o">F1–F18</span>
+        <span class="tag o">Use Cases</span>
+        <span class="tag o">Acceptance Criteria</span>
+      </div>
+      <div class="doc-arrow">Open →</div>
+    </a>
+
+    <a href="02_Design_Doc.html" class="doc-card" style="--bar:linear-gradient(90deg,var(--teal),#4ECDC4)">
+      <div class="doc-num">Document 02</div>
+      <div class="doc-icon">🏗️</div>
+      <div class="doc-title">Technical Design</div>
+      <div class="doc-desc">End-to-end architecture, tech stack matrix (ASR / LLM / TTS vendors), data flow, self-learning module, RAG, multi-tenant infra and cost estimates.</div>
+      <div class="doc-tags">
+        <span class="tag s">Architecture</span>
+        <span class="tag s">Tech Stack</span>
+        <span class="tag s">ML Ops</span>
+      </div>
+      <div class="doc-arrow">Open →</div>
+    </a>
+
+    <a href="03_Call_Templates.html" class="doc-card" style="--bar:linear-gradient(90deg,var(--green),#78C9A4)">
+      <div class="doc-num">Document 03</div>
+      <div class="doc-icon">📞</div>
+      <div class="doc-title">Call Flow Templates</div>
+      <div class="doc-desc">Universal call flow + BFSI and Automotive templates. Phase-by-phase dialogue flows, distraction handling guide, mandatory parameter capture.</div>
+      <div class="doc-tags">
+        <span class="tag g">Universal</span>
+        <span class="tag g">BFSI</span>
+        <span class="tag g">Automotive</span>
+      </div>
+      <div class="doc-arrow">Open →</div>
+    </a>
+
+    <a href="04_Call_Scripts.html" class="doc-card" style="--bar:linear-gradient(90deg,var(--teal),var(--saffron))">
+      <div class="doc-num">Document 04</div>
+      <div class="doc-icon">🗒️</div>
+      <div class="doc-title">Call Scripts (20 Scripts)</div>
+      <div class="doc-desc">12 BFSI scripts (home loan, credit card, fraud, EMI, KYC, FD, MF, insurance) + 8 Automotive scripts. Real companies, real rates, Hinglish variations.</div>
+      <div class="doc-tags">
+        <span class="tag o">12 BFSI</span>
+        <span class="tag g">8 Automotive</span>
+        <span class="tag s">Hinglish</span>
+      </div>
+      <div class="doc-arrow">Open →</div>
+    </a>
+
+    <a href="05_Knowledge_Bank.html" class="doc-card" style="--bar:linear-gradient(90deg,var(--gold),var(--saffron))">
+      <div class="doc-num">Document 05</div>
+      <div class="doc-icon">🧠</div>
+      <div class="doc-title">Knowledge Bank</div>
+      <div class="doc-desc">RAG training data: BFSI products, loan rates, RBI/IRDAI regulations, KYC norms. Automotive brand models, service intervals, warranty, EV details.</div>
+      <div class="doc-tags">
+        <span class="tag y">BFSI</span>
+        <span class="tag g">Automotive</span>
+        <span class="tag o">Regulatory</span>
+      </div>
+      <div class="doc-arrow">Open →</div>
+    </a>
+
+    <a href="06_Business_Document.html" class="doc-card" style="--bar:linear-gradient(90deg,#E05252,var(--saffron))">
+      <div class="doc-num">Document 06</div>
+      <div class="doc-icon">📈</div>
+      <div class="doc-title">Business Strategy &amp; Pitch</div>
+      <div class="doc-desc">Executive and customer pitch: market opportunity, competitive landscape, industry ROI, pricing in ₹, GTM strategy, 3-year financial projections.</div>
+      <div class="doc-tags">
+        <span class="tag o">Executive</span>
+        <span class="tag o">GTM</span>
+        <span class="tag y">ROI</span>
+      </div>
+      <div class="doc-arrow">Open →</div>
+    </a>
+
+
+    <a href="07_Competitive_Analysis.html" class="doc-card" style="--bar:linear-gradient(90deg,var(--purple),var(--teal))">
+      <div class="doc-num">Document 07</div>
+      <div class="doc-icon">🏆</div>
+      <div class="doc-title">Competitive &amp; Market Analysis</div>
+      <div class="doc-desc">In-depth analysis of 11 competitors — ElevenLabs, Sarvam, Kore.ai, Yellow.ai, Uniphore, Gnani, SquadStack, CoRover, Google CCAI, Devnagri. Market sizing, funding, tech depth, and Vaani AI positioning.</div>
+      <div class="doc-tags">
+        <span class="tag s">11 Competitors</span>
+        <span class="tag o">Market Sizing</span>
+        <span class="tag g">Live Data</span>
+      </div>
+      <div class="doc-arrow">Open →</div>
+    </a>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── TECH STACK ─────────────────────────────────────────────────────── -->
+  <div class="section-label">Recommended Tech Stack</div>
+  <div class="stack-grid">
+    <div class="stack-card">
+      <div class="stack-label" style="color:var(--green)">ASR</div>
+      <div class="stack-items">Soniox (primary)<br>Google Chirp (Indic)<br>Deepgram Nova-2<br>AI4Bharat IndicWhisper</div>
+    </div>
+    <div class="stack-card">
+      <div class="stack-label" style="color:var(--teal)">LLM</div>
+      <div class="stack-items">Claude 3.5 / 3.7 Sonnet<br>GPT-4o (fallback)<br>Llama 3.1 70B<br>Mistral Large (EU)</div>
+    </div>
+    <div class="stack-card">
+      <div class="stack-label" style="color:var(--saffron)">TTS</div>
+      <div class="stack-items">ElevenLabs Flash v2.5<br>Azure Neural TTS<br>AI4Bharat Indic-TTS<br>NVIDIA P-Flow (on-prem)</div>
+    </div>
+    <div class="stack-card">
+      <div class="stack-label" style="color:var(--gold)">Telephony</div>
+      <div class="stack-items">Twilio (global)<br>Exotel (India)<br>Plivo (cost-effective)<br>WebRTC (web / app)</div>
+    </div>
+    <div class="stack-card">
+      <div class="stack-label" style="color:var(--green)">Orchestration</div>
+      <div class="stack-items">LangGraph<br>FastAPI + WebSocket<br>Redis (session)<br>Celery (async)</div>
+    </div>
+    <div class="stack-card">
+      <div class="stack-label" style="color:var(--teal)">Memory &amp; RAG</div>
+      <div class="stack-items">Pinecone (vector DB)<br>PostgreSQL + pgvector<br>MongoDB (transcripts)<br>Redis (short-term)</div>
+    </div>
+    <div class="stack-card">
+      <div class="stack-label" style="color:var(--saffron)">ML Ops</div>
+      <div class="stack-items">MLflow (experiments)<br>Label Studio (annotation)<br>Airflow (pipelines)<br>W&amp;B (monitoring)</div>
+    </div>
+    <div class="stack-card">
+      <div class="stack-label" style="color:var(--gold)">Infrastructure</div>
+      <div class="stack-items">Kubernetes (EKS/GKE)<br>AWS Mumbai ap-south-1<br>NVIDIA A100 GPU<br>Prometheus + Grafana</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── FOOTER ─────────────────────────────────────────────────────────────── -->
+<footer class="footer">
+  Vaani AI &nbsp;·&nbsp; वाणी — Voice of Intelligence &nbsp;·&nbsp; v1.0 &nbsp;·&nbsp; March 2026 &nbsp;·&nbsp; Confidential
+</footer>
+
+<!-- ── NAV ───────────────────────────────────────────────────────────────── -->
+<nav class="vb-nav" aria-label="Page navigation">
+  <button onclick="history.back()" title="Go Back">&#8592; Back</button>
+  <button onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to Top">&#8593; Top</button>
+</nav>
+
+</body>
+</html>

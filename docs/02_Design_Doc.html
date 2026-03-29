@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vaani AI — Technical Design Document v1.0</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f0f4f8;
+    color: #1e293b;
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* ── HEADER ── */
+  .page-header {
+    background: linear-gradient(135deg, #0D3B47 0%, #1e4d8c 50%, #0A8EA0 100%);
+    color: white;
+    padding: 52px 48px 44px;
+    position: relative;
+    overflow: hidden;
+  }
+  .page-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 20% 50%, rgba(255,255,255,0.05) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(37,99,235,0.3) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .header-inner { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; }
+  .doc-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #bfdbfe;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 16px;
+    border-radius: 20px;
+    margin-bottom: 18px;
+  }
+  .page-header h1 {
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+    line-height: 1.15;
+  }
+  .page-header h1 span { color: #93c5fd; }
+  .header-sub {
+    font-size: 16px;
+    color: #bfdbfe;
+    margin-bottom: 28px;
+  }
+  .header-meta {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .meta-item { font-size: 13px; color: #93c5fd; }
+  .meta-item strong { color: white; display: block; font-size: 15px; }
+
+  /* ── LAYOUT ── */
+  .layout {
+    display: flex;
+    max-width: 1280px;
+    margin: 0 auto;
+    gap: 28px;
+    padding: 32px 24px;
+    align-items: flex-start;
+  }
+
+  /* ── SIDEBAR TOC ── */
+  .toc-sidebar {
+    width: 270px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 24px;
+  }
+  .toc-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+    overflow: hidden;
+  }
+  .toc-header {
+    background: linear-gradient(135deg, #0D3B47, #0A8EA0);
+    color: white;
+    padding: 14px 18px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .toc-list { list-style: none; padding: 10px 0; }
+  .toc-list li a {
+    display: block;
+    padding: 7px 18px;
+    font-size: 13px;
+    color: #334155;
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: all 0.15s;
+    line-height: 1.4;
+  }
+  .toc-list li a:hover {
+    color: #0A8EA0;
+    background: #eff6ff;
+    border-left-color: #0A8EA0;
+  }
+  .toc-list li a .toc-num {
+    display: inline-block;
+    width: 20px;
+    color: #94a3b8;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  /* ── MAIN CONTENT ── */
+  .main-content { flex: 1; min-width: 0; }
+
+  /* ── SECTIONS ── */
+  .section {
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.05);
+    margin-bottom: 28px;
+    overflow: hidden;
+  }
+  .section-header {
+    background: linear-gradient(135deg, #0D3B47 0%, #0A8EA0 100%);
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .section-num {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    font-size: 13px;
+    font-weight: 800;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-header h2 {
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+  }
+  .section-body { padding: 28px; }
+
+  /* ── TYPOGRAPHY ── */
+  h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1e3a5f;
+    margin: 22px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #e2e8f0;
+  }
+  h3:first-child { margin-top: 0; }
+  h4 {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #0A8EA0;
+    margin: 16px 0 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  p { margin-bottom: 12px; color: #334155; }
+  ul, ol { margin: 8px 0 14px 20px; }
+  li { margin-bottom: 5px; color: #334155; font-size: 14px; }
+  strong { color: #1e293b; }
+
+  /* ── PIPELINE FLOW ── */
+  .pipeline-flow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    align-items: center;
+    background: #FAF8F4;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin: 16px 0;
+  }
+  .pipe-step {
+    background: linear-gradient(135deg, #0D3B47, #0A8EA0);
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+  .pipe-arrow {
+    color: #64748b;
+    font-size: 18px;
+    padding: 0 6px;
+    font-weight: 300;
+  }
+
+  /* ── CODE BLOCKS ── */
+  .code-block {
+    background: #0f172a;
+    color: #e2e8f0;
+    border-radius: 10px;
+    padding: 20px 22px;
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-x: auto;
+    margin: 14px 0;
+    border-left: 4px solid #0A8EA0;
+  }
+  .code-block .comment { color: #64748b; font-style: italic; }
+  .code-block .key { color: #93c5fd; }
+  .code-block .val { color: #86efac; }
+  .code-block .str { color: #fbbf24; }
+  .code-block .kw { color: #f472b6; }
+
+  /* ── DECISION MATRIX TABLE ── */
+  .matrix-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 13px;
+  }
+  .matrix-table thead tr {
+    background: linear-gradient(135deg, #0D3B47, #0A8EA0);
+    color: white;
+  }
+  .matrix-table thead th {
+    padding: 11px 14px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.3px;
+  }
+  .matrix-table tbody tr { border-bottom: 1px solid #f1f5f9; }
+  .matrix-table tbody tr:hover { background: #FAF8F4; }
+  .matrix-table tbody td {
+    padding: 10px 14px;
+    color: #334155;
+    vertical-align: top;
+  }
+  .matrix-table tbody td:first-child { font-weight: 600; color: #1e293b; }
+
+  /* ── BADGES ── */
+  .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+  .badge-primary { background: #DCF0F3; color: #1d4ed8; }
+  .badge-green { background: #dcfce7; color: #15803d; }
+  .badge-amber { background: #fef3c7; color: #92400e; }
+  .badge-red { background: #fee2e2; color: #991b1b; }
+  .badge-purple { background: #ede9fe; color: #6d28d9; }
+
+  /* ── STAGE CARD ── */
+  .stage-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    margin: 12px 0;
+    overflow: hidden;
+  }
+  .stage-card-header {
+    background: #FAF8F4;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .stage-num-badge {
+    background: #0A8EA0;
+    color: white;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .stage-title { font-weight: 700; color: #1e293b; font-size: 14px; }
+  .stage-latency { margin-left: auto; font-size: 12px; font-weight: 700; color: #059669; }
+  .stage-card-body { padding: 14px 16px; }
+  .stage-card-body ul { margin-left: 16px; }
+  .stage-card-body li { font-size: 13.5px; color: #475569; }
+
+  /* ── RECOMMENDATION BOX ── */
+  .rec-box {
+    background: linear-gradient(135deg, #eff6ff, #f0fdf4);
+    border: 1px solid #bfdbfe;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 16px 0;
+  }
+  .rec-box h4 { color: #1d4ed8; margin-top: 0; border: none; }
+  .rec-box ul { margin-left: 18px; }
+  .rec-box li { color: #1e3a5f; font-size: 13.5px; }
+
+  /* ── COST TABLE ── */
+  .cost-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    margin: 14px 0;
+  }
+  .cost-table thead tr { background: #1e3a5f; color: white; }
+  .cost-table thead th { padding: 10px 16px; text-align: left; font-weight: 700; }
+  .cost-table tbody tr { border-bottom: 1px solid #e2e8f0; }
+  .cost-table tbody tr:nth-child(even) { background: #FAF8F4; }
+  .cost-table tbody tr.total-row { background: #DCF0F3; font-weight: 700; }
+  .cost-table tbody td { padding: 10px 16px; color: #334155; }
+  .cost-table tbody td:last-child { text-align: right; font-weight: 600; color: #1e293b; }
+
+  /* ── GRID CARDS ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin: 16px 0;
+  }
+  .info-card {
+    background: #FAF8F4;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .info-card h4 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; }
+  .info-card p { font-size: 14px; color: #1e293b; margin: 0; font-weight: 600; }
+  .info-card .sub { font-size: 12px; color: #64748b; font-weight: 400; margin-top: 3px; }
+
+  /* ── ARCH DIAGRAM ── */
+  .arch-diagram {
+    background: #FAF8F4;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 22px;
+    margin: 16px 0;
+    font-family: 'Cascadia Code', monospace;
+    font-size: 13px;
+    color: #334155;
+    line-height: 1.8;
+    overflow-x: auto;
+  }
+  .arch-diagram .layer-label {
+    font-weight: 700;
+    color: #0D3B47;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ── INLINE HIGHLIGHT ── */
+  code {
+    background: #f1f5f9;
+    color: #1d4ed8;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-family: 'Cascadia Code', 'Consolas', monospace;
+    font-size: 12.5px;
+  }
+
+  /* ── ALERT / NOTE BOXES ── */
+  .note-box {
+    background: #fffbeb;
+    border-left: 4px solid #f59e0b;
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    margin: 14px 0;
+    font-size: 13.5px;
+    color: #78350f;
+  }
+  .note-box strong { color: #92400e; }
+
+  /* ── DIVIDER ── */
+  hr { border: none; border-top: 1px solid #e2e8f0; margin: 20px 0; }
+
+  /* ── FOOTER ── */
+  .page-footer {
+    background: white;
+    border-top: 1px solid #e2e8f0;
+    padding: 22px 48px;
+    text-align: center;
+    color: #64748b;
+    font-size: 13px;
+    margin-top: 20px;
+  }
+  .page-footer strong { color: #1e3a5f; }
+
+  @media (max-width: 900px) {
+    .layout { flex-direction: column; }
+    .toc-sidebar { width: 100%; position: static; }
+    .page-header { padding: 36px 24px 30px; }
+    .page-header h1 { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════ HEADER ══════════════════════════════════════════ -->
+<header class="page-header">
+  <div class="header-inner">
+    <div class="doc-badge">Technical Design Document</div>
+    <h1><span>Vaani AI</span> — AI Voice Agent Platform</h1>
+    <p class="header-sub">End-to-end architecture, component specifications, and implementation guide for the engineering team</p>
+    <div class="header-meta">
+      <div class="meta-item"><strong>Version</strong>1.0 — March 2026</div>
+      <div class="meta-item"><strong>Status</strong>Internal — Engineering Use</div>
+      <div class="meta-item"><strong>Target Stack</strong>Python · Kubernetes · AWS ap-south-1</div>
+      <div class="meta-item"><strong>Sections</strong>14 Technical Sections</div>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════ LAYOUT ══════════════════════════════════════════ -->
+<div class="layout">
+
+  <!-- ── SIDEBAR TOC ── -->
+  <aside class="toc-sidebar">
+    <div class="toc-card">
+      <div class="toc-header">Table of Contents</div>
+      <ul class="toc-list">
+        <li><a href="#s1"><span class="toc-num">01</span>System Architecture Overview</a></li>
+        <li><a href="#s2"><span class="toc-num">02</span>Cascaded STS Pipeline Design</a></li>
+        <li><a href="#s3"><span class="toc-num">03</span>Tech Stack — Component by Component</a></li>
+        <li><a href="#s4"><span class="toc-num">04</span>End-to-End Data Flow</a></li>
+        <li><a href="#s5"><span class="toc-num">05</span>Self-Learning Module Architecture</a></li>
+        <li><a href="#s6"><span class="toc-num">06</span>Memory &amp; Context Management</a></li>
+        <li><a href="#s7"><span class="toc-num">07</span>RAG Design</a></li>
+        <li><a href="#s8"><span class="toc-num">08</span>Multi-Tenant Architecture</a></li>
+        <li><a href="#s9"><span class="toc-num">09</span>Security Architecture</a></li>
+        <li><a href="#s10"><span class="toc-num">10</span>Analytics &amp; Observability</a></li>
+        <li><a href="#s11"><span class="toc-num">11</span>API Design</a></li>
+        <li><a href="#s12"><span class="toc-num">12</span>Model Training &amp; Fine-Tuning</a></li>
+        <li><a href="#s13"><span class="toc-num">13</span>Infrastructure &amp; Deployment</a></li>
+        <li><a href="#s14"><span class="toc-num">14</span>Cost Estimates</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- ── MAIN CONTENT ── -->
+  <main class="main-content">
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 1 — SYSTEM ARCHITECTURE OVERVIEW
+    ════════════════════════════════════════════════════════════ -->
+    <section class="section" id="s1">
+      <div class="section-header">
+        <div class="section-num">01</div>
+        <h2>System Architecture Overview</h2>
+      </div>
+      <div class="section-body">
+
+        <h3>Architecture Pattern</h3>
+        <p>Vaani AI uses a <strong>Cascaded STS (Speech-to-Speech)</strong> microservices architecture deployed on Kubernetes. Each processing stage is an independently scalable service communicating over gRPC internally, with REST management APIs and WebSocket real-time audio streams.</p>
+
+        <h3>High-Level Pipeline</h3>
+        <div class="pipeline-flow">
+          <div class="pipe-step">Audio In</div><div class="pipe-arrow">→</div>
+          <div class="pipe-step">VAD</div><div class="pipe-arrow">→</div>
+          <div class="pipe-step">ASR</div><div class="pipe-arrow">→</div>
+          <div class="pipe-step">NLU / Intent</div><div class="pipe-arrow">→</div>
+          <div class="pipe-step">Dialogue Manager</div><div class="pipe-arrow">→</div>
+          <div class="pipe-step">LLM + RAG</div><div class="pipe-arrow">→</div>
+          <div class="pipe-step">Guardrails</div><div class="pipe-arrow">→</div>
+          <div class="pipe-step">TTS</div><div class="pipe-arrow">→</div>
+          <div class="pipe-step">Audio Out</div>
+        </div>
+
+        <h3>Communication Protocols</h3>
+        <div class="card-grid">
+          <div class="info-card">
+            <h4>Internal Services</h4>
+            <p>gRPC (Protocol Buffers)</p>
+            <div class="sub">Low latency, strongly typed, bi-directional streaming</div>
+          </div>
+          <div class="info-card">
+            <h4>Management APIs</h4>
+            <p>REST / HTTP 2</p>
+            <div class="sub">Tenant config, KB management, dashboards</div>
+          </div>
+          <div class="info-card">
+            <h4>Real-time Audio</h4>
+            <p>WebSocket</p>
+            <div class="sub">Twilio Media Streams, bidirectional 20ms frames</div>
+          </div>
+          <div class="info-card">
+            <h4>Async Events</h4>
+            <p>Apache Kafka</p>
+            <div class="sub">Call lifecycle, analytics, learning signals</div>
+          </div>
+        </div>
+
+        <h3>Data Stores</h3>
+        <table class="matrix-table">
+          <thead><tr><th>Store</th><th>Technology</th><th>Purpose</th><th>Justification</th></tr></thead>
+          <tbody>
+            <tr><td>Structured / Transactional</td><td>PostgreSQL 16</td><td>Tenant configs, caller profiles, billing, model metadata</td><td>ACID compliance, row-level security for multi-tenancy</td></tr>
+            <tr><td>Document / Transcripts</td><td>MongoDB 7.x</td><td>Call transcripts, conversation logs, raw turn data</td><td>Flexible schema, high-throughput writes, rich query</td></tr>
+            <tr><td>Session / Cache</td><td>Redis 7.x (Cluster)</td><td>Session state, conversation context, rate limiting, feature flags</td><td>Sub-millisecond reads, TTL-based expiry, pub/sub</td></tr>
+            <tr><td>Vector Embeddings</td><td>Pinecone (Serverless)</td><td>Knowledge base chunks per tenant for RAG retrieval</td><td>Managed, per-tenant namespaces, low-latency ANN search</td></tr>
+            <tr><td>Object Storage</td><td>AWS S3 / MinIO</td><td>Audio recordings, model artifacts, training datasets</td><td>Durable, cost-effective, IAM-policy isolation per tenant</td></tr>
+          </tbody>
+        </table>
+
+        <h3>System Components</h3>
+        <ol>
+          <li><strong>Telephony Gateway Service</strong> — handles Twilio/Exotel webhooks, SIP trunking, WebRTC bridge</li>
+          <li><strong>Audio Processing Service</strong> — VAD (Voice Activity Detection), noise reduction, audio format/sample-rate conversion</li>
+          <li><strong>ASR Service</strong> — streaming speech recognition, language ID detection, partial transcript emission</li>
+          <li><strong>NLU Service</strong> — intent classification, named entity recognition, slot filling state machine</li>
+          <li><strong>Dialogue Manager</strong> — call script FSM execution, context orchestration, tool call routing</li>
+          <li><strong>LLM Service</strong> — prompt construction, RAG injection, response generation, streaming, guardrails</li>
+          <li><strong>TTS Service</strong> — text-to-speech with sentence-level streaming, voice/language selection per tenant</li>
+          <li><strong>Self-Learning Service</strong> — signal collection, dataset curation, training pipeline orchestration</li>
+          <li><strong>Analytics Service</strong> — metrics computation, business KPIs, dashboard data APIs</li>
+          <li><strong>Admin API</strong> — tenant management, configuration, knowledge base (KB) CRUD</li>
+          <li><strong>Notification Service</strong> — post-call webhooks, alert dispatch, SMS/email summaries</li>
+        </ol>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 2 — CASCADED STS PIPELINE DESIGN
+    ════════════════════════════════════════════════════════════ -->
+    <section class="section" id="s2">
+      <div class="section-header">
+        <div class="section-num">02</div>
+        <h2>Cascaded STS Pipeline Design</h2>
+      </div>
+      <div class="section-body">
+        <p>The pipeline targets <strong>&lt;600ms end-to-end latency</strong> from end-of-user-speech to first audio byte delivered to caller. Each stage below includes its latency budget and implementation notes.</p>
+
+        <div class="stage-card">
+          <div class="stage-card-header">
+            <span class="stage-num-badge">Stage 1</span>
+            <span class="stage-title">Call Connect</span>
+            <span class="stage-latency">Budget: 0ms (sync)</span>
+          </div>
+          <div class="stage-card-body">
+            <ul>
+              <li>Twilio/Exotel fires <code>POST /webhook/inbound</code> to Telephony Gateway</li>
+              <li>Gateway resolves tenant from the dialed number (To field) — PostgreSQL lookup, Redis-cached after first hit</li>
+              <li>Session created in Redis: <code>{session_id, tenant_id, caller_id: hash(From), start_time, state: "greeting"}</code></li>
+              <li>Caller profile loaded from PostgreSQL (name, preferred language, prior interaction count)</li>
+              <li>WebSocket stream negotiated with Twilio Media Streams for bidirectional audio</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="stage-card">
+          <div class="stage-card-header">
+            <span class="stage-num-badge">Stage 2</span>
+            <span class="stage-title">VAD &amp; Audio Streaming</span>
+            <span class="stage-latency">Budget: 0–100ms</span>
+          </div>
+          <div class="stage-card-body">
+            <ul>
+              <li>Audio arrives as 20ms µ-law 8kHz frames via WebSocket from Twilio</li>
+              <li>VAD implemented with <strong>Silero-VAD</strong> (ONNX, CPU, ~2ms per frame): classifies each frame as speech or silence</li>
+              <li>Speech frames buffered; silence frames discarded to reduce upstream bandwidth</li>
+              <li>Audio resampled from 8kHz → 16kHz via <code>librosa</code> or <code>soxr</code> if the target ASR model requires 16kHz</li>
+              <li>End-of-utterance detected via VAD silence threshold (300ms sustained silence → speech segment complete)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="stage-card">
+          <div class="stage-card-header">
+            <span class="stage-num-badge">Stage 3</span>
+            <span class="stage-title">ASR Streaming</span>
+            <span class="stage-latency">Budget: 100–300ms</span>
+          </div>
+          <div class="stage-card-body">
+            <ul>
+              <li>Speech frames streamed to ASR Service over gRPC bidirectional stream</li>
+              <li>ASR emits <strong>partial transcripts every 100–200ms</strong> for speculative early intent detection</li>
+              <li>Primary: <strong>Soniox</strong> — token-level language detection enables native code-switch (Hindi+English in same utterance)</li>
+              <li>Detected language stored in Redis session for TTS voice selection</li>
+              <li>Final transcript returned ~300–500ms after end-of-utterance detection</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="stage-card">
+          <div class="stage-card-header">
+            <span class="stage-num-badge">Stage 4</span>
+            <span class="stage-title">NLU Processing</span>
+            <span class="stage-latency">Budget: 300–400ms</span>
+          </div>
+          <div class="stage-card-body">
+            <ul>
+              <li>Final transcript sent to NLU Service via gRPC unary call</li>
+              <li>Intent classifier: fine-tuned <strong>DeBERTa-v3-base</strong> or LLM-based classifier (few-shot, per-tenant)</li>
+              <li>NER extracts entities: account numbers, dates, currency amounts, customer names, vehicle chassis numbers</li>
+              <li>Slot filling state check: if required slots for intent are missing → Dialogue Manager generates follow-up clarification question</li>
+              <li>Language detection confirmed: <code>{language: "hi-IN", code_switch: true}</code></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="stage-card">
+          <div class="stage-card-header">
+            <span class="stage-num-badge">Stage 5</span>
+            <span class="stage-title">Context Assembly</span>
+            <span class="stage-latency">Budget: 400–420ms</span>
+          </div>
+          <div class="stage-card-body">
+            <ul>
+              <li>Dialogue Manager assembles the LLM prompt from six sources:</li>
+              <li>1. <strong>System prompt</strong> — tenant-specific, domain-specific (BFSI / Automotive), stored in PostgreSQL</li>
+              <li>2. <strong>Script state</strong> — current FSM node, pending tasks, slot fill requirements</li>
+              <li>3. <strong>Conversation history</strong> — last 20 turns pulled from Redis session</li>
+              <li>4. <strong>Caller profile</strong> — name, language preference, prior intent history (from PostgreSQL)</li>
+              <li>5. <strong>RAG context</strong> — top-5 KB chunks from Pinecone, retrieval runs in parallel with NLU (Stage 4) to hide latency</li>
+              <li>6. <strong>Current turn</strong> — final transcript + detected intent + extracted entities</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="stage-card">
+          <div class="stage-card-header">
+            <span class="stage-num-badge">Stage 6</span>
+            <span class="stage-title">LLM Response Generation (Streaming)</span>
+            <span class="stage-latency">Budget: 420–600ms (first sentence)</span>
+          </div>
+          <div class="stage-card-body">
+            <ul>
+              <li>LLM API called with fully assembled context; streaming mode enabled</li>
+              <li>Token stream decoded; <strong>first sentence boundary</strong> (period or newline) triggers immediate TTS dispatch</li>
+              <li>Remaining response streamed to TTS in sentence-sized chunks for continuous audio flow</li>
+              <li>Guardrail layer runs in parallel as a classifier: checks output for hallucinations, off-domain content, PII exposure, banned topics</li>
+              <li>If guardrail fires: response suppressed, safe fallback injected ("Let me connect you to a specialist")</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="stage-card">
+          <div class="stage-card-header">
+            <span class="stage-num-badge">Stage 7</span>
+            <span class="stage-title">TTS Streaming</span>
+            <span class="stage-latency">First audio at ~500–600ms</span>
+          </div>
+          <div class="stage-card-body">
+            <ul>
+              <li>First sentence text sent to TTS Service (ElevenLabs Flash v2.5); first audio chunk returned in ~75ms</li>
+              <li>Audio immediately forwarded to caller via WebSocket</li>
+              <li>Subsequent sentence chunks queued and streamed as previous audio finishes playing — continuous, low-jitter output</li>
+              <li>Voice selection: per-tenant config (e.g., Hindi female voice ID for BFSI tenant, Tamil male for Automotive)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="stage-card">
+          <div class="stage-card-header">
+            <span class="stage-num-badge">Stage 8</span>
+            <span class="stage-title">Post-Response (Async)</span>
+            <span class="stage-latency">Non-blocking / background</span>
+          </div>
+          <div class="stage-card-body">
+            <ul>
+              <li>Full turn logged to MongoDB: <code>{session_id, turn_id, transcript, intent, entities, response, latency_breakdown}</code></li>
+              <li>Call state updated in Redis; resolved intents added to <code>resolved_intents[]</code></li>
+              <li>Analytics events published to Kafka topic <code>call.turn.completed</code></li>
+              <li>If tool call needed (balance lookup, service appointment): executed in parallel via Celery task; result injected into next turn context</li>
+              <li>PII masking applied before log persistence (account numbers, phone numbers tokenized)</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 3 — TECH STACK
+    ════════════════════════════════════════════════════════════ -->
+    <section class="section" id="s3">
+      <div class="section-header">
+        <div class="section-num">03</div>
+        <h2>Tech Stack — Component by Component</h2>
+      </div>
+      <div class="section-body">
+
+        <h3>ASR — Decision Matrix</h3>
+        <table class="matrix-table">
+          <thead>
+            <tr>
+              <th>Option</th><th>Latency</th><th>Indic Languages</th><th>Code-Switch</th><th>Deployment</th><th>Price/min</th><th>Verdict</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Soniox</td><td>~249ms median</td><td>10 (BN, GU, HI, KN, ML, MR, PA, TA, TE, UR)</td><td><span class="badge badge-green">Native</span></td><td>Cloud API</td><td>$0.006</td><td><span class="badge badge-primary">PRIMARY</span></td>
+            </tr>
+            <tr>
+              <td>Google Cloud STT (Chirp)</td><td>~300–400ms</td><td>Excellent — all major Indic</td><td><span class="badge badge-amber">Limited</span></td><td>Cloud (Mumbai)</td><td>$0.016</td><td><span class="badge badge-amber">Fallback</span></td>
+            </tr>
+            <tr>
+              <td>Deepgram Nova-2</td><td>&lt;300ms (Flux &lt;200ms)</td><td>English excellent, Hindi limited</td><td><span class="badge badge-amber">Limited</span></td><td>Cloud API</td><td>$0.0043</td><td><span class="badge badge-purple">English-only</span></td>
+            </tr>
+            <tr>
+              <td>AI4Bharat IndicWhisper</td><td>~200ms on A100</td><td>22 Indian languages — best accuracy</td><td><span class="badge badge-amber">Limited</span></td><td>Self-hosted GPU</td><td>Infra only</td><td><span class="badge badge-purple">Enterprise / On-Prem</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="rec-box">
+          <h4>Final ASR Recommendation</h4>
+          <ul>
+            <li><strong>Default (all tenants):</strong> Soniox — best latency + native code-switch for Hinglish</li>
+            <li><strong>Indic fallback:</strong> Google Cloud STT Chirp — when Soniox coverage insufficient for a specific language variant</li>
+            <li><strong>English high-volume:</strong> Deepgram Nova-2 — lowest cost + ultra-low latency for English-only flows</li>
+            <li><strong>Enterprise on-prem (BFSI/Auto):</strong> AI4Bharat IndicWhisper on NVIDIA A100 — data sovereignty, best Indic accuracy</li>
+          </ul>
+        </div>
+
+        <h3>LLM — Decision Matrix</h3>
+        <table class="matrix-table">
+          <thead>
+            <tr><th>Option</th><th>Context</th><th>Hallucination</th><th>Multilingual</th><th>First Token</th><th>Price (In/Out per 1M)</th><th>Verdict</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Claude 3.5 Sonnet (Anthropic)</td><td>200K</td><td><span class="badge badge-green">Lowest</span></td><td>English excellent; Indic via transliteration</td><td>~150–250ms</td><td>$3 / $15</td><td><span class="badge badge-primary">PRIMARY BFSI</span></td>
+            </tr>
+            <tr>
+              <td>GPT-4o (OpenAI)</td><td>128K</td><td><span class="badge badge-green">Low</span></td><td>Strong — English, European, Arabic</td><td>~100–200ms</td><td>$2.50 / $10</td><td><span class="badge badge-amber">Fallback / A-B Test</span></td>
+            </tr>
+            <tr>
+              <td>Llama 3.1 70B (Meta)</td><td>128K</td><td><span class="badge badge-amber">Moderate</span></td><td>Good</td><td>~100–200ms (self-hosted)</td><td>Infra only</td><td><span class="badge badge-purple">Phase 2 Cost Opt</span></td>
+            </tr>
+            <tr>
+              <td>Mistral Large 2</td><td>128K</td><td><span class="badge badge-green">Low</span></td><td>Excellent European</td><td>~100–150ms</td><td>$2 / $6</td><td><span class="badge badge-purple">EU Expansion</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="rec-box">
+          <h4>Final LLM Recommendation</h4>
+          <ul>
+            <li><strong>BFSI / Automotive (Indic):</strong> Claude 3.5 Sonnet — lowest hallucination rate, best call-script adherence</li>
+            <li><strong>Global / European:</strong> GPT-4o or Mistral Large 2</li>
+            <li><strong>High-volume cost optimization (Phase 2):</strong> Llama 3.1 70B self-hosted via vLLM after accuracy validation</li>
+          </ul>
+        </div>
+
+        <h3>TTS — Decision Matrix</h3>
+        <table class="matrix-table">
+          <thead>
+            <tr><th>Option</th><th>First Chunk Latency</th><th>Indic Languages</th><th>Quality (MOS)</th><th>Voice Cloning</th><th>Verdict</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ElevenLabs Flash v2.5</td><td>~75ms</td><td>HI, BN, GU, KN, ML, MR, PA, TA, TE, UR + 60 more</td><td>~4.3/5</td><td><span class="badge badge-green">YES (3 sec sample)</span></td><td><span class="badge badge-primary">PRIMARY</span></td>
+            </tr>
+            <tr>
+              <td>Azure Neural TTS</td><td>~100–150ms</td><td>HI (Swara — high quality), BN, TA, TE</td><td>~4.1/5</td><td><span class="badge badge-amber">Custom Neural Voice</span></td><td><span class="badge badge-amber">Enterprise / BFSI</span></td>
+            </tr>
+            <tr>
+              <td>AI4Bharat Indic-TTS</td><td>~150–250ms on GPU</td><td>13 Indian languages — natural prosody</td><td>~3.9/5</td><td><span class="badge badge-red">No</span></td><td><span class="badge badge-purple">On-Prem Indic</span></td>
+            </tr>
+            <tr>
+              <td>NVIDIA P-Flow</td><td>Research-grade</td><td>7 Indic (voice cloning)</td><td>Research</td><td><span class="badge badge-green">YES (3 sec)</span></td><td><span class="badge badge-purple">Future Roadmap</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="rec-box">
+          <h4>Final TTS Recommendation</h4>
+          <ul>
+            <li><strong>Default:</strong> ElevenLabs Flash v2.5 — 75ms first chunk, best Indic quality, voice cloning for branded agents</li>
+            <li><strong>Enterprise / compliance:</strong> Azure Neural TTS — Azure ecosystem integration, SLA-backed</li>
+            <li><strong>Self-hosted Indic scale:</strong> AI4Bharat Indic-TTS on GPU for on-prem deployments</li>
+          </ul>
+        </div>
+
+        <h3>Telephony</h3>
+        <ul>
+          <li><strong>Twilio Programmable Voice:</strong> Primary for global tenants — WebRTC, SIP trunk, Media Streams WebSocket API, excellent developer experience</li>
+          <li><strong>Exotel:</strong> India-specific numbers, DND compliance built-in, strong Indian carrier relationships, lower cost for India-only SMB tenants</li>
+          <li><strong>Plivo:</strong> Cost-effective alternative for high-volume India calling (~30% cheaper than Twilio for India domestic routes)</li>
+          <li><strong>Decision:</strong> Twilio for enterprise API flexibility; Exotel for India SMB cost optimization; Plivo evaluated for Phase 2</li>
+        </ul>
+
+        <h3>Orchestration &amp; Framework</h3>
+        <ul>
+          <li><strong>LangGraph (LangChain):</strong> Agent state machine for dialogue management, tool calling orchestration, multi-step conversational flows with explicit state nodes</li>
+          <li><strong>FastAPI:</strong> Async Python web framework — WebSocket handlers, REST APIs, OpenAPI auto-docs; <code>uvicorn</code> with <code>asyncio</code> event loop</li>
+          <li><strong>Celery + Redis:</strong> Async task queue for non-real-time work — logging, analytics aggregation, training pipeline triggers, webhook dispatch</li>
+          <li><strong>Apache Kafka (MSK):</strong> Event streaming for call lifecycle events → analytics pipeline → self-learning pipeline</li>
+        </ul>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 4 — END-TO-END DATA FLOW
+    ════════════════════════════════════════════════════════════ -->
+    <section class="section" id="s4">
+      <div class="section-header">
+        <div class="section-num">04</div>
+        <h2>End-to-End Data Flow</h2>
+      </div>
+      <div class="section-body">
+        <h3>Inbound Call Flow — Step by Step</h3>
+        <ol>
+          <li>Caller dials tenant's phone number (Twilio / Exotel)</li>
+          <li>Telephony provider POSTs webhook to Telephony Gateway: <code>{CallSid, From, To, Direction}</code></li>
+          <li>Gateway resolves tenant from the <code>To</code> number → loads tenant config from PostgreSQL → Redis-cached after first hit</li>
+          <li>Gateway creates Redis session: <code>{session_id: uuid4(), tenant_id, caller_id: sha256(From), start_time, language: null, state: "greeting"}</code></li>
+          <li>Gateway instructs Twilio to open WebSocket Media Stream; bidirectional audio link established</li>
+          <li>Greeting dispatched immediately to TTS (no ASR needed): <em>"Welcome to [TenantName]. How may I help you today?"</em></li>
+          <li>TTS audio chunk returned in ~75ms → streamed to caller via WebSocket — caller hears greeting within ~100ms of call answer</li>
+          <li>Caller speaks → 20ms µ-law audio frames arrive at Gateway via WebSocket</li>
+          <li>VAD (Silero-VAD) classifies frames; speech segments buffered and streamed to ASR Service over gRPC</li>
+          <li>ASR Service (Soniox) emits partials: <code>["नमस्ते", "नमस्ते मेरा", "नमस्ते मेरा account"]</code></li>
+          <li>Language detected as <code>hi-IN</code> with code-switch flag; stored in Redis session</li>
+          <li>End-of-utterance detected → final transcript: <code>"नमस्ते मेरा account balance बताइए"</code></li>
+          <li>NLU Service: <code>{intent: "check_balance", entities: {}, language: "hi-IN", code_switch: true}</code></li>
+          <li>Dialogue Manager checks script FSM: state <code>"greeting"</code> → transition requires auth before balance → new state <code>"auth"</code></li>
+          <li><strong>PARALLEL:</strong> RAG retrieval begins on query <em>"account balance check process"</em> → Pinecone returns top-10 → cross-encoder reranks → top-5 selected</li>
+          <li>Context assembled: system prompt + script state(<code>auth</code>) + last 20 turns + caller profile + RAG chunks + current intent</li>
+          <li>LLM (Claude 3.5 Sonnet) called with streaming; generates: <em>"आपका balance जानने के लिए, कृपया अपना account number बताएं"</em></li>
+          <li>Guardrail classifier: response passes — on-domain, no hallucination, no PII exposure</li>
+          <li>First sentence dispatched to TTS → ElevenLabs Hindi voice → audio chunk in 75ms → to caller</li>
+          <li>Turn logged async to MongoDB; analytics event published to Kafka: <code>{session_id, turn_id, language, intent, latency_asr_ms, latency_llm_ms, latency_tts_ms}</code></li>
+          <li><strong>Next turn:</strong> Caller provides account number → NLU extracts entity → auth service verifies → balance fetched from core banking API → response generated with actual balance</li>
+          <li>Call end: session closed, call summary written to PostgreSQL, learning signals processed by Self-Learning Service</li>
+        </ol>
+
+        <div class="note-box">
+          <strong>Latency target:</strong> From end-of-user-speech to first audio byte delivered to caller — target &lt;600ms P95. Steps 9–19 above occur within this window. RAG retrieval (Step 15) runs in parallel with NLU (Step 13) to avoid adding to the critical path.
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 5 — SELF-LEARNING MODULE
+    ════════════════════════════════════════════════════════════ -->
+    <section class="section" id="s5">
+      <div class="section-header">
+        <div class="section-num">05</div>
+        <h2>Self-Learning Module Architecture</h2>
+      </div>
+      <div class="section-body">
+
+        <h3>Signal Collection (Real-Time)</h3>
+        <table class="matrix-table">
+          <thead><tr><th>Signal Type</th><th>Detection Method</th><th>Kafka Topic</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td>Resolution</td><td>Closing phrase NLP classifier ("Thank you, your issue is resolved")</td><td><code>learning.signals</code></td><td>RESOLVED</td></tr>
+            <tr><td>Escalation</td><td>Dialogue Manager triggers human transfer</td><td><code>learning.signals</code></td><td>ESCALATED</td></tr>
+            <tr><td>Confusion</td><td>Same intent repeated 3+ times in one call</td><td><code>learning.signals</code></td><td>CONFUSED</td></tr>
+            <tr><td>Explicit CSAT</td><td>Post-call IVR (press 1–5) or SMS survey linked to session_id</td><td><code>learning.csat</code></td><td>1–5 numeric</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Weekly Curated Dataset Generation</h3>
+        <div class="code-block">
+<span class="comment">-- PostgreSQL: select high-quality sessions for training</span>
+<span class="kw">SELECT</span> s.session_id, s.transcript_id
+<span class="kw">FROM</span> sessions s
+<span class="kw">WHERE</span> s.resolution_status = <span class="str">'RESOLVED'</span>
+  <span class="kw">AND</span> s.csat_score >= <span class="val">4</span>
+  <span class="kw">AND</span> s.escalation_count = <span class="val">0</span>
+  <span class="kw">AND</span> s.created_at >= NOW() - INTERVAL <span class="str">'7 days'</span>;
+
+<span class="comment">-- Transcripts fetched from MongoDB, formatted as instruction pairs:</span>
+<span class="comment">-- [{"role": "system", "content": system_prompt},</span>
+<span class="comment">--  {"role": "user", "content": caller_utterance},</span>
+<span class="comment">--  {"role": "assistant", "content": agent_response}]</span>
+        </div>
+
+        <h3>Human Review Pipeline</h3>
+        <ul>
+          <li>10% of auto-selected samples reviewed in <strong>Label Studio</strong> by domain QA annotators</li>
+          <li>Annotators flag: incorrect intent labels, hallucinated responses, poor code-switch handling</li>
+          <li>Final curated dataset versioned and stored in S3: <code>s3://vaani-ai-training/datasets/v{date}/</code></li>
+        </ul>
+
+        <h3>Bi-Weekly Fine-Tuning Pipeline</h3>
+        <div class="code-block">
+<span class="comment"># HuggingFace PEFT — LoRA fine-tuning config</span>
+<span class="key">from</span> peft <span class="key">import</span> LoraConfig, get_peft_model
+
+lora_config = LoraConfig(
+    <span class="key">r</span>=<span class="val">16</span>,
+    <span class="key">lora_alpha</span>=<span class="val">32</span>,
+    <span class="key">target_modules</span>=[<span class="str">"q_proj"</span>, <span class="str">"v_proj"</span>],
+    <span class="key">lora_dropout</span>=<span class="val">0.05</span>,
+    <span class="key">bias</span>=<span class="str">"none"</span>,
+    <span class="key">task_type</span>=<span class="str">"CAUSAL_LM"</span>
+)
+<span class="comment"># Training: 3 epochs, lr=2e-4, batch_size=16 on 1x A100</span>
+<span class="comment"># Estimated time: 2–4 hours for 10K examples</span>
+        </div>
+
+        <h3>Evaluation Gate &amp; Deployment</h3>
+        <ul>
+          <li>New model evaluated on held-out test set (20% of dataset, never used in training)</li>
+          <li>Must meet thresholds: intent accuracy ≥ (baseline − 0.5%), resolution rate ≥ (baseline − 1%)</li>
+          <li>If passes gate → <strong>canary deployment at 5% traffic</strong> → monitor 48 hours → progressive rollout to 100%</li>
+          <li><strong>MLflow Model Registry</strong> tracks all experiments, evaluation metrics, and model artifacts with full lineage</li>
+        </ul>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 6 — MEMORY & CONTEXT MANAGEMENT
+    ════════════════════════════════════════════════════════════ -->
+    <section class="section" id="s6">
+      <div class="section-header">
+        <div class="section-num">06</div>
+        <h2>Memory &amp; Context Management</h2>
+      </div>
+      <div class="section-body">
+
+        <h3>Short-Term Memory — Redis</h3>
+        <p>TTL: <code>call_duration + 10 minutes</code>. Stores the entire in-flight call context.</p>
+        <div class="code-block">
+<span class="comment"># Redis key: "session:{session_id}"</span>
+{
+  <span class="key">"caller_id"</span>:        <span class="str">"sha256_hashed_phone"</span>,
+  <span class="key">"tenant_id"</span>:        <span class="str">"tenant_bfsi_001"</span>,
+  <span class="key">"language"</span>:         <span class="str">"hi-IN"</span>,
+  <span class="key">"script_state"</span>:     <span class="str">"auth"</span>,
+  <span class="key">"entities"</span>: {
+    <span class="key">"account_number"</span>:  <span class="str">"XXXX-REDACTED"</span>,
+    <span class="key">"name"</span>:            <span class="str">"Rahul Sharma"</span>
+  },
+  <span class="key">"turns"</span>: [           <span class="comment">// last 20 turns only</span>
+    { <span class="key">"role"</span>: <span class="str">"user"</span>,      <span class="key">"content"</span>: <span class="str">"..."</span>, <span class="key">"intent"</span>: <span class="str">"check_balance"</span>, <span class="key">"ts"</span>: <span class="val">1743000000</span> },
+    { <span class="key">"role"</span>: <span class="str">"assistant"</span>, <span class="key">"content"</span>: <span class="str">"..."</span>, <span class="key">"ts"</span>: <span class="val">1743000001</span> }
+  ],
+  <span class="key">"resolved_intents"</span>: [<span class="str">"greeting"</span>],
+  <span class="key">"pending_slots"</span>:    [<span class="str">"auth_otp"</span>]
+}
+        </div>
+
+        <h3>Long-Term Memory — PostgreSQL</h3>
+        <div class="code-block">
+<span class="comment">-- Table: caller_profiles</span>
+<span class="kw">CREATE TABLE</span> caller_profiles (
+  caller_id              TEXT <span class="kw">NOT NULL</span>,   <span class="comment">-- sha256(phone), PII-safe</span>
+  tenant_id              UUID <span class="kw">NOT NULL</span>,
+  preferred_language     TEXT,            <span class="comment">-- "hi-IN", "ta-IN", etc.</span>
+  display_name           TEXT,            <span class="comment">-- if consented and known</span>
+  last_interaction_at    TIMESTAMPTZ,
+  interaction_count      INT <span class="kw">DEFAULT</span> <span class="val">0</span>,
+  avg_csat               NUMERIC(<span class="val">3</span>,<span class="val">2</span>),
+  frequent_intent        TEXT,
+  consent_cross_call     BOOLEAN <span class="kw">DEFAULT</span> FALSE,  <span class="comment">-- GDPR consent flag</span>
+  <span class="kw">PRIMARY KEY</span> (caller_id, tenant_id)
+);
+        </div>
+
+        <h3>Prompt Construction Template</h3>
+        <div class="code-block">
+<span class="comment">"""</span>
+<span class="kw">You are</span> {agent_name}, a virtual assistant for {tenant_name}.
+<span class="kw">Domain:</span> {domain}  <span class="comment">| Language: Respond in {caller_language}.</span>
+<span class="kw">Handle code-switching naturally</span> (e.g., Hindi + English is expected).
+<span class="kw">Tone:</span> {tenant_tone_config}
+
+<span class="kw">RULES:</span>
+- Only answer questions relevant to {domain}.
+- All rates, fees, and product details MUST come from the provided
+  Knowledge Base context only. Never invent figures.
+- If unsure, say "Let me connect you to a specialist" — never guess.
+- Current call state: {script_state} | Pending task: {pending_task}
+
+<span class="kw">CALLER CONTEXT:</span> {caller_profile_json}
+<span class="kw">PREVIOUS CALL SUMMARY:</span> {last_call_summary}
+<span class="kw">KNOWLEDGE BASE CONTEXT:</span>
+{rag_chunks}
+
+<span class="kw">CONVERSATION HISTORY (last 20 turns):</span>
+{conversation_history}
+<span class="comment">"""</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 7 — RAG DESIGN
+    ════════════════════════════════════════════════════════════ -->
+    <section class="section" id="s7">
+      <div class="section-header">
+        <div class="section-num">07</div>
+        <h2>RAG (Retrieval Augmented Generation) Design</h2>
+      </div>
+      <div class="section-body">
+
+        <h3>Ingestion Pipeline</h3>
+        <ol>
+          <li>Document uploaded via Admin API: PDF, Word (.docx), Excel, or URL</li>
+          <li><strong>Document Processor:</strong> PyMuPDF for PDF text extraction; python-docx for Word; pandas for Excel; trafilatura for URLs</li>
+          <li><strong>Chunker:</strong> LangChain <code>RecursiveCharacterTextSplitter</code>, <code>chunk_size=512</code>, <code>chunk_overlap=50</code> tokens; respects paragraph and sentence boundaries</li>
+          <li><strong>Embeddings:</strong>
+            <ul>
+              <li>English-heavy content: <code>text-embedding-3-large</code> (OpenAI, 3072 dims)</li>
+              <li>Indic / multilingual content: <code>multilingual-e5-large</code> (Hugging Face, 1024 dims, trained on Indic text)</li>
+            </ul>
+          </li>
+          <li><strong>Upsert to Pinecone:</strong> namespace = <code>{tenant_id}_{domain}</code>; metadata = <code>{doc_id, title, section, page, updated_at, language}</code></li>
+          <li>KB version record updated in PostgreSQL; cache invalidation signal published to Redis</li>
+        </ol>
+
+        <h3>Retrieval at Query Time</h3>
+        <div class="code-block">
+<span class="comment"># Runs in parallel with NLU (Stage 4) to hide latency</span>
+<span class="key">async def</span> retrieve_rag_context(query: str, tenant_id: str, language: str):
+    embedding = <span class="key">await</span> embed(query, model=select_embed_model(language))
+
+    <span class="comment"># Pinecone ANN search — returns top 10 candidates</span>
+    candidates = pinecone_index.query(
+        vector=embedding,
+        top_k=<span class="val">10</span>,
+        namespace=f<span class="str">"{tenant_id}_bfsi"</span>,
+        include_metadata=<span class="val">True</span>
+    )
+
+    <span class="comment"># Cross-encoder reranking — selects best 5</span>
+    reranked = cross_encoder.predict(
+        [(query, c[<span class="str">"metadata"</span>][<span class="str">"text"</span>]) <span class="kw">for</span> c <span class="kw">in</span> candidates]
+    )
+    top5 = sorted(zip(candidates, reranked), key=<span class="kw">lambda</span> x: -x[<span class="val">1</span>])[:5]
+
+    <span class="comment"># Citation tracking: every chunk has source doc ID</span>
+    <span class="key">return</span> [{ <span class="str">"text"</span>: c[<span class="str">"metadata"</span>][<span class="str">"text"</span>], <span class="str">"doc_id"</span>: c[<span class="str">"metadata"</span>][<span class="str">"doc_id"</span>] }
+            <span class="kw">for</span> c, _ <span class="kw">in</span> top5]
+        </div>
+
+        <h3>Citation &amp; Audit Trail</h3>
+        <ul>
+          <li>Every LLM response is tagged with the source doc IDs used in the context (<code>used_doc_ids: ["doc_123", "doc_456"]</code>)</li>
+          <li>RAG retrieval log stored per call turn in MongoDB for compliance auditing</li>
+          <li>Cross-encoder model: <code>cross-encoder/ms-marco-MiniLM-L-6-v2</code> — fast (~5ms on CPU), accurate relevance reranking</li>
+        </ul>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 8 — MULTI-TENANT ARCHITECTURE
+    ════════════════════════════════════════════════════════════ -->
+    <section class="section" id="s8">
+      <div class="section-header">
+        <div class="section-num">08</div>
+        <h2>Multi-Tenant Architecture</h2>
+      </div>
+      <div class="section-body">
+
+        <h3>Isolation Layers</h3>
+        <table class="matrix-table">
+          <thead><tr><th>Layer</th><th>Mechanism</th><th>Enforcement Point</th></tr></thead>
+          <tbody>
+            <tr><td>Network</td><td>Kubernetes NetworkPolicy — restricts cross-tenant pod communication</td><td>K8s control plane</td></tr>
+            <tr><td>Database</td><td>PostgreSQL Row-Level Security (RLS) — enforces <code>tenant_id</code> filter on ALL queries automatically</td><td>PostgreSQL policy engine</td></tr>
+            <tr><td>Cache</td><td>Redis key prefix = <code>t:{tenant_id}:</code> — logical namespace separation</td><td>Application layer</td></tr>
+            <tr><td>Vector DB</td><td>Pinecone namespace per tenant — <code>{tenant_id}_{domain}</code></td><td>Pinecone SDK</td></tr>
+            <tr><td>Object Storage</td><td>S3 bucket prefix policy: <code>/tenants/{tenant_id}/</code> with IAM deny on cross-prefix access</td><td>AWS IAM</td></tr>
+            <tr><td>Logs &amp; Traces</td><td>Separate log streams per tenant in CloudWatch Log Groups; OpenTelemetry <code>tenant_id</code> attribute on all spans</td><td>CloudWatch / Jaeger</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Tenant Configuration Schema</h3>
+        <div class="code-block">
+{
+  <span class="key">"tenant_id"</span>:           <span class="str">"uuid"</span>,
+  <span class="key">"name"</span>:                <span class="str">"HDFC Bank Retail"</span>,
+  <span class="key">"domain"</span>:              <span class="str">"BFSI"</span>,
+  <span class="key">"asr_provider"</span>:        <span class="str">"soniox"</span>,
+  <span class="key">"asr_language_set"</span>:    [<span class="str">"hi-IN"</span>, <span class="str">"en-IN"</span>, <span class="str">"mr-IN"</span>],
+  <span class="key">"llm_model"</span>:           <span class="str">"claude-3-5-sonnet-20241022"</span>,
+  <span class="key">"llm_system_prompt"</span>:   <span class="str">"..."</span>,
+  <span class="key">"tts_provider"</span>:        <span class="str">"elevenlabs"</span>,
+  <span class="key">"tts_voice_id"</span>:        <span class="str">"voice_id_hindi_female"</span>,
+  <span class="key">"tts_language"</span>:        <span class="str">"hi-IN"</span>,
+  <span class="key">"telephony_provider"</span>:  <span class="str">"twilio"</span>,
+  <span class="key">"phone_numbers"</span>:       [<span class="str">"+911800XXXXXX"</span>],
+  <span class="key">"kb_namespace"</span>:        <span class="str">"tenant_hdfc_bfsi"</span>,
+  <span class="key">"compliance_settings"</span>: {
+    <span class="key">"record_calls"</span>:          <span class="val">false</span>,
+    <span class="key">"data_residency_region"</span>: <span class="str">"ap-south-1"</span>,
+    <span class="key">"pii_masking_level"</span>:     <span class="str">"HIGH"</span>
+  }
+}
+        </div>
+
+        <h3>Tenant Onboarding Flow</h3>
+        <ol>
+          <li>Admin creates tenant via <code>POST /admin/tenants</code> — writes to PostgreSQL, provisions Pinecone namespace, creates S3 prefix, Redis key namespace</li>
+          <li>Admin uploads knowledge base documents via <code>POST /admin/tenants/{id}/kb</code></li>
+          <li>Admin configures phone numbers, ASR language set, TTS voice via Admin UI (React + Admin API)</li>
+          <li>Test call placed; QA review of transcript and intent accuracy</li>
+          <li>Go-live: DNS configured, DND compliance verified (for India numbers via Exotel), monitoring dashboards provisioned</li>
+        </ol>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 9 — SECURITY ARCHITECTURE
+    ════════════════════════════════════════════════════════════ -->
+    <section class="section" id="s9">
+      <div class="section-header">
+        <div class="section-num">09</div>
+        <h2>Security Architecture</h2>
+      </div>
+      <div class="section-body">
+
+        <h3>PII Handling</h3>
+        <ul>
+          <li><strong>Phone number hashing:</strong> Raw phone numbers never stored; SHA-256 hash used as <code>caller_id</code> throughout the system</li>
+          <li><strong>In-flight masking:</strong> Before logging to MongoDB, NER-based PII masker redacts account numbers, Aadhaar, PAN, credit card numbers using regex + ML classifier</li>
+          <li><strong>PII masking levels:</strong> HIGH (financial data fully tokenized), MEDIUM (partial masking), LOW (names retained if consented)</li>
+          <li><strong>Data residency:</strong> All AWS resources deployed in <code>ap-south-1</code> (Mumbai) for Indian tenants; EU tenants on <code>eu-west-1</code></li>
+        </ul>
+
+        <h3>Authentication &amp; Authorization</h3>
+        <ul>
+          <li><strong>Admin API:</strong> JWT-based auth (RS256); roles: <code>super_admin</code>, <code>tenant_admin</code>, <code>analyst</code></li>
+          <li><strong>Webhook validation:</strong> Twilio webhook signatures verified using HMAC-SHA1 on every inbound call event</li>
+          <li><strong>Internal services:</strong> mTLS enforced between all Kubernetes pods via Istio service mesh</li>
+          <li><strong>API keys:</strong> Third-party API keys (Soniox, ElevenLabs, OpenAI) stored in AWS Secrets Manager; rotated every 90 days</li>
+        </ul>
+
+        <h3>Encryption</h3>
+        <ul>
+          <li><strong>In transit:</strong> TLS 1.3 on all external endpoints; gRPC uses TLS by default; WebSocket over WSS (TLS)</li>
+          <li><strong>At rest:</strong> PostgreSQL, MongoDB (DocumentDB), Redis, S3 — all encrypted with AWS KMS (AES-256); per-tenant KMS key option for enterprise clients</li>
+          <li><strong>Audio recordings:</strong> If call recording enabled (BFSI compliance), audio stored in S3 with SSE-KMS; access gated by IAM role with CloudTrail audit</li>
+        </ul>
+
+        <h3>Compliance Controls</h3>
+        <ul>
+          <li><strong>India DPDPA 2023:</strong> Consent management for cross-call memory (<code>consent_cross_call</code> boolean per caller); data deletion API (<code>DELETE /admin/callers/{id}</code>)</li>
+          <li><strong>TRAI DND:</strong> Exotel handles DND compliance for India outbound calls; inbound calls exempt</li>
+          <li><strong>SOC 2 Type II:</strong> Logging of all admin actions in immutable CloudTrail; vulnerability scanning via AWS Inspector; penetration test annually</li>
+          <li><strong>RBI IT Framework:</strong> For BFSI tenants — data localization (Mumbai region), audit logs retained 5 years, encryption key management documented</li>
+        </ul>
+
+        <h3>Guardrails (LLM Output Safety)</h3>
+        <ul>
+          <li><strong>Domain classifier:</strong> Fine-tuned binary classifier runs on every LLM output; blocks off-domain responses (e.g., medical/legal advice from a BFSI agent)</li>
+          <li><strong>Hallucination detection:</strong> Response cross-checked against provided RAG chunks; if factual claim cannot be grounded in KB — suppressed</li>
+          <li><strong>Banned topic list:</strong> Per-tenant configurable blocklist (e.g., competitor names, regulatory topics requiring human handling)</li>
+          <li><strong>Fallback policy:</strong> On guardrail trigger → "Let me connect you to a specialist" → human escalation pathway initiated</li>
+        </ul>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 10 — ANALYTICS & OBSERVABILITY
+    ════════════════════════════════════════════════════════════ -->
+    <section class="section" id="s10">
+      <div class="section-header">
+        <div class="section-num">10</div>
+        <h2>Analytics &amp; Observability</h2>
+      </div>
+      <div class="section-body">
+
+        <h3>Real-Time System Metrics (Prometheus + Grafana)</h3>
+        <table class="matrix-table">
+          <thead><tr><th>Metric Name</th><th>Type</th><th>Labels</th><th>Alert Threshold</th></tr></thead>
+          <tbody>
+            <tr><td><code>asr_latency_ms</code></td><td>Histogram</td><td>tenant, language, provider</td><td>P95 &gt; 500ms</td></tr>
+            <tr><td><code>llm_first_token_ms</code></td><td>Histogram</td><td>tenant, model</td><td>P95 &gt; 300ms</td></tr>
+            <tr><td><code>tts_first_chunk_ms</code></td><td>Histogram</td><td>tenant, provider, language</td><td>P95 &gt; 200ms</td></tr>
+            <tr><td><code>e2e_turn_latency_ms</code></td><td>Histogram</td><td>tenant</td><td>P95 &gt; 700ms</td></tr>
+            <tr><td><code>concurrent_calls</code></td><td>Gauge</td><td>tenant</td><td>&gt; 80% capacity</td></tr>
+            <tr><td><code>asr_wer</code></td><td>Gauge</td><td>tenant, language</td><td>&gt; 15% WER</td></tr>
+            <tr><td><code>guardrail_trigger_rate</code></td><td>Counter</td><td>tenant, trigger_type</td><td>&gt; 5% of turns</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Business Metrics (Analytics Service, computed per-tenant)</h3>
+        <div class="code-block">
+<span class="comment"># Containment rate — primary KPI for tenant ROI</span>
+containment_rate = resolved_by_ai / total_calls
+
+<span class="comment"># Escalation rate</span>
+escalation_rate = escalated_calls / total_calls
+
+<span class="comment"># Intent accuracy (from labeled sample — 10% random sampling)</span>
+intent_accuracy = correct_intents / total_sampled_intents
+
+<span class="comment"># Average handle time</span>
+avg_handle_time = AVG(call_duration_seconds)
+
+<span class="comment"># CSAT average (only where score collected)</span>
+csat_avg = AVG(csat_score) WHERE csat_score IS NOT NULL
+        </div>
+
+        <h3>Distributed Tracing (OpenTelemetry + Jaeger)</h3>
+        <ul>
+          <li>Every call turn has a <code>trace_id</code> propagated through all services via OpenTelemetry W3C Trace Context headers</li>
+          <li>Span hierarchy: <code>telephony_gateway → audio_processor → asr_service → nlu_service → dialogue_manager → llm_service → tts_service</code></li>
+          <li>Each span records: start_time, duration_ms, service_name, tenant_id, session_id, turn_id, error (if any)</li>
+          <li>Traces exported to <strong>Jaeger</strong> (self-hosted on EKS) for waterfall visualization and latency bottleneck identification</li>
+          <li>Slow trace alerting: P99 traces &gt; 1000ms automatically flagged in Grafana and paged via PagerDuty</li>
+        </ul>
+
+        <h3>Log Management</h3>
+        <ul>
+          <li>Structured JSON logs from all services → AWS CloudWatch Log Groups (one group per service per tenant)</li>
+          <li>Log levels: ERROR / WARN / INFO / DEBUG; production runs at INFO; debug enabled per-session via feature flag in Redis</li>
+          <li>Log retention: 30 days hot (CloudWatch), 1 year cold (S3 + Glacier) for compliance</li>
+        </ul>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 11 — API DESIGN
+    ════════════════════════════════════════════════════════════ -->
+    <section class="section" id="s11">
+      <div class="section-header">
+        <div class="section-num">11</div>
+        <h2>API Design</h2>
+      </div>
+      <div class="section-body">
+
+        <h3>Admin REST API (FastAPI, versioned at <code>/api/v1</code>)</h3>
+        <table class="matrix-table">
+          <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th><th>Auth</th></tr></thead>
+          <tbody>
+            <tr><td>POST</td><td><code>/api/v1/tenants</code></td><td>Create new tenant — provisions DB, Pinecone namespace, S3 prefix</td><td>super_admin</td></tr>
+            <tr><td>GET</td><td><code>/api/v1/tenants/{id}/config</code></td><td>Retrieve full tenant configuration</td><td>tenant_admin</td></tr>
+            <tr><td>PATCH</td><td><code>/api/v1/tenants/{id}/config</code></td><td>Update ASR/LLM/TTS/telephony config</td><td>tenant_admin</td></tr>
+            <tr><td>POST</td><td><code>/api/v1/tenants/{id}/kb/documents</code></td><td>Upload KB document — triggers async ingestion pipeline</td><td>tenant_admin</td></tr>
+            <tr><td>DELETE</td><td><code>/api/v1/tenants/{id}/kb/documents/{doc_id}</code></td><td>Remove KB document and its Pinecone vectors</td><td>tenant_admin</td></tr>
+            <tr><td>GET</td><td><code>/api/v1/tenants/{id}/analytics</code></td><td>Business KPIs — containment rate, CSAT, AHT, intent breakdown</td><td>analyst</td></tr>
+            <tr><td>GET</td><td><code>/api/v1/tenants/{id}/calls</code></td><td>Paginated call history with filters (date, intent, language)</td><td>analyst</td></tr>
+            <tr><td>GET</td><td><code>/api/v1/tenants/{id}/calls/{session_id}/transcript</code></td><td>Full call transcript with turn-level intent and entity data</td><td>analyst</td></tr>
+            <tr><td>DELETE</td><td><code>/api/v1/callers/{caller_id}</code></td><td>DPDPA right-to-erasure — delete all caller data across stores</td><td>tenant_admin</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Telephony Webhook Endpoints</h3>
+        <div class="code-block">
+<span class="comment"># Twilio inbound call webhook</span>
+POST /webhooks/twilio/inbound
+  Body: {CallSid, From, To, Direction, CallStatus}
+  Response: TwiML instructing Twilio to open Media Stream WebSocket
+
+<span class="comment"># WebSocket endpoint — bidirectional audio stream</span>
+WS /ws/audio/{session_id}
+  Client → Server: { event: "media", payload: { chunk: "&lt;base64 mulaw&gt;" } }
+  Server → Client: { event: "media", payload: { chunk: "&lt;base64 mulaw&gt;" } }
+  Server → Client: { event: "clear" }  <span class="comment"># flush audio on barge-in</span>
+
+<span class="comment"># Post-call webhook dispatched to tenant</span>
+POST {tenant.webhook_url}
+  Body: {
+    session_id, duration_s, outcome,
+    intents_detected, escalated, csat_score,
+    summary: "Caller checked balance and updated contact info."
+  }
+        </div>
+
+        <h3>Internal gRPC Service Contracts</h3>
+        <div class="code-block">
+<span class="comment">// asr.proto — streaming ASR</span>
+<span class="kw">service</span> AsrService {
+  rpc StreamRecognize (stream AudioChunk) returns (stream AsrResult);
+}
+<span class="kw">message</span> AsrResult {
+  string transcript = 1;
+  bool   is_final   = 2;
+  string language   = 3;
+  bool   code_switch= 4;
+  float  confidence = 5;
+}
+
+<span class="comment">// tts.proto — streaming TTS</span>
+<span class="kw">service</span> TtsService {
+  rpc Synthesize (stream TextChunk) returns (stream AudioChunk);
+}
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 12 — MODEL TRAINING & FINE-TUNING
+    ════════════════════════════════════════════════════════════ -->
+    <section class="section" id="s12">
+      <div class="section-header">
+        <div class="section-num">12</div>
+        <h2>Model Training &amp; Fine-Tuning</h2>
+      </div>
+      <div class="section-body">
+
+        <h3>Domain Adaptation — BFSI</h3>
+        <ul>
+          <li><strong>Custom ASR vocabulary:</strong> NACH, SWIFT, CIBIL, Aadhaar, FD (Fixed Deposit), RD (Recurring Deposit), EMI, NPA, SARFAESI, NACH mandate, NEFT, RTGS, UPI, IMPS, LTV, CAGR</li>
+          <li><strong>Pronunciation lexicon:</strong> ₹ → "rupees"; HDFC → "H-D-F-C"; ICICI → "I-C-I-C-I"; SBI → "S-B-I"; ATM → "A-T-M"; OTP → "O-T-P"</li>
+          <li><strong>LLM instruction fine-tuning:</strong> 5,000 curated BFSI Q&amp;A pairs (loan queries, account services, credit card, FD/RD, complaint resolution)</li>
+          <li><strong>Evaluation:</strong> BFSI domain Q&amp;A accuracy on 500 held-out questions; target ≥ 92% correct with no hallucinated figures</li>
+        </ul>
+
+        <h3>Domain Adaptation — Automotive</h3>
+        <ul>
+          <li><strong>Custom ASR vocabulary:</strong> OBD2, BS6, TPMS, VIN, chassis number, RSA (Roadside Assistance), CNG, EV charging, AMT transmission, ARAI, VAHAN</li>
+          <li><strong>LLM fine-tuning:</strong> 3,000 Automotive service + sales Q&amp;A pairs covering Maruti, Tata, Hyundai, Mahindra, Honda, Kia model-specific terminology</li>
+          <li><strong>Use case coverage:</strong> Service appointment booking, service cost estimation, warranty queries, roadside assistance dispatch, EV charging station lookup</li>
+        </ul>
+
+        <h3>Fine-Tuning Infrastructure &amp; Pipeline</h3>
+        <table class="matrix-table">
+          <thead><tr><th>Component</th><th>Technology</th><th>Detail</th></tr></thead>
+          <tbody>
+            <tr><td>Training Framework</td><td>HuggingFace Transformers + PEFT</td><td>LoRA rank=16, alpha=32, target: q_proj / v_proj</td></tr>
+            <tr><td>Distributed Training</td><td>DeepSpeed ZeRO-3</td><td>Enables 70B model training across 4x A100 with optimizer state sharding</td></tr>
+            <tr><td>Optimized Inference</td><td>vLLM</td><td>3–4x throughput improvement vs naive HuggingFace inference; PagedAttention for efficient KV-cache</td></tr>
+            <tr><td>Experiment Tracking</td><td>MLflow</td><td>All runs, params, metrics, and model artifacts logged; Model Registry for versioning</td></tr>
+            <tr><td>GPU Hardware</td><td>AWS p4d.24xlarge (4x A100 80GB)</td><td>$32/hr; ~4 hour run = ~$128 per fine-tune cycle</td></tr>
+            <tr><td>Annotation Tool</td><td>Label Studio</td><td>10% human review of auto-curated dataset; multi-annotator agreement scoring</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Training Hyperparameters</h3>
+        <div class="code-block">
+training_args = TrainingArguments(
+    num_train_epochs=<span class="val">3</span>,
+    learning_rate=<span class="val">2e-4</span>,
+    per_device_train_batch_size=<span class="val">16</span>,
+    gradient_accumulation_steps=<span class="val">4</span>,
+    warmup_ratio=<span class="val">0.05</span>,
+    lr_scheduler_type=<span class="str">"cosine"</span>,
+    fp16=<span class="val">True</span>,
+    save_strategy=<span class="str">"epoch"</span>,
+    evaluation_strategy=<span class="str">"epoch"</span>,
+    load_best_model_at_end=<span class="val">True</span>,
+    report_to=<span class="str">"mlflow"</span>
+)
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 13 — INFRASTRUCTURE & DEPLOYMENT
+    ════════════════════════════════════════════════════════════ -->
+    <section class="section" id="s13">
+      <div class="section-header">
+        <div class="section-num">13</div>
+        <h2>Infrastructure &amp; Deployment</h2>
+      </div>
+      <div class="section-body">
+
+        <h3>Kubernetes Services (AWS EKS, ap-south-1)</h3>
+        <table class="matrix-table">
+          <thead><tr><th>Service</th><th>Base Replicas</th><th>HPA Scale Range</th><th>Scale Trigger</th><th>Node Type</th></tr></thead>
+          <tbody>
+            <tr><td>telephony-gateway</td><td>3</td><td>3 → 50</td><td>Concurrent WebSocket connections</td><td>m5.xlarge</td></tr>
+            <tr><td>audio-processor</td><td>2</td><td>2 → 30</td><td>CPU utilization &gt; 70%</td><td>m5.xlarge</td></tr>
+            <tr><td>asr-service</td><td>2</td><td>2 → 20</td><td>gRPC stream count</td><td>m5.xlarge</td></tr>
+            <tr><td>nlu-service</td><td>2</td><td>2 → 15</td><td>RPS</td><td>m5.large</td></tr>
+            <tr><td>dialogue-manager</td><td>3</td><td>3 → 30</td><td>RPS (stateless — session in Redis)</td><td>m5.xlarge</td></tr>
+            <tr><td>llm-service</td><td>2</td><td>2 → 20</td><td>Pending LLM API requests</td><td>m5.xlarge</td></tr>
+            <tr><td>tts-service</td><td>2</td><td>2 → 20</td><td>gRPC stream count</td><td>m5.large</td></tr>
+            <tr><td>analytics-service</td><td>2</td><td>2 → 8</td><td>Kafka consumer lag</td><td>m5.large</td></tr>
+            <tr><td>admin-api</td><td>2</td><td>2 → 6</td><td>HTTP RPS</td><td>m5.large</td></tr>
+          </tbody>
+        </table>
+
+        <h3>AWS Managed Services</h3>
+        <div class="card-grid">
+          <div class="info-card"><h4>Compute</h4><p>EKS — m5.xlarge nodes</p><div class="sub">4 vCPU, 16GB RAM; managed node groups</div></div>
+          <div class="info-card"><h4>Database</h4><p>RDS PostgreSQL 16</p><div class="sub">db.r6g.large, Multi-AZ, automated backups</div></div>
+          <div class="info-card"><h4>Cache</h4><p>ElastiCache Redis 7</p><div class="sub">cache.r6g.large, cluster mode enabled</div></div>
+          <div class="info-card"><h4>Documents</h4><p>DocumentDB (MongoDB-compat)</p><div class="sub">db.r6g.large, 3-node replica set</div></div>
+          <div class="info-card"><h4>Messaging</h4><p>MSK (Managed Kafka)</p><div class="sub">kafka.m5.large, 3 brokers, replication factor 3</div></div>
+          <div class="info-card"><h4>Storage</h4><p>S3 Standard</p><div class="sub">Transcripts, model artifacts, training data</div></div>
+          <div class="info-card"><h4>GPU (Self-Hosted Models)</h4><p>g5.xlarge (A10G)</p><div class="sub">AI4Bharat IndicWhisper + Indic-TTS for on-prem tenants</div></div>
+          <div class="info-card"><h4>CDN</h4><p>CloudFront</p><div class="sub">Audio delivery latency optimization for distributed callers</div></div>
+        </div>
+
+        <h3>CI/CD Pipeline</h3>
+        <ul>
+          <li><strong>Source control:</strong> GitHub (monorepo, one directory per service)</li>
+          <li><strong>CI:</strong> GitHub Actions — on PR: lint (ruff, mypy), unit tests (pytest), Docker build, security scan (Trivy)</li>
+          <li><strong>CD:</strong> ArgoCD (GitOps) — Helm chart updates in <code>infra/</code> repo trigger rolling deployments to EKS</li>
+          <li><strong>Container registry:</strong> Amazon ECR; images tagged with git SHA + semantic version</li>
+          <li><strong>Secrets:</strong> AWS Secrets Manager → Kubernetes External Secrets Operator → mounted as env vars; never in git</li>
+          <li><strong>Feature flags:</strong> Redis-backed per-tenant flags for gradual rollout of new ASR/LLM/TTS providers</li>
+        </ul>
+
+        <h3>Disaster Recovery</h3>
+        <ul>
+          <li>RTO: &lt; 30 minutes; RPO: &lt; 5 minutes</li>
+          <li>PostgreSQL: automated daily snapshots + continuous WAL archival to S3; cross-region replication to ap-southeast-1 for DR</li>
+          <li>Redis: AOF persistence enabled; ElastiCache automated backups daily</li>
+          <li>EKS: Infrastructure as Code via Terraform; cluster can be recreated in &lt; 20 minutes from scratch</li>
+        </ul>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 14 — COST ESTIMATES
+    ════════════════════════════════════════════════════════════ -->
+    <section class="section" id="s14">
+      <div class="section-header">
+        <div class="section-num">14</div>
+        <h2>Cost Estimates</h2>
+      </div>
+      <div class="section-body">
+
+        <h3>MVP Scale — 100K Calls/Month (~5 min avg = 500K minutes)</h3>
+        <table class="cost-table">
+          <thead><tr><th>Component</th><th>Provider</th><th>Calculation</th><th>Monthly Cost</th></tr></thead>
+          <tbody>
+            <tr><td>ASR</td><td>Soniox</td><td>500K min × $0.006/min</td><td>$3,000</td></tr>
+            <tr><td>LLM</td><td>Claude 3.5 Sonnet</td><td>~$0.05/call × 100K calls</td><td>$5,000</td></tr>
+            <tr><td>TTS</td><td>ElevenLabs Flash v2.5</td><td>~$0.01/call × 100K calls</td><td>$1,000</td></tr>
+            <tr><td>Telephony</td><td>Twilio</td><td>$0.013/min × 500K min</td><td>$6,500</td></tr>
+            <tr><td>Vector DB</td><td>Pinecone Serverless</td><td>~10M vectors, 100K queries</td><td>$70</td></tr>
+            <tr><td>AWS Infrastructure</td><td>EKS + RDS + Redis + MSK + S3</td><td>Estimated cluster cost</td><td>$2,500</td></tr>
+            <tr><td>Monitoring</td><td>Datadog / Grafana Cloud</td><td>Infrastructure + APM</td><td>$400</td></tr>
+            <tr class="total-row"><td colspan="3"><strong>TOTAL (MVP — 100K calls/month)</strong></td><td><strong>~$18,470 / month</strong></td></tr>
+            <tr class="total-row"><td colspan="3"><strong>Per-call cost</strong></td><td><strong>~$0.18–0.20 / call</strong></td></tr>
+          </tbody>
+        </table>
+
+        <h3>Scale Economics — 1M Calls/Month</h3>
+        <table class="cost-table">
+          <thead><tr><th>Optimization Lever</th><th>Action</th><th>Savings Estimate</th></tr></thead>
+          <tbody>
+            <tr><td>ASR volume discount</td><td>Negotiate Soniox enterprise contract at &gt;5M min/month</td><td>~30% reduction → ~$0.004/min</td></tr>
+            <tr><td>Self-hosted ASR</td><td>AI4Bharat IndicWhisper on g5.12xlarge (4x A10G)</td><td>~$0.001/min infra cost vs $0.006 API</td></tr>
+            <tr><td>Self-hosted TTS</td><td>AI4Bharat Indic-TTS on GPU for Indic languages</td><td>Eliminates ~$10K/month ElevenLabs at scale</td></tr>
+            <tr><td>LLM routing</td><td>Simple intents (FAQ, greeting) → Llama 3.1 70B; complex → Claude</td><td>~50% LLM cost reduction for eligible calls</td></tr>
+            <tr><td>Telephony</td><td>Migrate India domestic to Exotel or Plivo</td><td>~$0.008/min vs $0.013/min Twilio (38% saving)</td></tr>
+            <tr class="total-row"><td colspan="2"><strong>Target per-call cost at 1M calls/month</strong></td><td><strong>~$0.07–0.09 / call</strong></td></tr>
+          </tbody>
+        </table>
+
+        <div class="note-box">
+          <strong>Gross Margin Modeling:</strong> At a target price of $0.25–0.35/call to enterprise clients, gross margin at MVP scale is approximately 30–45%. At 1M calls/month with cost optimization, gross margin improves to 65–72%. The largest variable cost driver is telephony (Twilio), which is why migrating India-domestic traffic to Exotel/Plivo is a high-priority Phase 2 action.
+        </div>
+
+        <h3>One-Time &amp; Setup Costs</h3>
+        <table class="cost-table">
+          <thead><tr><th>Item</th><th>Estimated Cost</th></tr></thead>
+          <tbody>
+            <tr><td>Initial BFSI domain fine-tuning run (p4d.24xlarge, ~4 hours)</td><td>~$128</td></tr>
+            <tr><td>Automotive domain fine-tuning run</td><td>~$128</td></tr>
+            <tr><td>Label Studio annotation (5K BFSI + 3K Auto samples, outsourced)</td><td>~$2,000–4,000</td></tr>
+            <tr><td>Security penetration test (year 1)</td><td>~$8,000–15,000</td></tr>
+            <tr><td>SOC 2 Type II audit preparation (year 1)</td><td>~$20,000–40,000</td></tr>
+          </tbody>
+        </table>
+
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ══════════════════════════════════════════ FOOTER ══════════════════════════════════════════ -->
+<footer class="page-footer">
+  <strong>Vaani AI — Technical Design Document v1.0</strong> &nbsp;|&nbsp; March 2026 &nbsp;|&nbsp; Internal Engineering Use Only &nbsp;|&nbsp; Classification: Confidential
+</footer>
+
+
+<!-- ++ Floating Navigation Bar ++ -->
+<style>
+  .vb-nav {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    gap: 8px;
+    z-index: 9999;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+  .vb-nav a, .vb-nav button {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: white;
+    color: #0D3B47;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 24px;
+    padding: 9px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 2px 14px rgba(0,0,0,0.13);
+    transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+    white-space: nowrap;
+  }
+  .vb-nav a:hover, .vb-nav button:hover {
+    background: #0D3B47;
+    color: white;
+    border-color: #0D3B47;
+    box-shadow: 0 4px 18px rgba(26,58,92,0.25);
+  }
+</style>
+<nav class="vb-nav" aria-label="Page navigation">
+  <a href="index.html" title="Go to Home">&#127968; Home</a>
+  <button onclick="history.back()" title="Go Back">&#8592; Back</button>
+  <button onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to Top">&#8593; Top</button>
+</nav>
+</body>
+</html>

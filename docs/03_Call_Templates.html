@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>03 - Call Templates | RTCA Platform</title>
+<style>
+  :root {
+    --primary: #0D3B47;
+    --secondary: #0A8EA0;
+    --accent: #0ea5e9;
+    --agent-bg: #DCF0F3;
+    --agent-border: #0A8EA0;
+    --user-bg: #dcfce7;
+    --user-border: #22c55e;
+    --system-bg: #f3f4f6;
+    --system-border: #9ca3af;
+    --warn-bg: #fef3c7;
+    --warn-border: #f59e0b;
+    --error-bg: #fee2e2;
+    --error-border: #ef4444;
+    --success-bg: #d1fae5;
+    --success-border: #10b981;
+    --hindi-bg: #fdf4ff;
+    --hindi-border: #a855f7;
+    --compliance-bg: #fff7ed;
+    --compliance-border: #ea580c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #FAF8F4;
+    color: #1e293b;
+    line-height: 1.6;
+  }
+  .page-header {
+    background: linear-gradient(135deg, #0D3B47 0%, #0A8EA0 100%);
+    color: white;
+    padding: 2.5rem 3rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .page-header .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+    padding: 0.25rem 0.85rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  .page-header h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .page-header p { opacity: 0.85; font-size: 1.05rem; max-width: 700px; }
+  .toc {
+    background: white;
+    border-left: 4px solid var(--secondary);
+    margin: 2rem 3rem;
+    padding: 1.5rem 2rem;
+    border-radius: 0 8px 8px 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .toc h3 { color: var(--primary); margin-bottom: 1rem; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .toc ol { padding-left: 1.5rem; }
+  .toc li { margin: 0.4rem 0; }
+  .toc a { color: var(--secondary); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 3rem 4rem; }
+  .section {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    margin-bottom: 2.5rem;
+    overflow: hidden;
+  }
+  .section-header {
+    background: linear-gradient(135deg, var(--primary), #0A5A6B);
+    color: white;
+    padding: 1.2rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .section-header .num {
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.9rem; flex-shrink: 0;
+  }
+  .section-header h2 { font-size: 1.2rem; font-weight: 600; }
+  .section-header .subtitle { opacity: 0.8; font-size: 0.85rem; margin-top: 0.1rem; }
+  .section-body { padding: 2rem; }
+  .phase {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+  }
+  .phase-header {
+    background: linear-gradient(to right, #eff6ff, #f8fafc);
+    border-bottom: 1px solid #e2e8f0;
+    padding: 0.9rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+  }
+  .phase-header:hover { background: linear-gradient(to right, #DCF0F3, #eff6ff); }
+  .phase-badge {
+    background: var(--secondary);
+    color: white;
+    border-radius: 6px;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .phase-header h3 { font-size: 1rem; color: var(--primary); font-weight: 600; }
+  .phase-content { padding: 1.5rem; }
+  .dialogue-box {
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 0.75rem 0;
+    border-left: 4px solid;
+    font-size: 0.92rem;
+  }
+  .agent-en {
+    background: var(--agent-bg);
+    border-color: var(--agent-border);
+  }
+  .agent-en::before {
+    content: 'AGENT (English)';
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    color: #1d4ed8;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+  }
+  .agent-hi {
+    background: var(--hindi-bg);
+    border-color: var(--hindi-border);
+  }
+  .agent-hi::before {
+    content: 'AGENT (Hindi / Hinglish)';
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    color: #7c3aed;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+  }
+  .system-action {
+    background: var(--system-bg);
+    border-color: var(--system-border);
+    font-family: 'Consolas', monospace;
+    font-size: 0.84rem;
+  }
+  .system-action::before {
+    content: 'SYSTEM ACTION';
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    color: #4b5563;
+    margin-bottom: 0.4rem;
+    font-family: 'Segoe UI', sans-serif;
+    text-transform: uppercase;
+  }
+  .branch {
+    background: var(--warn-bg);
+    border-color: var(--warn-border);
+  }
+  .branch::before {
+    content: 'BRANCH CONDITION';
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    color: #92400e;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+  }
+  .error-box {
+    background: var(--error-bg);
+    border-color: var(--error-border);
+  }
+  .error-box::before {
+    content: 'ERROR / FALLBACK';
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    color: #991b1b;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+  }
+  .distraction-box {
+    background: #f0fdf4;
+    border-left: 4px solid #16a34a;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 0.75rem 0;
+    font-size: 0.92rem;
+  }
+  .distraction-box::before {
+    content: 'DISTRACTION HANDLING';
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    color: #15803d;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+  }
+  .compliance-note {
+    background: var(--compliance-bg);
+    border: 1px solid var(--compliance-border);
+    border-left-width: 4px;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 0.75rem 0;
+    font-size: 0.88rem;
+  }
+  .compliance-note::before {
+    content: 'COMPLIANCE / REGULATORY NOTE';
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    color: #c2410c;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+  }
+  .param-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    margin-top: 1rem;
+  }
+  .param-table th {
+    background: var(--primary);
+    color: white;
+    padding: 0.65rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .param-table td {
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: top;
+  }
+  .param-table tr:nth-child(even) td { background: #FAF8F4; }
+  .param-table tr:hover td { background: #eff6ff; }
+  .tag {
+    display: inline-block;
+    border-radius: 4px;
+    padding: 0.15rem 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .tag-required { background: #fee2e2; color: #991b1b; }
+  .tag-optional { background: #f0fdf4; color: #166534; }
+  .tag-bfsi { background: #DCF0F3; color: #1e40af; }
+  .tag-auto { background: #fef3c7; color: #92400e; }
+  .tag-universal { background: #f3f4f6; color: #374151; }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 1rem 0;
+  }
+  .info-card {
+    background: #FAF8F4;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1.25rem;
+  }
+  .info-card h4 {
+    color: var(--primary);
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .info-card ul { padding-left: 1.25rem; font-size: 0.88rem; }
+  .info-card li { margin: 0.3rem 0; }
+  .flow-arrow {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 1.5rem;
+    margin: 0.25rem 0;
+    line-height: 1;
+  }
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 0; bottom: 0;
+    width: 2px;
+    background: #e2e8f0;
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -1.75rem;
+    top: 0.4rem;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--secondary);
+    border: 2px solid white;
+    box-shadow: 0 0 0 2px var(--secondary);
+  }
+  .timeline-item h4 { color: var(--primary); font-size: 0.95rem; margin-bottom: 0.3rem; }
+  .timeline-item p { font-size: 0.88rem; color: #64748b; }
+  .callout {
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+  }
+  .callout-info { background: #eff6ff; border-left: 4px solid #0A8EA0; }
+  .callout-warn { background: #fffbeb; border-left: 4px solid #f59e0b; }
+  .callout-danger { background: #fff1f2; border-left: 4px solid #f43f5e; }
+  .callout-success { background: #f0fdf4; border-left: 4px solid #22c55e; }
+  code {
+    background: #f1f5f9;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-family: 'Consolas', monospace;
+    font-size: 0.85em;
+    color: #0f172a;
+  }
+  .trigger-list { list-style: none; padding: 0; }
+  .trigger-list li {
+    padding: 0.5rem 0.75rem;
+    margin: 0.4rem 0;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    border-left: 3px solid;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .trigger-list li .icon { flex-shrink: 0; }
+  .trigger-escalate { background: #fee2e2; border-color: #ef4444; }
+  .trigger-warn { background: #fef3c7; border-color: #f59e0b; }
+  .trigger-ok { background: #dcfce7; border-color: #22c55e; }
+  h4.sub { color: var(--primary); font-size: 0.95rem; margin: 1.25rem 0 0.6rem; }
+  .chip {
+    display: inline-block;
+    background: #e0f2fe;
+    color: #0369a1;
+    border-radius: 20px;
+    padding: 0.2rem 0.7rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin: 0.15rem;
+  }
+  .section-divider {
+    border: none;
+    border-top: 2px dashed #e2e8f0;
+    margin: 2rem 0;
+  }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 768px) {
+    .grid-2, .two-col { grid-template-columns: 1fr; }
+    .container { padding: 0 1rem 3rem; }
+    .page-header { padding: 1.5rem; }
+    .toc { margin: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="badge">RTCA Platform — Document 03</div>
+  <h1>Call Templates & Flow Specifications</h1>
+  <p>Universal and industry-specific call flow templates for real-time conversational AI agents. Covers greeting to closing, authentication, intent routing, distraction handling, and compliance requirements for BFSI and Automotive sectors.</p>
+</div>
+
+<div class="toc">
+  <h3>Table of Contents</h3>
+  <ol>
+    <li><a href="#universal">Universal Call Flow Template (All Industries)</a></li>
+    <li><a href="#bfsi">BFSI-Specific Call Template (Banking &amp; Finance)</a></li>
+    <li><a href="#automotive">Automotive-Specific Call Template</a></li>
+    <li><a href="#distraction">Distraction Handling Guide</a></li>
+    <li><a href="#parameters">Important Parameters to Capture (Per Industry)</a></li>
+  </ol>
+</div>
+
+<div class="container">
+
+<!-- ===== SECTION 1: UNIVERSAL CALL FLOW ===== -->
+<div class="section" id="universal">
+  <div class="section-header">
+    <div class="num">1</div>
+    <div>
+      <h2>Universal Call Flow Template</h2>
+      <div class="subtitle">Applicable across all industries — BFSI, Automotive, Telecom, Healthcare, etc.</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout callout-info">
+      This template defines the six canonical phases every AI agent call must traverse. Industry-specific templates in Sections 2 and 3 extend this base with sector-specific logic, compliance requirements, and intent categories.
+    </div>
+
+    <!-- PHASE 1 -->
+    <div class="phase">
+      <div class="phase-header">
+        <div class="phase-badge">Phase 1</div>
+        <h3>Greeting &amp; Identity Establishment</h3>
+      </div>
+      <div class="phase-content">
+        <div class="grid-2">
+          <div>
+            <div class="dialogue-box agent-en">
+              "Thank you for calling [Company Name]. This is [Agent Name], your AI-powered assistant. How may I help you today?"
+            </div>
+            <div class="dialogue-box agent-hi">
+              "[Company Name] mein aapka swagat hai. Main [Agent Name] hoon, aapka AI assistant. Aaj main aapki kaise madad kar sakta/sakti hoon?"
+            </div>
+          </div>
+          <div>
+            <div class="dialogue-box system-action">
+              ACTIONS:<br>
+              → Call session initialized; call_id generated<br>
+              → ANI/DNIS captured from telephony layer<br>
+              → Language detection started (voice biometrics)<br>
+              → CRM lookup initiated on phone number<br>
+              → Timestamp: call_start recorded
+            </div>
+          </div>
+        </div>
+
+        <h4 class="sub">Branch Conditions</h4>
+        <div class="dialogue-box branch">
+          <strong>IF</strong> caller is identified in CRM via ANI → address by name: "Hello Mr./Ms. [Last Name], welcome back!"<br>
+          <strong>IF</strong> caller is new (not in CRM) → proceed with standard greeting<br>
+          <strong>IF</strong> no audio detected for 5 seconds → play prompt: "Hello? Are you there? Please go ahead and speak."<br>
+          <strong>IF</strong> caller speaks Hindi immediately → switch to Hindi TTS model<br>
+          <strong>IF</strong> caller speaks regional language (Tamil, Telugu, etc.) → route to regional language queue or offer English/Hindi fallback
+        </div>
+
+        <h4 class="sub">Timeout Handling</h4>
+        <div class="dialogue-box error-box">
+          <strong>T+5s silence:</strong> "Hello, I couldn't hear you. Are you there?"<br>
+          <strong>T+10s silence:</strong> "I'm having trouble hearing you. Could you please check your microphone or press 1 to continue?"<br>
+          <strong>T+20s silence:</strong> "As I'm unable to connect with you, I'll end this call now. Please call back when you're ready. Goodbye!"<br>
+          [SYSTEM: call_result = "no_audio_timeout"; session terminated]
+        </div>
+
+        <div class="compliance-note">
+          RBI/TRAI Mandate: AI agent must clearly disclose it is an automated system. Phrase "AI-powered assistant" or "automated voice assistant" must appear in the greeting. Caller must have option to speak to a human agent at any time.
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 2 -->
+    <div class="phase">
+      <div class="phase-header">
+        <div class="phase-badge">Phase 2</div>
+        <h3>Authentication &amp; Verification</h3>
+      </div>
+      <div class="phase-content">
+        <div class="grid-2">
+          <div>
+            <div class="dialogue-box agent-en">
+              "To ensure your account security, I'll need to verify a few details. Could you please share your [Account Number / Registered Mobile Number / Date of Birth]?"
+            </div>
+            <div class="dialogue-box agent-hi">
+              "Aapki account ki suraksha ke liye, mujhe kuch details verify karni hogi. Kya aap apna [Account Number / Registered Mobile Number / Date of Birth] bata sakte hain?"
+            </div>
+          </div>
+          <div>
+            <div class="dialogue-box system-action">
+              ACTIONS:<br>
+              → Auth challenge generated based on account type<br>
+              → OTP dispatched to registered mobile (if applicable)<br>
+              → Voice tone analysis (stress detection) initiated<br>
+              → Auth attempt counter initialized (max: 3)<br>
+              → Sensitive data masking activated (PII logging disabled)
+            </div>
+          </div>
+        </div>
+
+        <h4 class="sub">Authentication Methods (Priority Order)</h4>
+        <div class="info-card">
+          <h4>Tier 1 — Low Risk Queries (Balance check, branch info)</h4>
+          <ul>
+            <li>ANI match (phone number on record) + Last 4 digits of account</li>
+            <li>OR: Registered mobile + Date of Birth</li>
+          </ul>
+        </div>
+        <div class="info-card" style="margin-top:0.75rem;">
+          <h4>Tier 2 — Medium Risk Queries (Statement, mini-statement)</h4>
+          <ul>
+            <li>Full Account Number / Customer ID</li>
+            <li>+ OTP sent to registered mobile</li>
+          </ul>
+        </div>
+        <div class="info-card" style="margin-top:0.75rem;">
+          <h4>Tier 3 — High Risk Actions (Fund transfer, card block, loan disbursement)</h4>
+          <ul>
+            <li>Full Account Number + OTP</li>
+            <li>+ Additional: Mother's maiden name / Secret question</li>
+            <li>Mandatory human agent review recommended</li>
+          </ul>
+        </div>
+
+        <h4 class="sub">Branch Conditions</h4>
+        <div class="dialogue-box branch">
+          <strong>IF</strong> OTP entered correctly on 1st attempt → proceed to Phase 3<br>
+          <strong>IF</strong> OTP incorrect (attempt 1) → "That doesn't seem right. You have 2 more attempts. Please try again."<br>
+          <strong>IF</strong> OTP incorrect (attempt 2) → "One more attempt remaining."<br>
+          <strong>IF</strong> OTP incorrect (attempt 3) → Block session; escalate to fraud queue; inform caller<br>
+          <strong>IF</strong> caller says "I didn't receive OTP" → offer resend (max 2 resends); if still fails → escalate<br>
+          <strong>IF</strong> caller refuses to authenticate → offer limited unauthenticated services (branch hours, product info only)
+        </div>
+
+        <div class="dialogue-box error-box">
+          <strong>Auth Failure Protocol:</strong><br>
+          "I'm sorry, I wasn't able to verify your identity after multiple attempts. For your security, this session has been flagged. Please visit your nearest branch with a valid ID proof, or call back from your registered mobile number. Goodbye."<br>
+          [SYSTEM: auth_failure_flag=true; security_alert dispatched to fraud team; session_locked=30min]
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 3 -->
+    <div class="phase">
+      <div class="phase-header">
+        <div class="phase-badge">Phase 3</div>
+        <h3>Intent Detection</h3>
+      </div>
+      <div class="phase-content">
+        <div class="grid-2">
+          <div>
+            <div class="dialogue-box agent-en">
+              "Thank you for verifying your details. How can I assist you today? You can say things like 'check my balance', 'block my card', 'book a service appointment', or just describe what you need."
+            </div>
+            <div class="dialogue-box agent-hi">
+              "Verify karne ke liye dhanyavaad. Aaj main aapki kya madad kar sakta/sakti hoon? Aap bol sakte hain 'balance check karna hai', 'card block karna hai', 'service book karni hai', ya apni zaroorat batayein."
+            </div>
+          </div>
+          <div>
+            <div class="dialogue-box system-action">
+              ACTIONS:<br>
+              → NLU intent classification model activated<br>
+              → Top-3 intents scored with confidence levels<br>
+              → Entity extraction: amounts, dates, product names, account numbers<br>
+              → Context window updated with auth session data<br>
+              → Relevant knowledge base sections pre-loaded
+            </div>
+          </div>
+        </div>
+
+        <h4 class="sub">Intent Confidence Thresholds</h4>
+        <table class="param-table">
+          <thead>
+            <tr><th>Confidence Score</th><th>Action</th><th>Example</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>&gt; 0.85</strong></td><td>Execute intent directly</td><td>"Check my balance" → balance_inquiry</td></tr>
+            <tr><td><strong>0.60 – 0.85</strong></td><td>Confirm intent before execution</td><td>"Tell me about my account" → clarify savings/loan/card</td></tr>
+            <tr><td><strong>0.40 – 0.60</strong></td><td>Ask clarifying question</td><td>"Help me with something" → open-ended clarification</td></tr>
+            <tr><td><strong>&lt; 0.40</strong></td><td>Fallback + reprompt</td><td>Unclear speech → "Could you please rephrase?"</td></tr>
+          </tbody>
+        </table>
+
+        <h4 class="sub">Clarification Dialogue</h4>
+        <div class="dialogue-box agent-en">
+          "I want to make sure I help you with the right thing. Are you looking to [Intent A] or [Intent B]?"
+        </div>
+        <div class="dialogue-box agent-en">
+          "I didn't quite catch that. Could you please say that again, or describe your request in a different way?"
+        </div>
+        <div class="dialogue-box error-box">
+          <strong>After 3 failed intent clarifications:</strong><br>
+          "I'm having difficulty understanding your request. Let me connect you to one of our specialists who can help you better."<br>
+          [SYSTEM: escalation_triggered=true; reason="intent_clarification_failure_x3"]
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 4 -->
+    <div class="phase">
+      <div class="phase-header">
+        <div class="phase-badge">Phase 4</div>
+        <h3>Query Resolution</h3>
+      </div>
+      <div class="phase-content">
+        <div class="grid-2">
+          <div>
+            <div class="dialogue-box agent-en">
+              [After fetching data] "I can see that [relevant information]. Would you like me to [next action]?"
+            </div>
+            <div class="dialogue-box agent-hi">
+              "Main dekh raha/rahi hoon ki [relevant information]. Kya aap chahte hain ki main [next action] karun?"
+            </div>
+          </div>
+          <div>
+            <div class="dialogue-box system-action">
+              ACTIONS:<br>
+              → API call to relevant backend system<br>
+              → Response latency target: &lt; 2 seconds<br>
+              → Data formatting for voice output (numbers, dates)<br>
+              → Sensitive data masking in logs<br>
+              → Transaction log entry created
+            </div>
+          </div>
+        </div>
+
+        <h4 class="sub">Resolution Attempt Protocol</h4>
+        <div class="dialogue-box branch">
+          <strong>IF</strong> query resolved in 1 attempt → offer additional help, proceed to Phase 5<br>
+          <strong>IF</strong> query partially resolved → "I've [done X]. Is there anything else related to this you need?"<br>
+          <strong>IF</strong> backend API timeout → "I'm experiencing a brief delay. Please hold while I retrieve that information... [wait 3s] ... I apologize, our system is taking longer than expected. Shall I try again or call you back?"<br>
+          <strong>IF</strong> data not found → "I wasn't able to find [X] in our records. Could you verify the [account number / reference number]?"<br>
+          <strong>IF</strong> request requires human judgment → escalate with full context handoff
+        </div>
+
+        <div class="distraction-box">
+          <strong>MID-RESOLUTION DISTRACTION EXAMPLE:</strong><br>
+          USER: "Wait, while you're checking — what are your bank's working hours?"<br>
+          AGENT: "Of course! Our branches are typically open Monday to Saturday, 10 AM to 4 PM. Now, let me get back to your [original query] — I have that information ready for you..."<br>
+          [SYSTEM: distraction_handled=true; context preserved; resume_intent=original_intent]
+        </div>
+
+        <div class="compliance-note">
+          All query responses involving financial data must include appropriate disclaimers where required. For investment-related queries, SEBI-mandated risk disclosures must be read verbatim. For insurance, IRDAI disclosure requirements apply.
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 5 -->
+    <div class="phase">
+      <div class="phase-header">
+        <div class="phase-badge">Phase 5</div>
+        <h3>Confirmation &amp; Next Steps</h3>
+      </div>
+      <div class="phase-content">
+        <div class="grid-2">
+          <div>
+            <div class="dialogue-box agent-en">
+              "Let me summarize what we've done today: [summary of actions taken]. You should receive a confirmation [SMS/email] at your registered [number/email] shortly. Is there anything else I can help you with?"
+            </div>
+            <div class="dialogue-box agent-hi">
+              "Aaj hamne jo kiya uska summary: [summary]. Aapko jald hi ek confirmation [SMS/email] milega aapke registered [number/email] par. Kya main kuch aur madad kar sakta/sakti hoon?"
+            </div>
+          </div>
+          <div>
+            <div class="dialogue-box system-action">
+              ACTIONS:<br>
+              → Transaction/action logged in CRM<br>
+              → Confirmation SMS/email dispatched<br>
+              → Case ID generated (if applicable)<br>
+              → Next action scheduled (callback, follow-up)<br>
+              → Resolution_status = "resolved" / "partial" / "escalated"
+            </div>
+          </div>
+        </div>
+
+        <h4 class="sub">Multi-Intent Handling</h4>
+        <div class="dialogue-box branch">
+          <strong>IF</strong> caller says "Yes, I also want to..." → re-enter Phase 3 (intent detection) with session context preserved<br>
+          <strong>IF</strong> caller says "No, that's all" → proceed to Phase 6<br>
+          <strong>IF</strong> caller says "Actually, wait..." → hold; prompt after 5 seconds if no input
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 6 -->
+    <div class="phase">
+      <div class="phase-header">
+        <div class="phase-badge">Phase 6</div>
+        <h3>Closing</h3>
+      </div>
+      <div class="phase-content">
+        <div class="grid-2">
+          <div>
+            <div class="dialogue-box agent-en">
+              "Thank you for calling [Company Name]. It was a pleasure assisting you today. Have a wonderful day! Goodbye."
+            </div>
+            <div class="dialogue-box agent-hi">
+              "[Company Name] mein call karne ke liye dhanyavaad. Aapki madad karke achha laga. Aapka din shubh ho! Namaskar."
+            </div>
+          </div>
+          <div>
+            <div class="dialogue-box system-action">
+              ACTIONS:<br>
+              → CSAT survey dispatched via SMS (optional)<br>
+              → call_end timestamp recorded<br>
+              → call_duration calculated<br>
+              → Call recording flagged for QA sampling<br>
+              → Full session transcript stored (encrypted)<br>
+              → Analytics event: session_complete
+            </div>
+          </div>
+        </div>
+        <div class="compliance-note">
+          As per TRAI DND regulations, post-call CSAT SMS must only be sent to numbers not on the DND registry, or where prior consent exists. Call recordings must be retained for minimum 60 days as per RBI guidelines for financial institutions.
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /section-body -->
+</div><!-- /section -->
+
+<!-- ===== SECTION 2: BFSI TEMPLATE ===== -->
+<div class="section" id="bfsi">
+  <div class="section-header">
+    <div class="num">2</div>
+    <div>
+      <h2>BFSI-Specific Call Template</h2>
+      <div class="subtitle">Indian banking &amp; financial services — patterns from SBI, HDFC Bank, ICICI Bank, Kotak Mahindra Bank</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout callout-warn">
+      <strong>Regulatory Framework:</strong> All BFSI call flows must comply with RBI Master Direction on KYC (2016, updated 2024), RBI Circular on Customer Service (2022), IRDAI regulations for insurance, and SEBI guidelines for investment products. This template incorporates mandatory elements from these frameworks.
+    </div>
+
+    <!-- BFSI GREETING -->
+    <div class="phase">
+      <div class="phase-header">
+        <div class="phase-badge">Phase 1</div>
+        <h3>BFSI Greeting — Opening Script</h3>
+      </div>
+      <div class="phase-content">
+        <div class="dialogue-box agent-en">
+          "Thank you for calling [Bank Name] customer care. This call may be recorded for quality and training purposes. I'm [Agent Name], your AI-powered banking assistant. To serve you better, could you please tell me the last 4 digits of your account number or your registered mobile number?"
+        </div>
+        <div class="dialogue-box agent-hi">
+          "[Bank Name] customer care mein aapka swagat hai. Yeh call quality aur training ke liye record ki ja sakti hai. Main [Agent Name] hoon, aapka AI banking assistant. Aapki behtar seva ke liye, kya aap apne account number ke aakhiri 4 digit ya registered mobile number bata sakte hain?"
+        </div>
+
+        <div class="compliance-note">
+          <strong>Mandatory Elements:</strong><br>
+          1. Call recording disclosure (as per RBI customer service guidelines)<br>
+          2. AI agent identification (TRAI/RBI digital banking guidelines)<br>
+          3. Option to speak to human agent must be available at all times (press 0 or say "human agent")
+        </div>
+
+        <div class="dialogue-box system-action">
+          BFSI-SPECIFIC SYSTEM ACTIONS:<br>
+          → IVR skill-based routing: incoming call tagged with product_type from DNIS<br>
+          → Core Banking System (CBS) lookup initiated on ANI<br>
+          → Customer risk profile loaded (High/Medium/Low risk classification)<br>
+          → Active fraud alerts checked on account<br>
+          → Preferred language from CRM profile loaded<br>
+          → Relationship Manager details fetched (if premium/private banking)
+        </div>
+      </div>
+    </div>
+
+    <!-- BFSI AUTH -->
+    <div class="phase">
+      <div class="phase-header">
+        <div class="phase-badge">Phase 2</div>
+        <h3>BFSI Authentication Flow</h3>
+      </div>
+      <div class="phase-content">
+
+        <h4 class="sub">Method A: OTP-Based (Standard)</h4>
+        <div class="dialogue-box agent-en">
+          "I'm sending a One Time Password to your registered mobile number ending in XXXX. Please share the 6-digit OTP with me once you receive it."
+        </div>
+        <div class="dialogue-box agent-en">
+          [After OTP received] "Thank you for sharing the OTP. I've successfully verified your identity. Your account is now accessible."
+        </div>
+
+        <h4 class="sub">Method B: DOB + Account Number (Fallback)</h4>
+        <div class="dialogue-box agent-en">
+          "If you're unable to receive an OTP, I can verify you using your Date of Birth. Could you please tell me your date of birth in DD/MM/YYYY format?"
+        </div>
+
+        <h4 class="sub">High-Value Transaction Authentication (Additional Layer)</h4>
+        <div class="dialogue-box agent-en">
+          "For this type of request, I need an additional verification. Could you please confirm the last transaction amount on your account, or your net banking password's first letter followed by your mother's maiden name initial?"
+        </div>
+
+        <div class="dialogue-box branch">
+          <strong>BFSI AUTH BRANCH CONDITIONS:</strong><br>
+          <strong>IF</strong> account has active fraud alert → immediately route to fraud investigation team; do NOT confirm any account details<br>
+          <strong>IF</strong> caller requests fund transfer → require Tier 3 auth regardless of other factors<br>
+          <strong>IF</strong> caller is calling from a different number than registered → flag as suspicious; downgrade to Tier 1 services only<br>
+          <strong>IF</strong> NRI customer detected (based on profile) → route to NRI banking desk; different product set applies<br>
+          <strong>IF</strong> caller is elderly (voice biometrics / self-declared) → offer simplified verification, longer timeouts
+        </div>
+
+        <div class="compliance-note">
+          Per RBI circular RBI/2021-22/74: Multi-Factor Authentication (MFA) is mandatory for all digital banking transactions. For phone banking, minimum two-factor authentication is required for any financial transactions. Card transactions must follow EMV 3DS standards.
+        </div>
+      </div>
+    </div>
+
+    <!-- BFSI INTENT CATEGORIES -->
+    <div class="phase">
+      <div class="phase-header">
+        <div class="phase-badge">Phase 3</div>
+        <h3>BFSI Intent Categories &amp; Routing</h3>
+      </div>
+      <div class="phase-content">
+        <table class="param-table">
+          <thead>
+            <tr><th>Intent Category</th><th>Sub-Intents</th><th>Auth Level</th><th>Auto-Resolvable</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Account Services</strong></td>
+              <td>Balance inquiry, mini statement, account statement, account opening status</td>
+              <td>Tier 1–2</td>
+              <td>Yes</td>
+            </tr>
+            <tr>
+              <td><strong>Card Services</strong></td>
+              <td>Card block, PIN change, limit increase, dispute, reward points, statement</td>
+              <td>Tier 2–3</td>
+              <td>Partial</td>
+            </tr>
+            <tr>
+              <td><strong>Loans</strong></td>
+              <td>Home loan, personal loan, auto loan, education loan — inquiry, EMI, foreclosure, NOC</td>
+              <td>Tier 2</td>
+              <td>Partial</td>
+            </tr>
+            <tr>
+              <td><strong>Deposits</strong></td>
+              <td>FD inquiry, FD booking, RD, interest rates, premature withdrawal</td>
+              <td>Tier 2</td>
+              <td>Yes (inquiry); No (booking)</td>
+            </tr>
+            <tr>
+              <td><strong>Digital Banking</strong></td>
+              <td>NetBanking unlock, mobile app help, UPI issues, password reset</td>
+              <td>Tier 2–3</td>
+              <td>Partial</td>
+            </tr>
+            <tr>
+              <td><strong>Investments</strong></td>
+              <td>Mutual fund SIP, portfolio, NAV, demat account, bonds</td>
+              <td>Tier 2</td>
+              <td>Yes (inquiry only)</td>
+            </tr>
+            <tr>
+              <td><strong>Insurance</strong></td>
+              <td>Life, motor, health — premium, claim status, policy details</td>
+              <td>Tier 2</td>
+              <td>Yes (status only)</td>
+            </tr>
+            <tr>
+              <td><strong>Complaints</strong></td>
+              <td>Unauthorized transaction, service complaint, fraud report</td>
+              <td>Tier 3</td>
+              <td>No — always escalate</td>
+            </tr>
+            <tr>
+              <td><strong>General Inquiries</strong></td>
+              <td>Branch locator, IFSC code, interest rates, product info, working hours</td>
+              <td>None (unauthenticated)</td>
+              <td>Yes</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4 class="sub">Escalation Triggers</h4>
+        <ul class="trigger-list">
+          <li class="trigger-escalate"><span class="icon">🚨</span><span><strong>Fraud report:</strong> Any mention of unauthorized transactions, card cloning, phishing — immediate escalation to fraud desk</span></li>
+          <li class="trigger-escalate"><span class="icon">🚨</span><span><strong>Regulatory complaint:</strong> Caller mentions RBI Banking Ombudsman, consumer court, media — escalate to senior manager</span></li>
+          <li class="trigger-escalate"><span class="icon">🚨</span><span><strong>Auth failure x3:</strong> Three consecutive authentication failures — lock session, escalate to security team</span></li>
+          <li class="trigger-warn"><span class="icon">⚠️</span><span><strong>Emotional distress:</strong> Caller sounds angry, crying, mentions financial hardship — escalate with empathy note</span></li>
+          <li class="trigger-warn"><span class="icon">⚠️</span><span><strong>Complex loan restructuring:</strong> Request goes beyond standard flow — escalate to relationship manager</span></li>
+          <li class="trigger-ok"><span class="icon">✓</span><span><strong>Caller requests human agent:</strong> Honor immediately, do not delay or dissuade</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- BFSI COMPLIANCE -->
+    <div class="phase">
+      <div class="phase-header">
+        <div class="phase-badge">Compliance</div>
+        <h3>Mandatory Compliance Statements</h3>
+      </div>
+      <div class="phase-content">
+        <div class="compliance-note">
+          <strong>Call Recording Disclosure (Read at start of EVERY call):</strong><br>
+          "This call may be recorded for quality assurance and regulatory compliance purposes."
+        </div>
+        <div class="compliance-note">
+          <strong>Investment Product SEBI Disclosure (Read for any MF/stock/bonds discussion):</strong><br>
+          "Mutual fund investments are subject to market risks. Please read all scheme-related documents carefully before investing. Past performance is not indicative of future results."
+        </div>
+        <div class="compliance-note">
+          <strong>Insurance IRDAI Disclosure (Read for any insurance product):</strong><br>
+          "Insurance is the subject matter of solicitation. Please read the policy document carefully before purchase."
+        </div>
+        <div class="compliance-note">
+          <strong>Data Privacy (DPDP Act 2023):</strong><br>
+          "Your personal data is being processed as per our privacy policy and the Digital Personal Data Protection Act, 2023. For details, visit [Bank Website]."
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== SECTION 3: AUTOMOTIVE TEMPLATE ===== -->
+<div class="section" id="automotive">
+  <div class="section-header">
+    <div class="num">3</div>
+    <div>
+      <h2>Automotive-Specific Call Template</h2>
+      <div class="subtitle">Indian automotive sector — Maruti Suzuki Arena/Nexa, Tata Motors, Hyundai India, Honda, Mahindra patterns</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout callout-info">
+      Automotive calls are largely inbound service/support calls and outbound lead follow-up calls. Authentication is lighter than BFSI — typically vehicle registration number or chassis number combined with registered mobile. The focus is on service scheduling, complaint resolution, and vehicle information.
+    </div>
+
+    <!-- AUTO GREETING -->
+    <div class="phase">
+      <div class="phase-header">
+        <div class="phase-badge">Phase 1</div>
+        <h3>Automotive Greeting</h3>
+      </div>
+      <div class="phase-content">
+        <div class="dialogue-box agent-en">
+          "Thank you for calling [Brand] Customer Care. I'm [Agent Name], your AI assistant. I can help you with service bookings, complaints, vehicle information, and more. May I have your vehicle registration number to get started?"
+        </div>
+        <div class="dialogue-box agent-hi">
+          "[Brand] Customer Care mein aapka swagat hai. Main [Agent Name] hoon, aapka AI assistant. Main service booking, complaints, vehicle information, aur bahut kuch mein madad kar sakta/sakti hoon. Shuru karne ke liye kya aap apna vehicle registration number bata sakte hain?"
+        </div>
+        <div class="dialogue-box system-action">
+          AUTO-SPECIFIC SYSTEM ACTIONS:<br>
+          → DMS (Dealer Management System) lookup initiated on ANI<br>
+          → Vehicle history database query prepared<br>
+          → Warranty status check API ready<br>
+          → Nearest service centers pre-loaded based on registered address<br>
+          → Active service bookings for caller's vehicle checked<br>
+          → RSA (Roadside Assistance) status checked for active incidents
+        </div>
+      </div>
+    </div>
+
+    <!-- AUTO SERVICE BOOKING FLOW -->
+    <div class="phase">
+      <div class="phase-header">
+        <div class="phase-badge">Flow A</div>
+        <h3>Service Booking Flow</h3>
+      </div>
+      <div class="phase-content">
+        <div class="timeline">
+          <div class="timeline-item">
+            <h4>Step 1: Vehicle Identification</h4>
+            <p>Capture registration number → validate format → fetch vehicle details (model, year, VIN/chassis, last service date)</p>
+          </div>
+          <div class="timeline-item">
+            <h4>Step 2: Service Type Classification</h4>
+            <p>Determine: Periodic/Scheduled service (1st/2nd/3rd free / paid) vs Specific repair vs Body work vs Accessories</p>
+          </div>
+          <div class="timeline-item">
+            <h4>Step 3: Mileage Capture</h4>
+            <p>Current odometer reading → validate against service schedule → identify correct service package (5k/10k/20k km intervals)</p>
+          </div>
+          <div class="timeline-item">
+            <h4>Step 4: Dealership Selection</h4>
+            <p>Fetch 3 nearest authorized service centers → present to caller with distance and availability → caller selects preferred center</p>
+          </div>
+          <div class="timeline-item">
+            <h4>Step 5: Date &amp; Time Slot</h4>
+            <p>Present next 5 available slots at chosen service center → confirm preferred slot → offer pick-up/drop service option</p>
+          </div>
+          <div class="timeline-item">
+            <h4>Step 6: Confirmation</h4>
+            <p>Read back full booking details → generate booking ID → send SMS confirmation → update DMS</p>
+          </div>
+        </div>
+
+        <div class="dialogue-box agent-en">
+          "I can see your [Maruti Swift] [MH02 XX 1234] was last serviced on [Date] at [X] km. You're now due for your [3rd] free service. I have the following service centers near you: [Center 1] (2.5 km, available tomorrow), [Center 2] (4 km, available day after). Which do you prefer?"
+        </div>
+
+        <div class="dialogue-box branch">
+          <strong>SERVICE BOOKING BRANCHES:</strong><br>
+          <strong>IF</strong> vehicle is within free service period → confirm free service eligibility; list what's included<br>
+          <strong>IF</strong> free service count exhausted → quote estimated paid service cost range (mention labor + consumables)<br>
+          <strong>IF</strong> preferred slot not available → offer waitlist or alternative center<br>
+          <strong>IF</strong> customer requests pick-up/drop → capture pick-up address, preferred time, additional charges if any<br>
+          <strong>IF</strong> vehicle has open recall campaign → proactively inform about recall and incorporate in service booking
+        </div>
+      </div>
+    </div>
+
+    <!-- AUTO COMPLAINT FLOW -->
+    <div class="phase">
+      <div class="phase-header">
+        <div class="phase-badge">Flow B</div>
+        <h3>Complaint Registration Flow</h3>
+      </div>
+      <div class="phase-content">
+        <div class="dialogue-box agent-en">
+          "I'm sorry to hear you're experiencing an issue with your vehicle. Let me register this complaint for you. Could you describe the problem in detail? For example: When did you first notice it? Does it happen always or intermittently? Any warning lights on the dashboard?"
+        </div>
+
+        <div class="dialogue-box system-action">
+          COMPLAINT CAPTURE FIELDS:<br>
+          → complaint_category: [Mechanical / Electrical / Body/Paint / Noise/Vibration / AC/HVAC / Fuel System / Safety]<br>
+          → symptom_description: free text (max 500 chars)<br>
+          → occurrence_pattern: [Always / Intermittent / Specific condition]<br>
+          → warning_lights_active: [Yes/No/Which]<br>
+          → accident_involved: [Yes/No]<br>
+          → urgency_level: [Critical/High/Normal] — system determined based on symptom keywords<br>
+          → complaint_id: auto-generated
+        </div>
+
+        <div class="dialogue-box branch">
+          <strong>COMPLAINT URGENCY BRANCHES:</strong><br>
+          <strong>IF</strong> keywords: "brakes", "steering", "airbag", "fire", "smoke", "won't stop" → CRITICAL — offer RSA immediately + escalate<br>
+          <strong>IF</strong> keywords: "AC not working", "window not opening", "music system" → Normal — standard workshop appointment<br>
+          <strong>IF</strong> vehicle is within warranty → confirm warranty coverage; no repair cost for covered items<br>
+          <strong>IF</strong> vehicle is post-warranty → provide estimated cost range; recommend workshop inspection for exact quote<br>
+          <strong>IF</strong> complaint is repeat (same issue within 30 days) → flag as repeat complaint; escalate to service manager
+        </div>
+      </div>
+    </div>
+
+    <!-- AUTO VEHICLE INFO -->
+    <div class="phase">
+      <div class="phase-header">
+        <div class="phase-badge">Flow C</div>
+        <h3>Vehicle Information Lookup &amp; Parts Inquiry</h3>
+      </div>
+      <div class="phase-content">
+        <div class="dialogue-box agent-en">
+          "I can see your [vehicle model] details. Could you confirm what information you're looking for — warranty status, service history, parts availability, or something else?"
+        </div>
+
+        <h4 class="sub">Parts Inquiry Flow</h4>
+        <div class="dialogue-box agent-en">
+          "For parts inquiry, I'll need your chassis number or VIN for accurate part matching. Could you share that? You'll find it on your RC book, or on the dashboard near the windshield."
+        </div>
+        <div class="dialogue-box branch">
+          <strong>IF</strong> genuine parts requested → confirm availability at dealer; provide dealer contact<br>
+          <strong>IF</strong> caller asks about aftermarket parts → inform about genuine parts warranty implications; do not recommend aftermarket<br>
+          <strong>IF</strong> safety-critical parts (brakes, tyres, steering) → strongly recommend authorized service center fitting; read safety disclaimer
+        </div>
+        <div class="compliance-note">
+          As per Motor Vehicles Act and manufacturer warranty terms: Use of non-genuine parts may void vehicle warranty. For BS6-compliant vehicles, tampering with emission control systems is illegal under CMVR (Central Motor Vehicles Rules).
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== SECTION 4: DISTRACTION HANDLING ===== -->
+<div class="section" id="distraction">
+  <div class="section-header">
+    <div class="num">4</div>
+    <div>
+      <h2>Distraction Handling Guide</h2>
+      <div class="subtitle">Graceful handling of off-topic queries, maximum tolerance thresholds, and approved redirect phrases</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout callout-info">
+      Distraction handling is critical for maintaining call efficiency while ensuring a natural, non-robotic experience. The AI agent must be helpful with tangential queries while steering the conversation back to the primary intent. A maximum of 2 distractions per call are handled gracefully; beyond that, the caller is gently but firmly redirected.
+    </div>
+
+    <h4 class="sub">Distraction Categories and Responses</h4>
+
+    <table class="param-table">
+      <thead>
+        <tr><th>Distraction Type</th><th>User Says</th><th>Agent Response</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Related Product Inquiry</strong></td>
+          <td>"By the way, what's your FD rate?"</td>
+          <td>"Our current FD rates range from 6.5% to 7.5% for 1 to 3 year tenures — I'll send you the full rate card via SMS. Now, coming back to your home loan query..."</td>
+          <td>Answer briefly; resume original intent</td>
+        </tr>
+        <tr>
+          <td><strong>Technical Support</strong></td>
+          <td>"Also, my app is showing an error — what do I do?"</td>
+          <td>"I understand. For app issues, you can try clearing the app cache or reinstalling. If it persists, press 3 on our IVR for tech support. Now let me continue with your [original query]..."</td>
+          <td>Provide brief resolution or routing; resume</td>
+        </tr>
+        <tr>
+          <td><strong>General Knowledge / Non-Company</strong></td>
+          <td>"What's the current repo rate set by RBI?"</td>
+          <td>"The RBI repo rate as of my last update is 6.50%. This directly influences lending rates, which is relevant to your home loan discussion! Speaking of which, let me continue..."</td>
+          <td>Link distraction to main topic where possible; resume</td>
+        </tr>
+        <tr>
+          <td><strong>Personal / Conversational</strong></td>
+          <td>"Are you a real person or a robot?"</td>
+          <td>"I'm an AI-powered virtual assistant — so yes, I'm an automated system! But I'm fully capable of helping you with your banking needs. If you'd prefer to speak with a human agent, just say 'human agent' at any time. Now, let me help you with [original query]..."</td>
+          <td>Answer honestly; reassure; resume</td>
+        </tr>
+        <tr>
+          <td><strong>Complaint About Hold Time</strong></td>
+          <td>"I've been waiting for 10 minutes! This is terrible service."</td>
+          <td>"I sincerely apologize for the wait. I understand your time is valuable. I'm right here now and will resolve your [query] as quickly as possible. Let's get started..."</td>
+          <td>Empathize; do not argue; resume</td>
+        </tr>
+        <tr>
+          <td><strong>Completely Unrelated</strong></td>
+          <td>"What's the weather today?" / "Tell me a joke"</td>
+          <td>"Ha! I'm a dedicated banking assistant, so weather forecasting is a bit outside my area of expertise! Let me focus on getting your [query] sorted. Where were we?"</td>
+          <td>Light humor (if appropriate); firm resume</td>
+        </tr>
+        <tr>
+          <td><strong>Background Noise / Interruption</strong></td>
+          <td>[Caller speaks to someone else in background] "Wait, not you... my phone... yes, yes, sorry—"</td>
+          <td>[Wait 3 seconds] "Take your time, I'm here when you're ready."</td>
+          <td>Patient wait; do not interrupt; resume from where left off</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h4 class="sub">Maximum Distraction Tolerance Policy</h4>
+    <div class="grid-2">
+      <div class="info-card">
+        <h4>Distraction Count Tracking</h4>
+        <ul>
+          <li><strong>Distraction 1:</strong> Answer fully and helpfully; smooth redirect</li>
+          <li><strong>Distraction 2:</strong> Answer briefly; slightly firmer redirect</li>
+          <li><strong>Distraction 3:</strong> "I want to make sure we resolve your primary concern today. Let me focus on [original query] — we can explore other topics through our other channels."</li>
+          <li><strong>Distraction 4+:</strong> Offer callback or human agent; consider if caller is confused or has a different primary need</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h4>Approved Redirect Phrases</h4>
+        <ul>
+          <li>"That's a great question — let me note that down. But first, let me finish helping you with [X]..."</li>
+          <li>"I'll definitely address that — right after we wrap up [X]. Won't take long!"</li>
+          <li>"Coming back to your [original query]..."</li>
+          <li>"Now, where were we — ah yes, [summary of original context]..."</li>
+          <li>"Let me make sure we've sorted out [X] first, and then we can look at your other question."</li>
+          <li><em>(Hindi)</em> "Haan, zaroor — lekin pehle aapka [X] complete karte hain..."</li>
+        </ul>
+      </div>
+    </div>
+
+    <h4 class="sub">Phrases to AVOID</h4>
+    <div class="callout callout-danger">
+      <ul style="padding-left:1.25rem;">
+        <li>"That's not relevant to your query." — sounds dismissive</li>
+        <li>"I can only help with banking/automotive topics." — too restrictive and robotic</li>
+        <li>"Please stay focused." — condescending</li>
+        <li>"I don't know about that." — without offering any help or alternative</li>
+        <li>Repeatedly asking the same clarifying question more than twice</li>
+        <li>Long silence without acknowledgment when caller pauses mid-sentence</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== SECTION 5: PARAMETERS ===== -->
+<div class="section" id="parameters">
+  <div class="section-header">
+    <div class="num">5</div>
+    <div>
+      <h2>Important Parameters to Capture</h2>
+      <div class="subtitle">Mandatory and optional data fields per industry — for CRM, analytics, and compliance logging</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h4 class="sub">Universal Parameters (All Industries)</h4>
+    <table class="param-table">
+      <thead>
+        <tr><th>Parameter</th><th>Data Type</th><th>Capture Method</th><th>Mandatory?</th><th>Usage</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>caller_name</td><td>String</td><td>CRM lookup / caller self-declaration</td><td><span class="tag tag-required">Required</span></td><td>Personalization, CRM update</td></tr>
+        <tr><td>phone_number</td><td>String (10-digit)</td><td>ANI capture (automatic)</td><td><span class="tag tag-required">Required</span></td><td>CRM lookup, authentication, callback</td></tr>
+        <tr><td>language_preference</td><td>Enum: en/hi/ta/te/mr/gu</td><td>Voice detection / IVR selection</td><td><span class="tag tag-required">Required</span></td><td>TTS model selection, routing</td></tr>
+        <tr><td>call_intent</td><td>String (classified)</td><td>NLU classification</td><td><span class="tag tag-required">Required</span></td><td>Routing, analytics, reporting</td></tr>
+        <tr><td>intent_confidence</td><td>Float (0–1)</td><td>NLU model output</td><td><span class="tag tag-required">Required</span></td><td>Quality assurance, model improvement</td></tr>
+        <tr><td>resolution_status</td><td>Enum: resolved/partial/escalated/abandoned</td><td>System determined at call end</td><td><span class="tag tag-required">Required</span></td><td>SLA tracking, analytics</td></tr>
+        <tr><td>call_duration</td><td>Integer (seconds)</td><td>Automatic (call_end - call_start)</td><td><span class="tag tag-required">Required</span></td><td>SLA, productivity analytics</td></tr>
+        <tr><td>escalation_flag</td><td>Boolean</td><td>System set on escalation trigger</td><td><span class="tag tag-required">Required</span></td><td>Routing to human, reporting</td></tr>
+        <tr><td>escalation_reason</td><td>String</td><td>System determined</td><td><span class="tag tag-optional">If escalated</span></td><td>Human agent context, QA</td></tr>
+        <tr><td>csat_score</td><td>Integer (1–5)</td><td>Post-call SMS survey</td><td><span class="tag tag-optional">Optional</span></td><td>Quality measurement</td></tr>
+        <tr><td>call_recording_url</td><td>URL (encrypted)</td><td>Automatic</td><td><span class="tag tag-required">Required</span></td><td>QA, compliance, dispute resolution</td></tr>
+        <tr><td>distraction_count</td><td>Integer</td><td>Counted by conversation engine</td><td><span class="tag tag-optional">Optional</span></td><td>Analytics, agent optimization</td></tr>
+      </tbody>
+    </table>
+
+    <hr class="section-divider">
+
+    <h4 class="sub">BFSI-Specific Parameters</h4>
+    <table class="param-table">
+      <thead>
+        <tr><th>Parameter</th><th>Data Type</th><th>Notes</th><th>Mandatory?</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>account_number</td><td>String (masked: show last 4 only in logs)</td><td>Core banking lookup key</td><td><span class="tag tag-required">Required</span></td></tr>
+        <tr><td>customer_id</td><td>String</td><td>CIF (Customer Information File) number</td><td><span class="tag tag-required">Required</span></td></tr>
+        <tr><td>date_of_birth</td><td>Date (DD/MM/YYYY)</td><td>Authentication factor; encrypt in logs</td><td><span class="tag tag-optional">Auth-dependent</span></td></tr>
+        <tr><td>product_type</td><td>Enum: savings/current/fd/rd/loan/cc/insurance/mf/demat</td><td>Routes to relevant knowledge base</td><td><span class="tag tag-required">Required</span></td></tr>
+        <tr><td>query_category</td><td>String (classified)</td><td>Sub-intent for product type</td><td><span class="tag tag-required">Required</span></td></tr>
+        <tr><td>transaction_id</td><td>String</td><td>For dispute/inquiry on specific transaction</td><td><span class="tag tag-optional">If applicable</span></td></tr>
+        <tr><td>transaction_amount</td><td>Decimal (INR)</td><td>Masked in logs per PCI-DSS</td><td><span class="tag tag-optional">If applicable</span></td></tr>
+        <tr><td>branch_code</td><td>String (IFSC prefix)</td><td>For branch-specific routing</td><td><span class="tag tag-optional">Optional</span></td></tr>
+        <tr><td>relationship_manager_name</td><td>String</td><td>For premium/private banking customers</td><td><span class="tag tag-optional">If premium segment</span></td></tr>
+        <tr><td>otp_verified</td><td>Boolean</td><td>Authentication status flag</td><td><span class="tag tag-required">Required</span></td></tr>
+        <tr><td>auth_method</td><td>Enum: otp/dob/security_question/biometric</td><td>Audit trail</td><td><span class="tag tag-required">Required</span></td></tr>
+        <tr><td>fraud_flag</td><td>Boolean</td><td>Set by fraud detection system</td><td><span class="tag tag-required">Required</span></td></tr>
+        <tr><td>risk_score</td><td>Integer (0–100)</td><td>Real-time risk assessment</td><td><span class="tag tag-required">Required</span></td></tr>
+        <tr><td>loan_account_number</td><td>String (masked)</td><td>For loan-specific queries</td><td><span class="tag tag-optional">If loan query</span></td></tr>
+        <tr><td>card_last_4_digits</td><td>String (4 chars)</td><td>For card-related queries; never capture full number</td><td><span class="tag tag-optional">If card query</span></td></tr>
+        <tr><td>dispute_amount</td><td>Decimal (INR)</td><td>For chargeback/dispute cases</td><td><span class="tag tag-optional">If dispute</span></td></tr>
+        <tr><td>nominee_name</td><td>String</td><td>For account closure or succession queries</td><td><span class="tag tag-optional">If applicable</span></td></tr>
+      </tbody>
+    </table>
+
+    <hr class="section-divider">
+
+    <h4 class="sub">Automotive-Specific Parameters</h4>
+    <table class="param-table">
+      <thead>
+        <tr><th>Parameter</th><th>Data Type</th><th>Notes</th><th>Mandatory?</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>vehicle_registration_number</td><td>String (MH02XX1234 format)</td><td>Primary vehicle lookup key; validate format per RTO pattern</td><td><span class="tag tag-required">Required</span></td></tr>
+        <tr><td>chassis_number</td><td>String (17-char VIN)</td><td>For parts lookup, warranty check — find on RC or dashboard</td><td><span class="tag tag-optional">If parts/warranty</span></td></tr>
+        <tr><td>engine_number</td><td>String</td><td>Sometimes required for insurance/warranty claims</td><td><span class="tag tag-optional">If claim</span></td></tr>
+        <tr><td>model_name</td><td>String</td><td>e.g., "Swift VXi", "Nexon EV Max", "Creta S+ Turbo"</td><td><span class="tag tag-required">Required</span></td></tr>
+        <tr><td>year_of_manufacture</td><td>Integer (YYYY)</td><td>For warranty period calculation</td><td><span class="tag tag-required">Required</span></td></tr>
+        <tr><td>fuel_type</td><td>Enum: petrol/diesel/cng/ev/hybrid</td><td>For service package determination</td><td><span class="tag tag-required">Required</span></td></tr>
+        <tr><td>current_mileage</td><td>Integer (km)</td><td>For service schedule determination</td><td><span class="tag tag-required">For service booking</span></td></tr>
+        <tr><td>last_service_date</td><td>Date</td><td>Fetched from DMS; used to determine next service due</td><td><span class="tag tag-optional">Fetched automatically</span></td></tr>
+        <tr><td>dealership_name</td><td>String</td><td>Home/preferred dealer for service</td><td><span class="tag tag-required">Required</span></td></tr>
+        <tr><td>service_type</td><td>Enum: periodic/repair/body/warranty/recall</td><td>Determines service flow</td><td><span class="tag tag-required">Required</span></td></tr>
+        <tr><td>complaint_description</td><td>String (free text)</td><td>User-described symptom; NLU classifies urgency</td><td><span class="tag tag-optional">If complaint</span></td></tr>
+        <tr><td>complaint_category</td><td>Enum: mechanical/electrical/body/noise/ac/safety</td><td>NLU classified from description</td><td><span class="tag tag-optional">If complaint</span></td></tr>
+        <tr><td>warranty_status</td><td>Enum: in_warranty/extended_warranty/out_of_warranty/amc</td><td>Fetched from warranty management system</td><td><span class="tag tag-required">Required</span></td></tr>
+        <tr><td>preferred_service_date</td><td>Date</td><td>Caller's requested service appointment date</td><td><span class="tag tag-required">For booking</span></td></tr>
+        <tr><td>preferred_service_time</td><td>Time</td><td>Slot within selected date (Morning/Afternoon/Evening)</td><td><span class="tag tag-required">For booking</span></td></tr>
+        <tr><td>pickup_drop_required</td><td>Boolean</td><td>Whether caller needs vehicle collection service</td><td><span class="tag tag-optional">Optional</span></td></tr>
+        <tr><td>pickup_address</td><td>String</td><td>Only if pickup_drop_required = true</td><td><span class="tag tag-optional">If pickup</span></td></tr>
+        <tr><td>rsa_incident_id</td><td>String</td><td>For roadside assistance tracking</td><td><span class="tag tag-optional">If RSA</span></td></tr>
+        <tr><td>insurance_claim_number</td><td>String</td><td>For insurance-related service visits</td><td><span class="tag tag-optional">If insurance</span></td></tr>
+        <tr><td>contact_alternate_number</td><td>String (10-digit)</td><td>For vehicle delivery/service notifications</td><td><span class="tag tag-optional">Optional</span></td></tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<footer style="background:#0D3B47;color:rgba(255,255,255,0.7);text-align:center;padding:1.5rem;font-size:0.82rem;">
+  RTCA Platform Documentation &bull; Document 03: Call Templates &bull; For internal use only &bull; Generated 2026
+</footer>
+
+
+<!-- ++ Floating Navigation Bar ++ -->
+<style>
+  .vb-nav {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    gap: 8px;
+    z-index: 9999;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+  .vb-nav a, .vb-nav button {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: white;
+    color: #0D3B47;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 24px;
+    padding: 9px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 2px 14px rgba(0,0,0,0.13);
+    transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+    white-space: nowrap;
+  }
+  .vb-nav a:hover, .vb-nav button:hover {
+    background: #0D3B47;
+    color: white;
+    border-color: #0D3B47;
+    box-shadow: 0 4px 18px rgba(26,58,92,0.25);
+  }
+</style>
+<nav class="vb-nav" aria-label="Page navigation">
+  <a href="index.html" title="Go to Home">&#127968; Home</a>
+  <button onclick="history.back()" title="Go Back">&#8592; Back</button>
+  <button onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to Top">&#8593; Top</button>
+</nav>
+</body>
+</html>

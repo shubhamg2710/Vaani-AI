@@ -1,0 +1,715 @@
+================================================================================
+VOXBHARAT — CALL SCRIPTS
+Industry: BFSI | Workflow: Loan Pre-Qualification
+Total Scripts: 5
+================================================================================
+MANDATORY PARAMETERS TO CAPTURE (ALL SCRIPTS):
+  1. Annual Pre-tax Income
+  2. Estimated Credit Score
+  3. Desired Loan Amount
+  4. Loan Duration
+  5. Type of Loan
+  6. Employment Status
+================================================================================
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT LPQ-01: HOME LOAN PRE-QUALIFICATION — SALARIED IT PROFESSIONAL
+────────────────────────────────────────────────────────────────────────────────
+Industry        : BFSI
+Workflow        : Loan Pre-Qualification
+Loan Type       : Home Loan
+Complexity      : Intermediate
+Duration        : ~5 minutes
+Language        : English (Hinglish variation included)
+Company Ref     : SBI / HDFC Bank style
+
+PARAMETERS CAPTURED IN THIS SCRIPT:
+  ✔ Annual Pre-tax Income      → ₹18,00,000 (₹1.5L/month gross)
+  ✔ Estimated Credit Score     → 760
+  ✔ Desired Loan Amount        → ₹60,00,000
+  ✔ Loan Duration              → 20 years
+  ✔ Type of Loan               → Home Loan (self-occupied)
+  ✔ Employment Status          → Salaried (Private sector, IT)
+
+--------------------------------------------------------------------------------
+DIALOGUE
+--------------------------------------------------------------------------------
+AGENT : "Good morning! Thank you for calling SBI Home Loans. I'm Priya, your
+         virtual assistant. How can I help you today?"
+
+USER  : "Hi, I want to check if I'm eligible for a home loan."
+
+[SYSTEM: Intent = loan_pre_qualification | Loan type slot = empty]
+
+AGENT : "I'd be happy to help you check your eligibility. To give you an
+         accurate assessment, I'll need to ask a few quick questions — it takes
+         about 2 minutes. Is that okay?"
+
+USER  : "Yes, sure."
+
+AGENT : "Great. First — what type of loan are you looking for? For example,
+         home loan, personal loan, car loan, or something else?"
+
+USER  : "Home loan. I want to buy a flat in Bangalore."
+
+[SYSTEM: Type of Loan = Home Loan | Slot filled]
+
+AGENT : "Perfect. What is the approximate loan amount you're looking for?"
+
+USER  : "Around 60 lakhs."
+
+[SYSTEM: Desired Loan Amount = ₹60,00,000 | Slot filled]
+
+AGENT : "And what loan tenure are you comfortable with — 10, 15, 20, or 30
+         years?"
+
+USER  : "20 years should be fine."
+
+[SYSTEM: Loan Duration = 20 years | Slot filled]
+
+AGENT : "Got it. Now, what is your current employment status — are you
+         salaried, self-employed, or a business owner?"
+
+USER  : "I'm salaried. I work at Infosys as a senior engineer."
+
+[SYSTEM: Employment Status = Salaried, Private IT sector | Slot filled]
+
+AGENT : "Great — salaried IT professionals generally have a strong eligibility
+         profile. Could you share your approximate annual pre-tax income?"
+
+USER  : "My CTC is around 18 lakhs per year."
+
+[SYSTEM: Annual Pre-tax Income = ₹18,00,000 | Slot filled]
+
+AGENT : "Excellent. And do you have a rough idea of your CIBIL or credit score?
+         Even an approximate range is fine — for example, above 750, 700 to
+         750, or below 700."
+
+USER  : "I checked last month — it was 760."
+
+[SYSTEM: Estimated Credit Score = 760 | ALL 6 MANDATORY SLOTS FILLED ✔]
+
+AGENT : "Thank you — I have everything I need. Here's your pre-qualification
+         summary:
+
+         Loan Type     : Home Loan
+         Desired Amount: ₹60,00,000
+         Tenure        : 20 years
+         Income (Annual): ₹18,00,000
+         CIBIL Score   : 760
+         Employment    : Salaried (IT)
+
+         Based on this profile:
+         ✔ You are likely eligible for a home loan of up to ₹60–70 lakhs.
+         ✔ At current SBI RLLR-linked rates of approximately 8.50% p.a., your
+           estimated EMI would be ₹52,143 per month for ₹60 lakhs over 20 years.
+         ✔ With a CIBIL score of 760, you qualify for our standard rate slab.
+           A score above 800 could fetch you 8.35%.
+
+         Your EMI-to-income ratio would be approximately 41.7% — within the
+         acceptable range of under 50%. You have a strong pre-qualification
+         profile.
+
+         Shall I schedule a callback from our home loan specialist to take this
+         forward with document verification?"
+
+USER  : "Yes please, call me after 5 PM."
+
+[SYSTEM: Callback scheduled | Lead ID: HLL20260329-IT-001 | Time: after 5 PM]
+
+AGENT : "Noted — our specialist will call you after 5 PM today. You'll also
+         receive an SMS with the lead reference HLL20260329-IT-001 and a
+         checklist of documents you'll need: Aadhaar, PAN, last 3 months'
+         salary slips, Form 16, 6 months' bank statements, and property
+         documents once finalised. Is there anything else?"
+
+USER  : "No, that's all. Thank you."
+
+AGENT : "Thank you for calling SBI Home Loans. Have a great day!"
+
+- - -
+DISTRACTION EXAMPLE
+- - -
+USER  : "By the way, should I buy in Whitefield or Sarjapur? Which area is
+         better for investment?"
+
+AGENT : "That's a great question for a property consultant! I specialize in
+         loan eligibility rather than location advice. What I can tell you is
+         that SBI finances properties in both areas without restrictions. Shall
+         we continue with your pre-qualification?"
+
+- - -
+HINGLISH VARIATION (Key Exchange)
+- - -
+USER  : "Home loan chahiye, 60 lakh ka. Eligible hoon kya?"
+AGENT : "Bilkul check kar sakte hain. Aapki annual income kitni hai pre-tax?"
+USER  : "18 lakh CTC hai. CIBIL score 760 hai."
+AGENT : "760 score ke saath aap eligible hain. EMI hogi approximately
+         ₹52,143 per month 20 saal ke liye 8.50% rate par."
+
+RESOLUTION  : Pre-qualification completed ✔ | All 6 parameters captured ✔
+              Callback scheduled ✔ | Lead ID generated ✔
+SUCCESS METRICS: All mandatory slots filled, accurate EMI quoted, lead
+                 captured for specialist follow-up
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT LPQ-02: PERSONAL LOAN PRE-QUALIFICATION — SELF-EMPLOYED BUSINESS OWNER
+────────────────────────────────────────────────────────────────────────────────
+Industry        : BFSI
+Workflow        : Loan Pre-Qualification
+Loan Type       : Personal Loan
+Complexity      : Intermediate
+Duration        : ~5 minutes
+Language        : English (Hinglish variation included)
+Company Ref     : HDFC Bank / Bajaj Finserv style
+
+PARAMETERS CAPTURED IN THIS SCRIPT:
+  ✔ Annual Pre-tax Income      → ₹12,00,000 (self-employed, net profit)
+  ✔ Estimated Credit Score     → ~720 (approximate)
+  ✔ Desired Loan Amount        → ₹5,00,000
+  ✔ Loan Duration              → 3 years
+  ✔ Type of Loan               → Personal Loan (business working capital)
+  ✔ Employment Status          → Self-Employed (retail business owner)
+
+--------------------------------------------------------------------------------
+DIALOGUE
+--------------------------------------------------------------------------------
+AGENT : "Thank you for calling HDFC Bank. I'm Arjun, your virtual loan
+         assistant. How can I help you today?"
+
+USER  : "I need a loan of 5 lakhs for my business. What are my options?"
+
+[SYSTEM: Intent = loan_inquiry | Amount = ₹5,00,000 | Business purpose]
+
+AGENT : "I can definitely help with that. To find the best option for you,
+         may I ask — are you looking for a personal loan, or a business loan
+         specifically?"
+
+USER  : "Personal loan would be fine. I just need funds quickly."
+
+[SYSTEM: Type of Loan = Personal Loan | Slot filled]
+
+AGENT : "Understood. What repayment tenure are you looking at — 1, 2, 3, or
+         5 years?"
+
+USER  : "3 years should work."
+
+[SYSTEM: Loan Duration = 3 years | Slot filled]
+
+AGENT : "And what is your employment or business status — are you salaried,
+         or do you run your own business?"
+
+USER  : "I have my own shop — a medical supply store in Pune. Running it for
+         4 years now."
+
+[SYSTEM: Employment Status = Self-Employed, Retail Business, 4 years vintage |
+         Slot filled]
+
+AGENT : "Good — 4 years of business vintage works in your favour for loan
+         eligibility. What is your approximate annual income from the business
+         before taxes? You can share the net profit figure from your ITR."
+
+USER  : "My ITR shows around 12 lakhs last year."
+
+[SYSTEM: Annual Pre-tax Income = ₹12,00,000 | Slot filled]
+
+AGENT : "That's a healthy income. Do you have a rough idea of your credit
+         score? Even approximately — above 750, between 700–750, or below 700?"
+
+USER  : "I think around 720. I checked maybe 6 months ago."
+
+[SYSTEM: Estimated Credit Score = ~720 | Slot filled]
+
+AGENT : "Got it — 720 is a decent score for personal loan eligibility. Let me
+         summarise your pre-qualification profile:
+
+         Loan Type         : Personal Loan
+         Desired Amount    : ₹5,00,000
+         Tenure            : 3 years
+         Annual Income     : ₹12,00,000 (ITR)
+         Credit Score      : ~720
+         Employment Status : Self-Employed (Medical Supplies, 4 yrs)
+
+         Assessment:
+         ✔ You are eligible for a personal loan. HDFC Bank offers personal
+           loans to self-employed individuals with minimum 2 years of business.
+         ✔ For self-employed customers with a 720 CIBIL score, interest rates
+           are typically in the range of 13–15% p.a.
+         ✔ At 14% p.a. for ₹5 lakhs over 3 years, your estimated EMI would
+           be approximately ₹17,093 per month.
+         ⚠ Note: A score of 750+ could bring the rate down to 11–12%. You
+           may want to check your current score before applying.
+
+         Shall I connect you with a personal loan specialist for the next
+         steps?"
+
+USER  : "Yes. Also — can I get the loan in 24 hours?"
+
+AGENT : "For self-employed applicants, HDFC Bank typically takes 3–5 working
+         days after document submission for personal loans. However, if you are
+         an existing HDFC Bank account holder, there may be a pre-approved
+         offer with faster disbursement. Are you an existing HDFC customer?"
+
+USER  : "Yes, I have a current account with HDFC."
+
+[SYSTEM: Existing customer = YES | Flag for pre-approved offer check]
+
+AGENT : "Excellent — that changes things. Let me flag this for our specialist
+         who can check if you have a pre-approved offer, which could be
+         disbursed within 4–24 hours. Specialist will call you within 2 hours.
+         Lead reference: PLL20260329-SE-002."
+
+- - -
+DISTRACTION EXAMPLE
+- - -
+USER  : "My chartered accountant told me I should take a business loan instead.
+         What do you think?"
+
+AGENT : "Your CA makes a valid point — business loans can sometimes offer
+         better rates for business purposes and may have tax implications too.
+         A personal loan is faster and needs less documentation. Our specialist
+         can compare both options for your specific case. Shall I schedule
+         that call?"
+
+- - -
+HINGLISH VARIATION (Key Exchange)
+- - -
+USER  : "5 lakh personal loan chahiye, business ke liye. Self-employed hoon."
+AGENT : "Annual income kitni hai? ITR mein kya show hota hai?"
+USER  : "12 lakh hai last year ki. CIBIL 720 ke aaspaas hai."
+AGENT : "720 score ke saath eligible hain. Rate 13-15% ke beech hogi.
+         3 saal mein EMI ₹17,093 per month hogi."
+
+RESOLUTION  : Pre-qualification completed ✔ | All 6 parameters captured ✔
+              Pre-approved offer flag raised ✔
+SUCCESS METRICS: Correct rate range quoted for self-employed segment,
+                 existing customer advantage identified, lead captured
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT LPQ-03: CAR LOAN PRE-QUALIFICATION — FIRST-TIME BUYER, SALARIED
+────────────────────────────────────────────────────────────────────────────────
+Industry        : BFSI
+Workflow        : Loan Pre-Qualification
+Loan Type       : Car Loan
+Complexity      : Basic
+Duration        : ~4 minutes
+Language        : English (Hinglish variation included)
+Company Ref     : Kotak Mahindra Bank / Maruti Finance style
+
+PARAMETERS CAPTURED IN THIS SCRIPT:
+  ✔ Annual Pre-tax Income      → ₹8,40,000 (₹70,000/month gross)
+  ✔ Estimated Credit Score     → 680 (first credit product)
+  ✔ Desired Loan Amount        → ₹7,00,000
+  ✔ Loan Duration              → 5 years
+  ✔ Type of Loan               → Car Loan
+  ✔ Employment Status          → Salaried (Government employee)
+
+--------------------------------------------------------------------------------
+DIALOGUE
+--------------------------------------------------------------------------------
+AGENT : "Good afternoon! Kotak Bank loan helpline, I'm Maya. How can I assist
+         you today?"
+
+USER  : "I want to buy a car and need a loan. I've never taken a loan before.
+         Is that a problem?"
+
+[SYSTEM: Intent = car_loan_pre_qualification | First-time borrower flag]
+
+AGENT : "Not at all — many first-time buyers get car loans successfully.
+         Let me quickly check your eligibility. What type of loan is this —
+         for a new car or a used car?"
+
+USER  : "New car. I'm looking at a Maruti Dzire."
+
+[SYSTEM: Type of Loan = New Car Loan | Vehicle = Maruti Dzire (~₹9L on-road)]
+
+AGENT : "Good choice. The Dzire is a very popular option. How much loan are
+         you looking to take — do you have a down payment in mind?"
+
+USER  : "I can pay 2 lakhs down. So loan would be about 7 lakhs."
+
+[SYSTEM: Desired Loan Amount = ₹7,00,000 | Slot filled]
+
+AGENT : "And what tenure are you comfortable with — 3, 5, or 7 years?"
+
+USER  : "5 years."
+
+[SYSTEM: Loan Duration = 5 years | Slot filled]
+
+AGENT : "Are you currently employed — salaried, self-employed, or in
+         business?"
+
+USER  : "I'm a government school teacher. Permanent job."
+
+[SYSTEM: Employment Status = Salaried, Government, Permanent | Very strong
+         profile for lenders | Slot filled]
+
+AGENT : "That's actually a very strong profile — government employees with
+         permanent positions are preferred by most lenders. What is your
+         approximate annual salary before tax deductions?"
+
+USER  : "I get around 70,000 per month gross. So about 8.4 lakhs a year."
+
+[SYSTEM: Annual Pre-tax Income = ₹8,40,000 | Slot filled]
+
+AGENT : "Good. Now — since this is your first loan, you may not have a CIBIL
+         score yet, or it may be limited. Do you have any credit cards or
+         previous loans?"
+
+USER  : "I have one credit card — used it for 8 months."
+
+[SYSTEM: Credit history = thin file, ~8 months credit card | Score estimate
+         ~650–700 range]
+
+AGENT : "That's helpful. With 8 months of credit card usage, you likely have
+         a score in the 650–700 range — this is workable for a car loan.
+         Would you say you've always paid your credit card bill on time?"
+
+USER  : "Yes, always full payment."
+
+[SYSTEM: Estimated Credit Score = ~680 (thin file, clean payment history) |
+         Slot filled]
+
+AGENT : "Perfect — on-time payments are the most important factor. Here's
+         your pre-qualification summary:
+
+         Loan Type         : New Car Loan
+         Desired Amount    : ₹7,00,000
+         Tenure            : 5 years
+         Annual Income     : ₹8,40,000
+         Credit Score      : ~680 (thin file, clean history)
+         Employment        : Salaried Government (Permanent)
+
+         Assessment:
+         ✔ You are eligible for a car loan. Government permanent employees
+           are a preferred segment for most banks.
+         ✔ Expected interest rate: 9.5–11% p.a. given thin credit file.
+           As your credit history grows (12+ months), rates improve.
+         ✔ At 10% for ₹7 lakhs over 5 years, EMI ≈ ₹14,873/month.
+         ✔ EMI-to-income ratio: ~21% — well within the 40–50% limit.
+
+         I'd recommend applying through Maruti Finance or Kotak Bank — both
+         are car-loan-friendly for first-time borrowers. Shall I schedule a
+         specialist callback?"
+
+USER  : "Yes please. When can they call?"
+
+AGENT : "I'll schedule a callback within 4 hours. Reference: CLL20260329-
+         GOV-003. You'll receive an SMS confirmation."
+
+- - -
+DISTRACTION EXAMPLE
+- - -
+USER  : "My friend said I should go to the car dealer directly for finance.
+         Is that better?"
+
+AGENT : "Dealer finance is convenient but often at higher rates (11–14%).
+         Direct bank loans like Kotak or SBI are usually 1–2% cheaper on the
+         same loan amount, saving you ₹20,000–40,000 over 5 years. Our
+         specialist can show you a side-by-side comparison. Want that?"
+
+- - -
+HINGLISH VARIATION
+- - -
+USER  : "Pehli baar loan le raha hoon, car ke liye. Government teacher hoon."
+AGENT : "Government job mein hain — ye bahut strong profile hai. 7 lakh
+         chahiye 5 saal ke liye? Income kitni hai per month?"
+USER  : "70,000 per month. CIBIL score abhi zyada nahi hai."
+AGENT : "8 mahine ka credit card history hai toh ~680 hoga score. Eligible
+         hain — EMI hogi ₹14,873 per month 10% rate par."
+
+RESOLUTION  : Pre-qualification completed ✔ | All 6 parameters captured ✔
+              First-time borrower guidance provided ✔
+SUCCESS METRICS: Thin-file borrower correctly assessed, government employee
+                 advantage flagged, realistic rate range quoted
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT LPQ-04: EDUCATION LOAN PRE-QUALIFICATION — PARENT CALLING FOR CHILD'S
+               ABROAD STUDIES
+────────────────────────────────────────────────────────────────────────────────
+Industry        : BFSI
+Workflow        : Loan Pre-Qualification
+Loan Type       : Education Loan
+Complexity      : Complex
+Duration        : ~6 minutes
+Language        : English (Hinglish variation included)
+Company Ref     : SBI Vidyarthi Plus / Axis Bank Education Loan style
+
+PARAMETERS CAPTURED IN THIS SCRIPT:
+  ✔ Annual Pre-tax Income      → ₹15,00,000 (father, salaried)
+  ✔ Estimated Credit Score     → 780 (father as co-applicant)
+  ✔ Desired Loan Amount        → ₹30,00,000 (USD 36,000 approx.)
+  ✔ Loan Duration              → 7 years (2 yr study + 5 yr repayment)
+  ✔ Type of Loan               → Education Loan (abroad — Masters program)
+  ✔ Employment Status          → Salaried (father, co-applicant) / Student
+                                  (primary applicant)
+
+--------------------------------------------------------------------------------
+DIALOGUE
+--------------------------------------------------------------------------------
+AGENT : "Good evening! SBI loan helpline, I'm Sneha. How can I help you?"
+
+USER  : "My daughter got admission to a university in Canada for Masters. I
+         need to know about education loans — how much can we get?"
+
+[SYSTEM: Intent = education_loan_pre_qualification | Country = Canada |
+         Degree = Masters]
+
+AGENT : "Congratulations to your daughter! Canada is a great choice. I can
+         help check your loan eligibility. Is the loan primarily in your name
+         as a parent co-applicant, or in your daughter's name?"
+
+USER  : "She'll be the main applicant but I'll be the guarantor."
+
+[SYSTEM: Primary applicant = Student | Co-applicant/guarantor = Parent]
+
+AGENT : "That's the standard structure for education loans. What is the total
+         course fee and living expenses estimate — roughly, how much loan are
+         you looking for?"
+
+USER  : "Total expenses will be around 30 to 35 lakhs over 2 years."
+
+[SYSTEM: Desired Loan Amount = ₹30,00,000 | Slot filled]
+
+AGENT : "For the loan tenure — education loans typically have a moratorium
+         period (study period + 6 months or 1 year after course completion),
+         and then repayment begins. What repayment tenure after the moratorium
+         are you comfortable with?"
+
+USER  : "5 years of repayment after she finishes. So total 7 years roughly."
+
+[SYSTEM: Loan Duration = 7 years total (2 study + 5 repayment) | Slot filled]
+
+AGENT : "Now, as the co-applicant and guarantor, I'll need to assess your
+         profile too. What is your current employment status?"
+
+USER  : "I'm a manager at a private company. Have been working for 18 years."
+
+[SYSTEM: Employment Status = Salaried, Private sector, 18 years experience |
+         Slot filled]
+
+AGENT : "Excellent — 18 years of experience is a very stable profile. What is
+         your approximate annual income before tax?"
+
+USER  : "Around 15 lakhs per year."
+
+[SYSTEM: Annual Pre-tax Income = ₹15,00,000 | Slot filled]
+
+AGENT : "And do you have an idea of your CIBIL score? As co-applicant, your
+         credit profile plays a key role in loan approval."
+
+USER  : "I checked recently — it was 780."
+
+[SYSTEM: Estimated Credit Score = 780 | ALL 6 MANDATORY SLOTS FILLED ✔]
+
+AGENT : "Perfect — 780 is an excellent score. Here's your pre-qualification
+         summary:
+
+         Loan Type         : Education Loan (Abroad — Canada, Masters)
+         Desired Amount    : ₹30,00,000
+         Tenure            : 7 years (2 yr study + 5 yr repayment)
+         Co-applicant Income: ₹15,00,000 p.a.
+         CIBIL (Co-applicant): 780
+         Employment        : Salaried, 18 years experience
+
+         Assessment:
+         ✔ Strong eligibility. SBI Vidyarthi Plus covers up to ₹1.5 crore for
+           abroad studies — ₹30 lakhs is well within limit.
+         ✔ For loans above ₹7.5 lakhs, collateral is typically required.
+           This could be property, FD, or LIC policy.
+         ✔ Interest rate: ~10.5–11.5% p.a. for abroad education loans.
+           Women students get an additional 0.5% concession — applicable
+           if your daughter is the primary applicant.
+         ✔ Tax benefit: Interest paid is deductible under Section 80E of
+           Income Tax Act — no limit on amount, for 8 years.
+         ✔ Moratorium: No EMI during study period + 6 months. Simple interest
+           accrues.
+
+         Next steps: I'll schedule a callback with our education loan
+         specialist. You'll need the university admission letter, fee
+         structure, co-applicant income proof, and collateral documents."
+
+USER  : "Great. What about visa — will the loan letter help?"
+
+AGENT : "Yes — banks issue a sanction letter which is accepted by Canadian
+         visa authorities as proof of funds. Our specialist will guide you on
+         the exact format required for the visa application. Callback within
+         2 hours — reference ELL20260329-CAN-004."
+
+- - -
+DISTRACTION EXAMPLE
+- - -
+USER  : "Canada is expensive these days. Is the UK better for education?"
+
+AGENT : "Both are excellent destinations! I can help with loan eligibility
+         regardless of country — SBI education loans cover 130+ countries.
+         The loan structure is similar for UK and Canada. Let's lock in your
+         pre-qualification, and the specialist can guide you based on the
+         final university choice."
+
+- - -
+HINGLISH VARIATION
+- - -
+USER  : "Beti ka Canada mein Masters mein admission hua hai. 30 lakh chahiye."
+AGENT : "Bahut badhai! Aap co-applicant honge na? Aapki annual income kitni
+         hai aur CIBIL score kya hai?"
+USER  : "15 lakh salary hai, CIBIL 780 hai."
+AGENT : "780 score ke saath bahut strong profile hai. Section 80E ke
+         under interest tax-free bhi hoga. Specialist call karega 2 ghante
+         mein."
+
+RESOLUTION  : Pre-qualification completed ✔ | All 6 parameters captured ✔
+              Tax benefit (80E) and visa letter guidance provided ✔
+SUCCESS METRICS: Abroad education loan specifics correctly explained,
+                 Section 80E mentioned, collateral requirement flagged
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT LPQ-05: MSME BUSINESS LOAN PRE-QUALIFICATION — MICRO-ENTERPRISE OWNER
+────────────────────────────────────────────────────────────────────────────────
+Industry        : BFSI
+Workflow        : Loan Pre-Qualification
+Loan Type       : Business Loan (MSME / Mudra)
+Complexity      : Complex
+Duration        : ~6 minutes
+Language        : English (Hinglish variation included)
+Company Ref     : SBI Mudra / SIDBI / HDFC Business Loan style
+
+PARAMETERS CAPTURED IN THIS SCRIPT:
+  ✔ Annual Pre-tax Income      → ₹9,60,000 (net business profit)
+  ✔ Estimated Credit Score     → 690
+  ✔ Desired Loan Amount        → ₹15,00,000
+  ✔ Loan Duration              → 5 years
+  ✔ Type of Loan               → Business Loan (MSME — machinery purchase)
+  ✔ Employment Status          → Self-Employed (Proprietor, 6 years)
+
+--------------------------------------------------------------------------------
+DIALOGUE
+--------------------------------------------------------------------------------
+AGENT : "Good morning! SBI Business Loan helpline, I'm Ravi. How can I help
+         you today?"
+
+USER  : "I run a small manufacturing unit. I need a loan to buy new machinery.
+         What loans are available for me?"
+
+[SYSTEM: Intent = business_loan_inquiry | Sector = Manufacturing | Purpose =
+         Machinery purchase]
+
+AGENT : "We have several options for MSME businesses including Mudra Loans,
+         CGTMSE-backed business loans, and equipment finance. To check which
+         is best for you, may I ask a few quick questions?"
+
+USER  : "Sure."
+
+AGENT : "What is the approximate loan amount you need for the machinery?"
+
+USER  : "Around 15 lakhs."
+
+[SYSTEM: Desired Loan Amount = ₹15,00,000 | Slot filled]
+
+AGENT : "And what repayment tenure are you looking at?"
+
+USER  : "5 years would be manageable."
+
+[SYSTEM: Loan Duration = 5 years | Slot filled]
+
+AGENT : "What type of loan is this exactly — do you need it specifically for
+         equipment purchase, or working capital, or both?"
+
+USER  : "Only for machinery. CNC machine for my workshop."
+
+[SYSTEM: Type of Loan = Equipment/Machinery Loan under MSME Business Loan |
+         Slot filled]
+
+AGENT : "Understood. And what is your current business structure — are you a
+         proprietorship, partnership, or private limited company?"
+
+USER  : "Proprietorship. I've been running this for 6 years now."
+
+[SYSTEM: Employment Status = Self-Employed, Proprietor, 6 years vintage |
+         Slot filled]
+
+AGENT : "6 years of business is very good — most banks require a minimum of
+         2–3 years. What is your approximate annual net profit from the
+         business? You can refer to your last ITR filing."
+
+USER  : "Last year my profit was around 9.6 lakhs after expenses."
+
+[SYSTEM: Annual Pre-tax Income = ₹9,60,000 | Slot filled]
+
+AGENT : "Good. And do you have a rough idea of your CIBIL or CIBIL MSME
+         score? Even a range is fine."
+
+USER  : "I think it's around 690. I had one late payment two years ago."
+
+[SYSTEM: Estimated Credit Score = 690 | One late payment noted | Slot filled |
+         ALL 6 MANDATORY SLOTS FILLED ✔]
+
+AGENT : "Thank you — I have all the information I need. Here's your
+         pre-qualification summary:
+
+         Loan Type         : MSME Business Loan (Equipment Finance)
+         Desired Amount    : ₹15,00,000
+         Tenure            : 5 years
+         Annual Net Profit : ₹9,60,000
+         CIBIL Score       : ~690
+         Business Status   : Proprietorship, 6 years, Manufacturing
+
+         Assessment:
+         ✔ You are eligible under the MSME equipment finance category.
+         ✔ MUDRA Tarun loan covers up to ₹10 lakhs (no collateral).
+           For ₹15 lakhs, CGTMSE scheme provides government guarantee —
+           no collateral required for loans up to ₹2 crore.
+         ✔ At ₹15 lakhs over 5 years at approximately 12% p.a., EMI would
+           be ₹33,367/month — 42% of net monthly income (₹80,000), which
+           is borderline. Requesting ₹12 lakhs may improve approval odds.
+         ⚠ CIBIL score of 690 with one late payment: most PSU banks require
+           700+. You may want to check if the late payment is over 2 years
+           old — older issues have less impact.
+         ✔ Under CGTMSE scheme, SBI charges a guarantee fee of ~1.5% p.a.
+           on outstanding loan — this is added to your repayment cost.
+
+         Shall I schedule you with our MSME loan specialist who can guide
+         you on CGTMSE documentation and the fastest route to approval?"
+
+USER  : "Yes. Also, how long will approval take?"
+
+AGENT : "For MSME loans under CGTMSE, PSU banks like SBI typically process
+         in 15–30 working days. Private banks like HDFC are faster — 7–14
+         days but at slightly higher rates. Our specialist can advise which
+         route is best for your timeline. Reference: BLL20260329-MFG-005."
+
+- - -
+DISTRACTION EXAMPLE
+- - -
+USER  : "GST filing is such a headache. I'm thinking of closing the business."
+
+AGENT : "I completely understand — GST compliance can be challenging for
+         small businesses. However, your 6 years of business history is
+         actually a very valuable asset for loan eligibility. Let's get this
+         machinery loan sorted and that should help your business grow. Shall
+         we proceed with the specialist callback?"
+
+- - -
+HINGLISH VARIATION
+- - -
+USER  : "CNC machine ke liye 15 lakh chahiye. 6 saal se manufacturing
+         business hai. CIBIL 690 ke aaspaas hai."
+AGENT : "CGTMSE scheme ke through collateral nahi chahiye 15 lakh ke liye.
+         EMI hogi ₹33,367 per month 5 saal ke liye. Specialist 15-30 din
+         mein approval karwa sakta hai."
+
+RESOLUTION  : Pre-qualification completed ✔ | All 6 parameters captured ✔
+              CGTMSE collateral-free option explained ✔ | CIBIL concern
+              flagged honestly ✔
+SUCCESS METRICS: MSME-specific schemes correctly identified, borderline CIBIL
+                 handled honestly, equipment loan route explained clearly
+
+
+================================================================================
+END OF FILE — BFSI LOAN PRE-QUALIFICATION SCRIPTS (LPQ-01 TO LPQ-05)
+================================================================================

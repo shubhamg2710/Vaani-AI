@@ -1,0 +1,641 @@
+================================================================================
+VOXBHARAT — CALL SCRIPTS
+Industry: Automotive | Workflow: Routine Service Booking
+Total Scripts: 5
+================================================================================
+MANDATORY PARAMETERS TO CAPTURE (ALL SCRIPTS):
+  1. Vehicle Make and Model
+  2. Vehicle Year
+  3. Primary Service Requested
+  4. Preferred Date and Time
+  5. Customer Contact Number
+================================================================================
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT RSB-01: ANNUAL 30,000 KM SERVICE — MARUTI SWIFT (ARENA)
+────────────────────────────────────────────────────────────────────────────────
+Industry        : Automotive
+Workflow        : Routine Service Booking
+Complexity      : Basic
+Duration        : ~4 minutes
+Language        : English (Hinglish variation included)
+Company Ref     : Maruti Suzuki Arena / TRUE SERVICE Program
+
+PARAMETERS CAPTURED IN THIS SCRIPT:
+  ✔ Vehicle Make and Model   → Maruti Suzuki Swift VXI
+  ✔ Vehicle Year             → 2021
+  ✔ Primary Service Requested→ 30,000 km periodic service
+  ✔ Preferred Date and Time  → Saturday 5th April, 10:00 AM
+  ✔ Customer Contact Number  → 9876543210
+
+--------------------------------------------------------------------------------
+DIALOGUE
+--------------------------------------------------------------------------------
+AGENT : "Hello! Thank you for calling Maruti Suzuki customer care. I'm Priya.
+         How can I help you today?"
+
+USER  : "I need to book a service for my car."
+
+[SYSTEM: Intent = service_booking | All slots empty]
+
+AGENT : "I'd be happy to help schedule that. Could you please share your
+         vehicle's registration number or tell me the make and model?"
+
+USER  : "It's a Maruti Swift. Registration is KA05MN4321."
+
+[SYSTEM: Vehicle lookup: Maruti Suzuki Swift VXI 2021 | Last service: 20,000 km
+         Aug 2024 | Current estimated mileage: ~30,500 km]
+
+AGENT : "Found it — your Maruti Swift VXI, 2021 model. It looks like your
+         last service was at 20,000 km in August 2024. It's now due for the
+         30,000 km periodic service. Is that the service you're looking to
+         book?"
+
+[SYSTEM: Vehicle Make and Model = Maruti Suzuki Swift VXI ✔
+         Vehicle Year = 2021 ✔
+         Primary Service = 30,000 km periodic service ✔]
+
+USER  : "Yes, exactly. The engine oil needs changing for sure."
+
+AGENT : "Definitely — the 30,000 km service includes engine oil and filter
+         change, air filter inspection, brake fluid check, tyre rotation, and
+         a full safety inspection. Approximate cost: ₹3,800–₹5,200 depending
+         on the oil grade you choose. Which service center do you prefer?"
+
+USER  : "The one in Koramangala, Bangalore."
+
+[SYSTEM: Service center = Maruti Suzuki Arena, Koramangala, Bangalore |
+         Available slots checked]
+
+AGENT : "Maruti Arena Koramangala has availability. What date and time works
+         best for you?"
+
+USER  : "This Saturday — 5th April. Morning time, around 10 AM."
+
+[SYSTEM: Preferred Date and Time = Saturday 5th April, 10:00 AM ✔
+         Slot confirmed: 10:00 AM slot available]
+
+AGENT : "Saturday 5th April at 10:00 AM is available. And may I confirm your
+         contact number in case the service advisor needs to reach you?"
+
+USER  : "Yes, 9876543210."
+
+[SYSTEM: Customer Contact Number = 9876543210 ✔
+         ALL 5 MANDATORY SLOTS FILLED ✔]
+
+AGENT : "Perfect — all confirmed. Here's your booking summary:
+
+         Vehicle       : Maruti Swift VXI, 2021
+         Service       : 30,000 km Periodic Service
+         Date & Time   : Saturday, 5th April 2026 at 10:00 AM
+         Service Center: Maruti Arena, Koramangala, Bangalore
+         Contact       : 9876543210
+         Booking Ref   : SB20260405-SW-001
+
+         You'll receive an SMS confirmation shortly. Our driver can pick up
+         your car from your address if you'd like — free within 10 km. Would
+         you like that?"
+
+USER  : "Yes please. I'm at JP Nagar."
+
+[SYSTEM: Pickup requested | Address: JP Nagar | Driver ETA: 9:30 AM pickup]
+
+AGENT : "Noted — our driver will pick up your Swift at 9:30 AM from JP Nagar
+         and return it by approximately 5 PM. You'll receive SMS updates at
+         each stage through the Maruti TRUE SERVICE platform. Is there anything
+         else?"
+
+USER  : "No, that's perfect. Thanks."
+
+AGENT : "Thank you for calling Maruti Suzuki. Have a great weekend!"
+
+- - -
+DISTRACTION EXAMPLE
+- - -
+USER  : "By the way, do you think I should trade this in for a new Baleno?"
+
+AGENT : "The new Baleno is a great car! Our sales team would love to talk to
+         you about that. For now let me make sure your Swift's service is all
+         set — your booking reference is SB20260405-SW-001. For the Baleno
+         inquiry, shall I also connect you with our sales team?"
+
+- - -
+HINGLISH VARIATION (Key Exchange)
+- - -
+USER  : "Swift ki service book karni hai, 30,000 km ho gaye hain."
+AGENT : "Koramangala centre available hai Saturday 5 April 10 AM ko.
+         Pickup-drop free hai JP Nagar se. Contact number batayein?"
+USER  : "9876543210."
+AGENT : "Booking ho gayi — reference SB20260405-SW-001. SMS aayega."
+
+RESOLUTION  : Service booked ✔ | All 5 parameters captured ✔
+              Pickup arranged ✔ | Booking reference generated ✔
+SUCCESS METRICS: Booking confirmed within call, correct service type matched
+                 to mileage, pickup offered proactively
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT RSB-02: FIRST FREE SERVICE (1,000 KM) — TATA NEXON
+────────────────────────────────────────────────────────────────────────────────
+Industry        : Automotive
+Workflow        : Routine Service Booking
+Complexity      : Basic
+Duration        : ~4 minutes
+Language        : English (Hinglish variation included)
+Company Ref     : Tata Motors Authorized Service / iRA App
+
+PARAMETERS CAPTURED IN THIS SCRIPT:
+  ✔ Vehicle Make and Model   → Tata Nexon XZ+ Petrol
+  ✔ Vehicle Year             → 2026 (new vehicle)
+  ✔ Primary Service Requested→ First Free Service (1,000–1,500 km check)
+  ✔ Preferred Date and Time  → Wednesday 2nd April, 2:00 PM
+  ✔ Customer Contact Number  → 9988776655
+
+--------------------------------------------------------------------------------
+DIALOGUE
+--------------------------------------------------------------------------------
+AGENT : "Tata Motors customer care, good afternoon. I'm Aryan. How can I
+         help you?"
+
+USER  : "I just bought a Nexon last month. I need to book the first free
+         service. My odometer shows 1,100 km now."
+
+[SYSTEM: Intent = first_free_service_booking | Vehicle = Tata Nexon |
+         Mileage = 1,100 km — within first service window]
+
+AGENT : "Congratulations on your new Nexon! The first free service is due at
+         1,000–1,500 km, so you're right on time. Could you confirm the exact
+         variant — for example, XE, XM, XZ, or XZ+?"
+
+USER  : "It's the XZ+ petrol."
+
+[SYSTEM: Vehicle Make and Model = Tata Nexon XZ+ Petrol ✔]
+
+AGENT : "And what year was it registered? Was it this year — 2026?"
+
+USER  : "Yes, January 2026."
+
+[SYSTEM: Vehicle Year = 2026 ✔]
+
+AGENT : "The first free service includes a multi-point vehicle inspection,
+         all fluid level checks, tyre pressure adjustment, brake inspection,
+         and software update check — all at zero cost. Typically takes 2–3
+         hours. Which Tata authorized service center do you prefer?"
+
+USER  : "There's one in Andheri — can I go there?"
+
+[SYSTEM: Service center = Tata Authorized Service, Andheri, Mumbai |
+         Availability check]
+
+AGENT : "Tata Authorized Service at Andheri, Mumbai is available.
+         What is your preferred date and time?"
+
+USER  : "Wednesday, 2nd April. Afternoon — around 2 PM."
+
+[SYSTEM: Preferred Date and Time = Wednesday 2nd April 2:00 PM ✔
+         Slot availability: confirmed]
+
+AGENT : "2nd April at 2:00 PM is available at Andheri. May I have your
+         contact number for the booking confirmation?"
+
+USER  : "9988776655."
+
+[SYSTEM: Customer Contact Number = 9988776655 ✔
+         ALL 5 MANDATORY SLOTS FILLED ✔]
+
+AGENT : "All confirmed! Booking summary:
+
+         Vehicle       : Tata Nexon XZ+ Petrol, 2026
+         Service       : First Free Service (at 1,100 km)
+         Date & Time   : Wednesday, 2nd April 2026 at 2:00 PM
+         Service Center: Tata Authorised Service, Andheri, Mumbai
+         Contact       : 9988776655
+         Booking Ref   : FSB20260402-NXN-002
+
+         This service is completely free — no charges apply. You'll receive
+         an SMS confirmation. The service advisor may also check for any
+         TSBs (Technical Service Bulletins) applicable to your VIN and
+         apply any updates. Is there anything specific you'd like the
+         technician to check?"
+
+USER  : "The rear AC vents don't seem to blow much air. Can they check that?"
+
+[SYSTEM: Additional service note: rear AC airflow — logged as note on booking]
+
+AGENT : "Noted — I've added that as a note on your booking. The technician
+         will specifically check the rear AC duct and blower performance.
+         If it's a manufacturing issue, it would be covered under warranty
+         at zero cost. See you Wednesday!"
+
+- - -
+DISTRACTION EXAMPLE
+- - -
+USER  : "What do you think of the Nexon compared to the Creta?"
+
+AGENT : "Both are popular choices! I'm best placed to assist with your Tata
+         Nexon service and features. For a full comparison, our sales team
+         would love to help. Right now, shall we confirm your first free
+         service booking for 2nd April?"
+
+- - -
+HINGLISH VARIATION
+- - -
+USER  : "Nexon liya hai last month. Pehli free service karwani hai,
+         1,100 km ho gaye hain."
+AGENT : "Bilkul — first service 1,000–1,500 km par free hoti hai. Andheri
+         centre Wednesday 2 April 2 PM ko available hai. Contact number?"
+USER  : "9988776655."
+AGENT : "Booking confirmed — FSB20260402-NXN-002. Rear AC ka note bhi add
+         kiya. Technician check karega."
+
+RESOLUTION  : Service booked ✔ | All 5 parameters captured ✔
+              Additional concern logged ✔ | Warranty eligibility flagged ✔
+SUCCESS METRICS: First-service window correctly verified, additional concern
+                 proactively logged, zero-cost confirmed
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT RSB-03: AC SERVICE + TYRE ROTATION — HYUNDAI CRETA
+────────────────────────────────────────────────────────────────────────────────
+Industry        : Automotive
+Workflow        : Routine Service Booking
+Complexity      : Intermediate
+Duration        : ~5 minutes
+Language        : English (Hinglish variation included)
+Company Ref     : Hyundai Authorised Service / Hyundai BlueLink
+
+PARAMETERS CAPTURED IN THIS SCRIPT:
+  ✔ Vehicle Make and Model   → Hyundai Creta SX (O) Petrol Automatic
+  ✔ Vehicle Year             → 2023
+  ✔ Primary Service Requested→ AC service (gas recharge) + tyre rotation
+  ✔ Preferred Date and Time  → Friday 4th April, 8:30 AM (drop-and-go)
+  ✔ Customer Contact Number  → 9123456780
+
+--------------------------------------------------------------------------------
+DIALOGUE
+--------------------------------------------------------------------------------
+AGENT : "Hyundai India customer care, good morning. I'm Anjali. How can I
+         help you today?"
+
+USER  : "I need to book my Creta for an AC check. The cooling has reduced a
+         lot and I also want the tyres rotated."
+
+[SYSTEM: Intent = service_booking | Issues: AC performance + tyre rotation |
+         Vehicle = Hyundai Creta]
+
+AGENT : "I understand — reduced AC cooling is a common summer concern and
+         we'll get that sorted. Could you please share your registration
+         number so I can pull up your vehicle details?"
+
+USER  : "MH12DE6789."
+
+[SYSTEM: Vehicle: Hyundai Creta SX(O) 1.5 Petrol AT 2023 | Mileage: ~28,000 km
+         Last service: Oct 2024 at 20,000 km | Warranty: Active till Aug 2026]
+
+AGENT : "Got it — your Hyundai Creta SX(O) Petrol Automatic, 2023 model.
+         Last serviced at 20,000 km in October. You're at approximately
+         28,000 km now, so you're also due for a regular service soon.
+
+         For the AC check and gas recharge, our technicians will inspect
+         the compressor, condenser, cabin filter, and refrigerant level.
+         If it needs a recharge, cost is typically ₹1,500–₹2,500. Tyre
+         rotation is ₹400–₹600. Would you like to combine with a regular
+         service at ₹6,000–₹8,000 to save a second visit?"
+
+[SYSTEM: Vehicle Make and Model = Hyundai Creta SX(O) Petrol AT ✔
+         Vehicle Year = 2023 ✔
+         Primary Service = AC service + tyre rotation ✔]
+
+USER  : "Let's just do the AC and tyres today. I'll book the full service
+         next month."
+
+AGENT : "Absolutely. Which Hyundai authorised service center is convenient
+         for you?"
+
+USER  : "The one in Vashi, Navi Mumbai."
+
+[SYSTEM: Service center = Hyundai Authorised, Vashi, Navi Mumbai |
+         Slots available]
+
+AGENT : "Vashi has availability this week. What date and time works for you?"
+
+USER  : "Friday 4th April. Early morning — I want to drop it and go to work.
+         8:30 AM would be perfect."
+
+[SYSTEM: Preferred Date and Time = Friday 4th April, 8:30 AM ✔]
+
+AGENT : "8:30 AM Friday at Vashi is confirmed. May I have your contact number
+         for the booking?"
+
+USER  : "9123456780."
+
+[SYSTEM: Customer Contact Number = 9123456780 ✔
+         ALL 5 MANDATORY SLOTS FILLED ✔]
+
+AGENT : "All set! Booking confirmed:
+
+         Vehicle       : Hyundai Creta SX(O) Petrol AT, 2023
+         Service       : AC Inspection + Gas Recharge + Tyre Rotation
+         Date & Time   : Friday, 4th April 2026 at 8:30 AM
+         Service Center: Hyundai Authorised, Vashi, Navi Mumbai
+         Contact       : 9123456780
+         Booking Ref   : SB20260404-CRE-003
+
+         Estimated time: 3–4 hours for both jobs. Your service advisor will
+         call you before starting the AC recharge to confirm cost and get
+         your go-ahead. Since your warranty is active until August 2026 —
+         if the reduced cooling is due to a manufacturing defect rather than
+         normal refrigerant loss, it would be covered under warranty. The
+         technician will assess this.
+
+         Shall I also set a reminder for your full service next month?"
+
+USER  : "Yes please — remind me in 4 weeks."
+
+[SYSTEM: Reminder set: 29th April 2026 | Full 30,000 km service follow-up]
+
+- - -
+DISTRACTION EXAMPLE
+- - -
+USER  : "The Hyundai app keeps crashing — it's so annoying."
+
+AGENT : "I'm sorry to hear that — I'll note that for our app feedback team.
+         For immediate help on the app, you can try reinstalling BlueLink
+         or call our app support on 1800-11-4645. Now, shall I confirm your
+         Friday booking for the AC and tyres?"
+
+- - -
+HINGLISH VARIATION
+- - -
+USER  : "Creta ka AC sahi se thanda nahi kar raha. Tyre rotation bhi
+         karwana hai. Friday morning 8:30 book karo Vashi mein."
+AGENT : "Confirm ho gaya — SB20260404-CRE-003. AC check + gas recharge +
+         tyre rotation Friday 4 April 8:30 AM Vashi. Warranty active hai,
+         defect hua to free hoga."
+
+RESOLUTION  : Service booked ✔ | All 5 parameters captured ✔
+              Warranty check flagged ✔ | Next service reminder set ✔
+SUCCESS METRICS: Drop-and-go preference accommodated, warranty eligibility
+                 correctly communicated, cost range provided upfront
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT RSB-04: MAJOR 40,000 KM SERVICE + BRAKE PADS — HONDA CITY
+────────────────────────────────────────────────────────────────────────────────
+Industry        : Automotive
+Workflow        : Routine Service Booking
+Complexity      : Intermediate
+Duration        : ~5 minutes
+Language        : English (Hinglish variation included)
+Company Ref     : Honda India / Honda Care
+
+PARAMETERS CAPTURED IN THIS SCRIPT:
+  ✔ Vehicle Make and Model   → Honda City 5th Gen ZX Petrol CVT
+  ✔ Vehicle Year             → 2022
+  ✔ Primary Service Requested→ 40,000 km major service + brake pad replacement
+  ✔ Preferred Date and Time  → Monday 7th April, 9:00 AM
+  ✔ Customer Contact Number  → 9345678901
+
+--------------------------------------------------------------------------------
+DIALOGUE
+--------------------------------------------------------------------------------
+AGENT : "Honda India customer care, good morning. I'm Rahul. How can I help
+         you today?"
+
+USER  : "I need to book my Honda City for a service. It's reached 40,000 km."
+
+[SYSTEM: Intent = major_service_booking | Vehicle = Honda City |
+         Mileage = 40,000 km — major service interval]
+
+AGENT : "The 40,000 km service is an important milestone for the City —
+         we'll make sure it's thoroughly done. Could you share your
+         registration number?"
+
+USER  : "DL3CAQ2233."
+
+[SYSTEM: Vehicle: Honda City ZX 1.5 Petrol CVT 2022 | Last service: 30,000 km
+         Feb 2025 | Out of standard warranty (standard is 3 yr/1L km) |
+         Honda Care extended warranty: active]
+
+AGENT : "Your Honda City ZX CVT, 2022 — great car. At 40,000 km, the major
+         service includes engine oil and filter, spark plug replacement, air
+         filter, fuel filter, transmission fluid for the CVT, coolant top-up,
+         and a full multi-point inspection. Estimated cost: ₹10,000–₹14,000.
+         You mentioned anything additional?"
+
+[SYSTEM: Vehicle Make and Model = Honda City ZX Petrol CVT ✔
+         Vehicle Year = 2022 ✔]
+
+USER  : "Yes — I feel the brakes are getting soft. Probably need new pads."
+
+[SYSTEM: Primary Service = 40,000 km major service + brake pad inspection/
+         replacement | Slot filled ✔]
+
+AGENT : "That's important to address. Brake pad replacement on the City
+         typically costs ₹2,500–₹4,000 for both axles. The technician will
+         inspect both front and rear and recommend replacement only if the
+         pad thickness is below the safe limit. Which service center do you
+         prefer?"
+
+USER  : "Honda authorised in Dwarka, Delhi."
+
+AGENT : "Honda Care, Dwarka has availability. What date and time works best?"
+
+USER  : "Monday 7th April. Can I come at 9 AM?"
+
+[SYSTEM: Preferred Date and Time = Monday 7th April, 9:00 AM ✔
+         Slot: available confirmed]
+
+AGENT : "Monday 7th April at 9:00 AM is confirmed at Dwarka. Your contact
+         number for the booking?"
+
+USER  : "9345678901."
+
+[SYSTEM: Customer Contact Number = 9345678901 ✔
+         ALL 5 MANDATORY SLOTS FILLED ✔]
+
+AGENT : "Perfect. Your booking is confirmed:
+
+         Vehicle       : Honda City ZX CVT, 2022
+         Service       : 40,000 km Major Service + Brake Inspection
+         Date & Time   : Monday, 7th April 2026 at 9:00 AM
+         Service Center: Honda Care, Dwarka, Delhi
+         Contact       : 9345678901
+         Booking Ref   : SB20260407-CTY-004
+         Estimated Cost: ₹12,000–₹18,000 (including potential brake pads)
+
+         The service advisor will send you a detailed job card with itemised
+         costs before starting any work — nothing will be done without your
+         approval. I also see you have Honda Care extended warranty active,
+         so if any defect is found during inspection, it may be covered.
+
+         Estimated completion: 6–8 hours for a major service. Would you like
+         a courtesy drop to a nearby location while the car is in the
+         workshop?"
+
+USER  : "Yes — to the nearest Metro station would be great."
+
+[SYSTEM: Courtesy drop: Dwarka Sector 21 Metro station logged]
+
+- - -
+DISTRACTION EXAMPLE
+- - -
+USER  : "I'm thinking of switching to the City e:HEV hybrid. Worth it?"
+
+AGENT : "The City e:HEV is excellent — 26+ kmpl in city driving. Our sales
+         team at the same dealership can show you the hybrid and even arrange
+         a test drive while your car is being serviced Monday! Shall I add
+         that request to your booking notes?"
+
+- - -
+HINGLISH VARIATION
+- - -
+USER  : "City ka 40,000 km service karwana hai. Brakes bhi thoda soft lag
+         rahe hain."
+AGENT : "Major service mein CVT fluid bhi change hoga. Brake pads check
+         hogi — agar replace karni padi toh ₹2,500–4,000 alag se. Monday
+         7 April 9 AM Dwarka confirm hai. Contact number?"
+
+RESOLUTION  : Service booked ✔ | All 5 parameters captured ✔
+              Brake safety concern escalated to technician ✔
+              Courtesy drop arranged ✔
+SUCCESS METRICS: Major service interval correctly identified, brake concern
+                 flagged, cost range communicated transparently
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT RSB-05: DIESEL SERVICE + COMPLAINT — MAHINDRA XUV700
+────────────────────────────────────────────────────────────────────────────────
+Industry        : Automotive
+Workflow        : Routine Service Booking
+Complexity      : Complex
+Duration        : ~6 minutes
+Language        : English (Hinglish variation included)
+Company Ref     : Mahindra Authorised Service / Mahindra Genuine Service (MGS)
+
+PARAMETERS CAPTURED IN THIS SCRIPT:
+  ✔ Vehicle Make and Model   → Mahindra XUV700 AX7 Diesel AWD
+  ✔ Vehicle Year             → 2022
+  ✔ Primary Service Requested→ 40,000 km diesel service + vibration complaint
+  ✔ Preferred Date and Time  → Thursday 3rd April, 11:00 AM
+  ✔ Customer Contact Number  → 9654321098
+
+--------------------------------------------------------------------------------
+DIALOGUE
+--------------------------------------------------------------------------------
+AGENT : "Mahindra customer care, good afternoon. I'm Deepa. How can I help
+         you?"
+
+USER  : "I need to book my XUV700 for service. Also I have a complaint —
+         there's vibration at highway speeds above 100 kmph."
+
+[SYSTEM: Intent = service_booking + vehicle_complaint | Vehicle = Mahindra
+         XUV700 | Complaint = vibration at high speed]
+
+AGENT : "I understand — vibration at highway speeds should definitely be
+         looked at. Let me book both together. Could you share your
+         registration number?"
+
+USER  : "RJ14GH8899."
+
+[SYSTEM: Vehicle: Mahindra XUV700 AX7 2.2L Diesel AWD 2022 | Mileage: ~41,500 km
+         Last service: 30,000 km Sep 2024 | Warranty: 3 yr/1L km — ACTIVE]
+
+AGENT : "Your Mahindra XUV700 AX7 Diesel AWD, 2022 model. It's just past the
+         40,000 km mark — perfect timing for the major diesel service. This
+         will include engine oil (engine-specific diesel grade), oil filter,
+         air filter, diesel filter, tyre rotation, and brake inspection.
+         For the vibration complaint, the technician will do a wheel
+         balancing check and inspect the tyres, suspension, and drive shafts.
+
+         Estimated service cost: ₹9,500–₹12,000. Wheel balancing and
+         alignment if needed: ₹800–₹1,200."
+
+[SYSTEM: Vehicle Make and Model = Mahindra XUV700 AX7 Diesel AWD ✔
+         Vehicle Year = 2022 ✔
+         Primary Service = 40,000 km diesel service + vibration investigation ✔]
+
+AGENT : "Which Mahindra authorised workshop would you like to visit?"
+
+USER  : "The one in Jaipur — Vaishali Nagar area."
+
+[SYSTEM: Service center: Mahindra Genuine Service, Vaishali Nagar, Jaipur |
+         Slots: Thursday 3 April: 9 AM, 11 AM; Friday 4 April: various]
+
+AGENT : "Mahindra Genuine Service, Vaishali Nagar has availability. What date
+         and time works for you?"
+
+USER  : "Thursday 3rd April, if possible late morning — 11 AM?"
+
+[SYSTEM: Preferred Date and Time = Thursday 3rd April, 11:00 AM ✔
+         Slot: Confirmed available]
+
+AGENT : "Thursday 3rd April at 11:00 AM is confirmed. May I have your contact
+         number for the booking?"
+
+USER  : "9654321098."
+
+[SYSTEM: Customer Contact Number = 9654321098 ✔
+         ALL 5 MANDATORY SLOTS FILLED ✔]
+
+AGENT : "Booking confirmed:
+
+         Vehicle       : Mahindra XUV700 AX7 Diesel AWD, 2022
+         Service       : 40,000 km Major Diesel Service + Vibration
+                         Investigation (Wheel Balancing / Suspension Check)
+         Date & Time   : Thursday, 3rd April 2026 at 11:00 AM
+         Service Center: Mahindra Genuine Service, Vaishali Nagar, Jaipur
+         Contact       : 9654321098
+         Booking Ref   : SB20260403-XUV-005
+         Est. Duration : 6–8 hours
+
+         Important: I've also registered the vibration complaint as a
+         separate service record — complaint ID CMP20260329-VIB-005. This
+         ensures the technician gives it dedicated attention and not just
+         as a footnote on the service job card.
+
+         Since your warranty is active until 2025... actually let me recheck
+         — your warranty is valid for 3 years from registration or 1,00,000 km,
+         whichever is earlier. If the vibration is due to a manufacturing
+         defect in the drive shaft or suspension, it would be covered. The
+         service advisor will assess."
+
+USER  : "What if it's just the tyres needing balancing?"
+
+AGENT : "Tyre balancing and alignment is a wear-and-tear service, not covered
+         under warranty, but the cost is modest — ₹800 for balancing. The
+         technician will pinpoint the exact cause first. Estimated time for
+         your full visit: 6–8 hours. You'll receive SMS updates."
+
+- - -
+DISTRACTION EXAMPLE
+- - -
+USER  : "I read the XUV700 has some quality issues. Do you think I should
+         have bought the Fortuner?"
+
+AGENT : "The XUV700 is an award-winning SUV — the vibration you're
+         experiencing is likely something specific and fixable, such as tyre
+         imbalance, which is very common after long highway trips. Let's get
+         the technician to diagnose it Thursday. If there's any systemic
+         issue, the warranty ensures you're covered at zero cost."
+
+- - -
+HINGLISH VARIATION
+- - -
+USER  : "XUV700 ki service karwani hai aur 100 ke upar vibration aata hai."
+AGENT : "40,000 km diesel service + vibration check Thursday 3 April 11 AM
+         Vaishali Nagar confirm hai. Complaint ID bhi alag se register ki
+         gayi hai — CMP20260329-VIB-005. Warranty active hai toh manufacturing
+         defect free hoga."
+
+RESOLUTION  : Service booked ✔ | All 5 parameters captured ✔
+              Vibration complaint separately registered ✔
+              Warranty eligibility communicated ✔
+SUCCESS METRICS: Both service and complaint handled in one call, complaint
+                 given separate tracking ID, warranty check flagged correctly
+
+
+================================================================================
+END OF FILE — AUTOMOTIVE ROUTINE SERVICE BOOKING SCRIPTS (RSB-01 TO RSB-05)
+================================================================================

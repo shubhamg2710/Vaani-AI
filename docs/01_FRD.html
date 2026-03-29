@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vaani AI — Functional Requirements Document v1.0</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #FAF8F4;
+      color: #1e293b;
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    /* ── PAGE HEADER ──────────────────────────────────────── */
+    .page-header {
+      background: linear-gradient(135deg, #0D3B47 0%, #0A8EA0 100%);
+      color: #fff;
+      padding: 48px 48px 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-header::after {
+      content: '';
+      position: absolute;
+      bottom: -30px; left: 0; right: 0;
+      height: 60px;
+      background: #FAF8F4;
+      clip-path: ellipse(55% 100% at 50% 100%);
+    }
+    .page-header .badge-row {
+      display: flex; flex-wrap: wrap; gap: 10px;
+      margin-bottom: 18px;
+    }
+    .page-header .badge {
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .page-header h1 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+    .page-header .subtitle {
+      font-size: 15px;
+      opacity: 0.85;
+      margin-bottom: 28px;
+    }
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      max-width: 680px;
+    }
+    .meta-item { font-size: 12px; }
+    .meta-item .label { opacity: 0.65; text-transform: uppercase; letter-spacing: 0.08em; font-size: 10px; }
+    .meta-item .value { font-weight: 600; font-size: 13px; }
+
+    /* ── CONTAINER ────────────────────────────────────────── */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    /* ── SECTION CARDS ────────────────────────────────────── */
+    .section {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.05);
+      margin-bottom: 32px;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+    }
+
+    .section-header {
+      background: #0D3B47;
+      color: #fff;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-header h2 {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .section-header .section-num {
+      background: rgba(255,255,255,0.2);
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .section-body { padding: 24px; }
+
+    /* ── TABLE OF CONTENTS ────────────────────────────────── */
+    .toc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 8px;
+    }
+    .toc-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 7px;
+      border: 1px solid #e2e8f0;
+      text-decoration: none;
+      color: #1e293b;
+      transition: background 0.15s, border-color 0.15s;
+      font-size: 13px;
+    }
+    .toc-item:hover { background: #eff6ff; border-color: #93c5fd; }
+    .toc-item .toc-num {
+      font-size: 10px;
+      font-weight: 700;
+      background: #0D3B47;
+      color: #fff;
+      border-radius: 4px;
+      padding: 2px 6px;
+      white-space: nowrap;
+    }
+
+    /* ── PRIORITY BADGES ──────────────────────────────────── */
+    .priority {
+      display: inline-block;
+      border-radius: 12px;
+      padding: 2px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .p0 { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+    .p1 { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+    .p2 { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+
+    /* ── REQUIREMENT BLOCKS ───────────────────────────────── */
+    .requirement {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+    .req-header {
+      background: #f1f5f9;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #e2e8f0;
+      flex-wrap: wrap;
+    }
+    .req-id {
+      font-size: 12px;
+      font-weight: 800;
+      color: #0A8EA0;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 6px;
+      padding: 3px 10px;
+      white-space: nowrap;
+    }
+    .req-title {
+      font-weight: 700;
+      font-size: 14px;
+      color: #0f172a;
+      flex: 1;
+    }
+    .req-body { padding: 18px; }
+    .req-desc { margin-bottom: 14px; color: #475569; }
+
+    .req-detail-header {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #64748b;
+      margin: 14px 0 6px;
+    }
+    .req-list {
+      list-style: none;
+      padding: 0;
+    }
+    .req-list li {
+      padding: 5px 0 5px 18px;
+      position: relative;
+      color: #334155;
+      border-bottom: 1px dashed #f1f5f9;
+      font-size: 13px;
+    }
+    .req-list li:last-child { border-bottom: none; }
+    .req-list li::before {
+      content: '▸';
+      position: absolute; left: 0;
+      color: #0A8EA0;
+      font-size: 10px;
+      top: 7px;
+    }
+
+    /* ── ACCEPTANCE CRITERIA TABLE ────────────────────────── */
+    .acceptance {
+      margin-top: 16px;
+    }
+    .acceptance table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+    .acceptance table thead tr {
+      background: #0D3B47;
+      color: #fff;
+    }
+    .acceptance table thead th {
+      padding: 8px 12px;
+      text-align: left;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .acceptance table tbody tr:nth-child(even) { background: #FAF8F4; }
+    .acceptance table tbody tr:hover { background: #eff6ff; }
+    .acceptance table tbody td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: top;
+    }
+    .ac-id {
+      font-weight: 700;
+      color: #0A8EA0;
+      white-space: nowrap;
+    }
+    .ac-pass {
+      background: #dcfce7;
+      color: #166534;
+      border-radius: 10px;
+      padding: 1px 8px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* ── NFR TABLE ────────────────────────────────────────── */
+    .nfr-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .nfr-table thead tr { background: #0D3B47; color: #fff; }
+    .nfr-table thead th {
+      padding: 9px 14px;
+      text-align: left;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .nfr-table tbody tr:nth-child(even) { background: #FAF8F4; }
+    .nfr-table tbody td {
+      padding: 9px 14px;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: top;
+    }
+    .nfr-id {
+      font-weight: 700;
+      color: #0D3B47;
+      white-space: nowrap;
+    }
+
+    /* ── RISK TABLE ───────────────────────────────────────── */
+    .risk-block {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .risk-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fef3c7;
+      border-bottom: 1px solid #fcd34d;
+      padding: 10px 16px;
+    }
+    .risk-num {
+      font-weight: 800;
+      font-size: 12px;
+      color: #92400e;
+      background: #fcd34d;
+      border-radius: 50%;
+      width: 24px; height: 24px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .risk-title { font-weight: 700; color: #92400e; font-size: 13px; }
+    .risk-body { padding: 12px 16px; }
+    .risk-label {
+      font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: #64748b;
+    }
+    .risk-mit { color: #334155; font-size: 13px; margin-top: 3px; }
+
+    /* ── STAKEHOLDER CARDS ────────────────────────────────── */
+    .persona-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+    }
+    .persona-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 16px;
+      background: #fafbfc;
+    }
+    .persona-card .persona-name {
+      font-weight: 700;
+      font-size: 13px;
+      color: #0D3B47;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .persona-card .persona-num {
+      background: #0D3B47;
+      color: #fff;
+      border-radius: 50%;
+      width: 20px; height: 20px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 800;
+    }
+    .persona-card p { color: #475569; font-size: 12.5px; }
+
+    /* ── SCOPE TABLE ──────────────────────────────────────── */
+    .scope-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .scope-col h3 {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 10px;
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+    .scope-col.in h3 { background: #dcfce7; color: #166534; }
+    .scope-col.out h3 { background: #fee2e2; color: #991b1b; }
+    .scope-col ul { list-style: none; padding: 0; }
+    .scope-col ul li {
+      padding: 5px 0 5px 16px;
+      position: relative;
+      font-size: 13px;
+      color: #334155;
+      border-bottom: 1px dashed #f1f5f9;
+    }
+    .scope-col ul li:last-child { border-bottom: none; }
+    .scope-col.in ul li::before { content: '✓'; position: absolute; left: 0; color: #16a34a; font-weight: 700; }
+    .scope-col.out ul li::before { content: '✗'; position: absolute; left: 0; color: #dc2626; font-weight: 700; }
+
+    /* ── GLOSSARY ─────────────────────────────────────────── */
+    .glossary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 8px;
+    }
+    .gloss-item {
+      background: #FAF8F4;
+      border: 1px solid #e2e8f0;
+      border-radius: 7px;
+      padding: 10px 14px;
+    }
+    .gloss-term { font-weight: 700; color: #0D3B47; font-size: 13px; }
+    .gloss-def { color: #64748b; font-size: 12px; margin-top: 2px; }
+
+    /* ── EXECUTIVE SUMMARY ────────────────────────────────── */
+    .exec-summary p { color: #475569; margin-bottom: 12px; font-size: 13.5px; }
+    .kd-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .kd-card {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .kd-card .kd-icon { font-size: 18px; margin-bottom: 6px; }
+    .kd-card .kd-title { font-weight: 700; font-size: 12px; color: #1e40af; margin-bottom: 4px; }
+    .kd-card p { font-size: 12px; color: #334155; }
+
+    /* ── PRODUCT VISION ───────────────────────────────────── */
+    .vision-box {
+      background: linear-gradient(135deg, #eff6ff, #f0fdf4);
+      border: 1px solid #bfdbfe;
+      border-left: 4px solid #0A8EA0;
+      border-radius: 8px;
+      padding: 20px 24px;
+      font-style: italic;
+      font-size: 16px;
+      font-weight: 600;
+      color: #1e40af;
+      margin-bottom: 16px;
+    }
+
+    /* ── MISC ─────────────────────────────────────────────── */
+    .info-text { color: #475569; font-size: 13px; }
+    .lang-pill {
+      display: inline-block;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 2px 9px;
+      font-size: 11px;
+      margin: 2px;
+      color: #334155;
+    }
+    .tag-row { margin-top: 6px; }
+
+    hr.divider {
+      border: none;
+      border-top: 1px solid #e2e8f0;
+      margin: 20px 0;
+    }
+
+    @media (max-width: 640px) {
+      .scope-cols { grid-template-columns: 1fr; }
+      .page-header { padding: 32px 20px 28px; }
+      .page-header h1 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     PAGE HEADER
+══════════════════════════════════════════════════════════ -->
+<header class="page-header">
+  <div class="badge-row">
+    <span class="badge">Confidential</span>
+    <span class="badge">Version 1.0</span>
+    <span class="badge">March 2026</span>
+    <span class="badge">Status: Draft</span>
+  </div>
+  <h1>Vaani AI — Functional Requirements Document</h1>
+  <p class="subtitle">Real-Time Multilingual Conversational AI Platform &nbsp;|&nbsp; B2B Voice Agent Solution</p>
+  <div class="meta-grid">
+    <div class="meta-item">
+      <div class="label">Document ID</div>
+      <div class="value">VB-FRD-001</div>
+    </div>
+    <div class="meta-item">
+      <div class="label">Version</div>
+      <div class="value">1.0 (MVP)</div>
+    </div>
+    <div class="meta-item">
+      <div class="label">Date</div>
+      <div class="value">March 2026</div>
+    </div>
+    <div class="meta-item">
+      <div class="label">Status</div>
+      <div class="value">Draft</div>
+    </div>
+    <div class="meta-item">
+      <div class="label">Authors</div>
+      <div class="value">Product Team</div>
+    </div>
+    <div class="meta-item">
+      <div class="label">Reviewed By</div>
+      <div class="value">Tech Founder</div>
+    </div>
+    <div class="meta-item">
+      <div class="label">Classification</div>
+      <div class="value">Confidential</div>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════════════
+     MAIN CONTAINER
+══════════════════════════════════════════════════════════ -->
+<div class="container">
+
+  <!-- ── TABLE OF CONTENTS ──────────────────────────────── -->
+  <div class="section" id="toc">
+    <div class="section-header">
+      <h2>Table of Contents</h2>
+    </div>
+    <div class="section-body">
+      <div class="toc-grid">
+        <a class="toc-item" href="#exec"><span class="toc-num">§1</span> Executive Summary</a>
+        <a class="toc-item" href="#vision"><span class="toc-num">§2</span> Product Vision</a>
+        <a class="toc-item" href="#stakeholders"><span class="toc-num">§3</span> Stakeholders &amp; User Personas</a>
+        <a class="toc-item" href="#scope"><span class="toc-num">§4</span> System Scope</a>
+        <a class="toc-item" href="#f1"><span class="toc-num">F1</span> Multilingual ASR (Streaming)</a>
+        <a class="toc-item" href="#f2"><span class="toc-num">F2</span> Language Detection &amp; Code-Switch</a>
+        <a class="toc-item" href="#f3"><span class="toc-num">F3</span> LLM Orchestration &amp; Intent</a>
+        <a class="toc-item" href="#f4"><span class="toc-num">F4</span> Context &amp; Memory Management</a>
+        <a class="toc-item" href="#f5"><span class="toc-num">F5</span> Anti-Hallucination &amp; Domain Boundary</a>
+        <a class="toc-item" href="#f6"><span class="toc-num">F6</span> Distraction &amp; Off-Topic Handling</a>
+        <a class="toc-item" href="#f7"><span class="toc-num">F7</span> TTS with Streaming &amp; Prosody</a>
+        <a class="toc-item" href="#f8"><span class="toc-num">F8</span> Dialogue &amp; Turn Management</a>
+        <a class="toc-item" href="#f9"><span class="toc-num">F9</span> Call Flow &amp; Script Engine</a>
+        <a class="toc-item" href="#f10"><span class="toc-num">F10</span> Knowledge Base Management (RAG)</a>
+        <a class="toc-item" href="#f11"><span class="toc-num">F11</span> Self-Learning Module</a>
+        <a class="toc-item" href="#f12"><span class="toc-num">F12</span> Multi-Tenant &amp; Customization</a>
+        <a class="toc-item" href="#f13"><span class="toc-num">F13</span> Call Analytics &amp; Reporting</a>
+        <a class="toc-item" href="#f14"><span class="toc-num">F14</span> API &amp; Integration Layer</a>
+        <a class="toc-item" href="#f15"><span class="toc-num">F15</span> Security, Compliance &amp; Privacy</a>
+        <a class="toc-item" href="#f16"><span class="toc-num">F16</span> Admin Dashboard &amp; Configuration</a>
+        <a class="toc-item" href="#f17"><span class="toc-num">F17</span> Model Training &amp; Versioning</a>
+        <a class="toc-item" href="#f18"><span class="toc-num">F18</span> Evaluation &amp; Quality Benchmarking</a>
+        <a class="toc-item" href="#nfr"><span class="toc-num">§NFR</span> Non-Functional Requirements</a>
+        <a class="toc-item" href="#risks"><span class="toc-num">§R</span> Risks &amp; Mitigations</a>
+        <a class="toc-item" href="#glossary"><span class="toc-num">§G</span> Glossary</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── §1 EXECUTIVE SUMMARY ───────────────────────────── -->
+  <div class="section" id="exec">
+    <div class="section-header">
+      <span class="section-num">§1</span>
+      <h2>Executive Summary</h2>
+    </div>
+    <div class="section-body exec-summary">
+      <p>
+        This document defines the complete set of functional and non-functional requirements for
+        <strong>Vaani AI</strong> — a real-time multilingual conversational AI platform targeting B2B customers
+        (Startups, SMBs, and Enterprise) across the BFSI, Automotive, Government, and Healthcare domains.
+        The platform enables businesses to deploy production-grade voice AI agents capable of handling
+        inbound and outbound calls in the customer's native Indian or global language, with zero hallucination
+        guarantees and a self-improving feedback loop.
+      </p>
+      <p>
+        The MVP delivers three core capabilities: (1) a <strong>Generalized Real-Time Conversational Agent</strong>
+        using a Cascaded Speech-to-Speech (STS) pipeline — Speech → ASR → LLM → TTS → Speech; (2) an
+        <strong>Industry-Specific BFSI Agent</strong> covering banking, insurance, and loans; and (3) an
+        <strong>Industry-Specific Automotive Agent</strong> covering service booking, sales support, and
+        roadside assistance (RSA). Healthcare and Government verticals are planned for Phase 2.
+      </p>
+      <p>
+        All requirements in this document are written to be implementation-ready. Each functional requirement
+        includes a description, detailed sub-requirements, and a structured acceptance criteria table with
+        measurable pass/fail conditions suitable for QA engineering and UAT sign-off.
+      </p>
+      <div class="kd-grid">
+        <div class="kd-card">
+          <div class="kd-icon">&#127760;</div>
+          <div class="kd-title">20+ Languages</div>
+          <p>10+ Indic languages with native prosody and code-switching support</p>
+        </div>
+        <div class="kd-card">
+          <div class="kd-icon">&#9889;</div>
+          <div class="kd-title">&lt;500ms E2E Latency</div>
+          <p>Full ASR + LLM + TTS pipeline under 500ms at P95 — real conversation speed</p>
+        </div>
+        <div class="kd-card">
+          <div class="kd-icon">&#128737;</div>
+          <div class="kd-title">Zero Hallucination</div>
+          <p>RAG-only factual responses with guardrail layer and confidence thresholds</p>
+        </div>
+        <div class="kd-card">
+          <div class="kd-icon">&#128200;</div>
+          <div class="kd-title">Self-Improving</div>
+          <p>CSAT, escalation, and resolution signals feed bi-weekly fine-tuning pipeline</p>
+        </div>
+        <div class="kd-card">
+          <div class="kd-icon">&#128222;</div>
+          <div class="kd-title">Telephony-Optimized</div>
+          <p>8kHz G.711 audio, noise-robust ASR, barge-in detection, hold music</p>
+        </div>
+        <div class="kd-card">
+          <div class="kd-icon">&#128736;</div>
+          <div class="kd-title">Full B2B Platform</div>
+          <p>Multi-tenant, white-label, dashboard, analytics, and API integrations</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── §2 PRODUCT VISION ──────────────────────────────── -->
+  <div class="section" id="vision">
+    <div class="section-header">
+      <span class="section-num">§2</span>
+      <h2>Product Vision</h2>
+    </div>
+    <div class="section-body">
+      <div class="vision-box">
+        "Enable any business to deploy a voice AI agent that speaks every customer's language, resolves queries instantly, and gets smarter with every conversation."
+      </div>
+      <p class="info-text" style="margin-bottom:14px;">
+        Vaani AI is built on the belief that language should never be a barrier to accessing financial services,
+        vehicle support, or government information. By combining state-of-the-art multilingual ASR, LLM-powered
+        reasoning, and native TTS — all in a latency-optimized real-time pipeline — Vaani AI makes enterprise-grade
+        voice AI accessible to any business in India and beyond.
+      </p>
+      <p class="info-text"><strong>Key differentiators:</strong></p>
+      <ul class="req-list" style="margin-top:8px;">
+        <li>20+ languages including 10+ Indic languages (Hindi, Tamil, Telugu, Marathi, Bengali, Kannada, Gujarati, Punjabi, Malayalam, Odia)</li>
+        <li>Code-switching support: Hinglish, Tanglish, Bamglish — no re-initialization, single unified model</li>
+        <li>&lt;500ms end-to-end response latency (ASR + LLM + TTS combined at P95)</li>
+        <li>Anti-hallucination architecture: RAG-only factual answers, confidence thresholds, guardrail layer</li>
+        <li>Self-improving via call outcome learning (CSAT, escalation, resolution signals)</li>
+        <li>Telephony-optimized: 8kHz noisy audio, G.711 codec, background noise handling</li>
+        <li>Full B2B multi-tenant platform with white-labeling, analytics, and CRM integrations</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── §3 STAKEHOLDERS ────────────────────────────────── -->
+  <div class="section" id="stakeholders">
+    <div class="section-header">
+      <span class="section-num">§3</span>
+      <h2>Stakeholders &amp; User Personas</h2>
+    </div>
+    <div class="section-body">
+      <div class="persona-grid">
+        <div class="persona-card">
+          <div class="persona-name"><span class="persona-num">1</span> End User / Caller</div>
+          <p>Indian consumer calling a bank, car dealership, or government helpline. Varied tech literacy. May code-switch between languages. May be impatient, distracted, or calling from a noisy environment. Primary driver of CSAT and resolution metrics.</p>
+        </div>
+        <div class="persona-card">
+          <div class="persona-name"><span class="persona-num">2</span> Business Admin</div>
+          <p>Operations manager at HDFC Bank, Maruti Suzuki dealership, or an SMB configuring the agent. Non-technical. Uses the no-code dashboard for script building, KB management, and analytics. Needs simple UX with no engineering dependency.</p>
+        </div>
+        <div class="persona-card">
+          <div class="persona-name"><span class="persona-num">3</span> ML Ops Engineer</div>
+          <p>Fine-tunes ASR and LLM models, monitors WER and intent accuracy, manages training pipelines, and executes canary deployments. Works with Label Studio for human annotation and Weights &amp; Biases for experiment tracking.</p>
+        </div>
+        <div class="persona-card">
+          <div class="persona-name"><span class="persona-num">4</span> Developer / Integrator</div>
+          <p>Connects Vaani AI APIs to existing CRM (Salesforce), core banking systems (Finacle, Flexcube), and dealer management systems. Uses REST and WebSocket APIs. Needs reliable documentation, sandbox environments, and pre-built integration adapters.</p>
+        </div>
+        <div class="persona-card">
+          <div class="persona-name"><span class="persona-num">5</span> Compliance Officer</div>
+          <p>Ensures adherence to RBI guidelines, IRDAI regulations, GDPR, and India's DPDP Act 2023. Reviews audit logs, verifies PII masking, data localization, call recording retention policies, and signs off on data erasure requests.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── §4 SYSTEM SCOPE ────────────────────────────────── -->
+  <div class="section" id="scope">
+    <div class="section-header">
+      <span class="section-num">§4</span>
+      <h2>System Scope</h2>
+    </div>
+    <div class="section-body">
+      <div class="scope-cols">
+        <div class="scope-col in">
+          <h3>In Scope — MVP</h3>
+          <ul>
+            <li>Real-time voice call handling (inbound + outbound)</li>
+            <li>Multi-language ASR streaming (20+ languages)</li>
+            <li>LLM-powered response generation with RAG</li>
+            <li>Multi-language TTS streaming with native prosody</li>
+            <li>Dialogue state management and call script execution</li>
+            <li>Self-learning from call outcome signals</li>
+            <li>Analytics dashboard (real-time + historical)</li>
+            <li>Multi-tenant B2B platform with white-labeling</li>
+            <li>BFSI-specific agent (banking, insurance, loans)</li>
+            <li>Automotive-specific agent (service, sales, RSA)</li>
+            <li>Telephony integration (Twilio, Exotel)</li>
+            <li>CRM integration (Salesforce)</li>
+            <li>Admin dashboard and no-code configuration</li>
+            <li>Security, compliance, and audit logging</li>
+          </ul>
+        </div>
+        <div class="scope-col out">
+          <h3>Out of Scope — MVP (Phase 2+)</h3>
+          <ul>
+            <li>Video calling</li>
+            <li>Physical IVR hardware manufacturing</li>
+            <li>WhatsApp / chat channel (Phase 2)</li>
+            <li>Healthcare vertical (Phase 2)</li>
+            <li>Government vertical (Phase 2)</li>
+            <li>On-premise deployment (Phase 2 for enterprise)</li>
+            <li>Voice biometrics / speaker authentication</li>
+            <li>Real-time sentiment analysis UI (Phase 2)</li>
+            <li>Native mobile SDK (Phase 2)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       FUNCTIONAL REQUIREMENTS
+  ═══════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <h2>Functional Requirements — F1 through F18</h2>
+    </div>
+    <div class="section-body" style="padding-bottom:4px;">
+      <p class="info-text" style="margin-bottom:4px;">
+        Priority legend:&nbsp;
+        <span class="priority p0">P0 Critical</span>&nbsp;
+        <span class="priority p1">P1 High</span>&nbsp;
+        <span class="priority p2">P2 Medium</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- ── F1 ─────────────────────────────────────────────── -->
+  <div class="requirement" id="f1">
+    <div class="req-header">
+      <span class="req-id">F1</span>
+      <span class="req-title">Real-Time Multilingual ASR with Streaming</span>
+      <span class="priority p0">P0 Critical</span>
+    </div>
+    <div class="req-body">
+      <p class="req-desc">
+        The system shall convert spoken audio to text in real-time using a streaming pipeline that returns partial
+        transcripts as speech occurs. The ASR must support a minimum of 20 languages including all major Indic
+        languages, and be optimized for telephony-quality audio.
+      </p>
+      <div class="req-detail-header">Detailed Requirements</div>
+      <ul class="req-list">
+        <li>Stream audio in chunks of 100–200ms via WebSocket connection</li>
+        <li>Return partial (interim) transcripts within 300ms of speech onset</li>
+        <li>Return final transcript within 500ms of end-of-utterance detection</li>
+        <li>Support 8kHz telephony audio (G.711 mu-law/A-law codec) AND 16kHz web audio (PCM/WAV/WebM)</li>
+        <li>Supported languages: Hindi (hi-IN), Tamil (ta-IN), Telugu (te-IN), Marathi (mr-IN), Bengali (bn-IN), Kannada (kn-IN), Gujarati (gu-IN), Punjabi (pa-IN), Malayalam (ml-IN), Odia (or-IN), English US (en-US), English UK (en-GB), English India (en-IN), German (de-DE), French (fr-FR), Spanish (es-ES), Italian (it-IT), Portuguese (pt-BR), Mandarin Chinese (zh-CN), Arabic (ar-SA)</li>
+        <li>Handle background noise, music-on-hold, telephony compression artifacts, and channel bandwidth limitations</li>
+        <li>WER targets (clean audio): &le;8% for Hindi and English; &le;12% for other Indic languages</li>
+        <li>Support speaker diarization to distinguish user speech from agent speech in recordings</li>
+        <li>Apply Voice Activity Detection (VAD) to avoid processing silence/noise as speech</li>
+        <li>Implement RNNoise or equivalent pre-processing for noise suppression at 8kHz</li>
+      </ul>
+      <div class="tag-row">
+        Supported Languages:&nbsp;
+        <span class="lang-pill">hi-IN Hindi</span><span class="lang-pill">ta-IN Tamil</span>
+        <span class="lang-pill">te-IN Telugu</span><span class="lang-pill">mr-IN Marathi</span>
+        <span class="lang-pill">bn-IN Bengali</span><span class="lang-pill">kn-IN Kannada</span>
+        <span class="lang-pill">gu-IN Gujarati</span><span class="lang-pill">pa-IN Punjabi</span>
+        <span class="lang-pill">ml-IN Malayalam</span><span class="lang-pill">or-IN Odia</span>
+        <span class="lang-pill">en-US</span><span class="lang-pill">en-GB</span><span class="lang-pill">en-IN</span>
+        <span class="lang-pill">de-DE</span><span class="lang-pill">fr-FR</span><span class="lang-pill">es-ES</span>
+        <span class="lang-pill">it-IT</span><span class="lang-pill">pt-BR</span><span class="lang-pill">zh-CN</span>
+        <span class="lang-pill">ar-SA</span>
+      </div>
+      <div class="acceptance">
+        <div class="req-detail-header">Acceptance Criteria</div>
+        <table>
+          <thead><tr><th>ID</th><th>Criterion</th><th>Measurement</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td class="ac-id">AC-F1.1</td><td>Streaming partial transcript received within 300ms of speech onset in test environment</td><td>Automated latency test, 100 utterances per language</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F1.2</td><td>WER &le;8% on Hindi benchmark dataset (AI4Bharat IndicSUPERB)</td><td>Standard WER metric on held-out test set</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F1.3</td><td>WER degradation on 8kHz telephony audio is &lt;15% vs clean 16kHz audio for same utterances</td><td>Paired comparison test on same transcript set</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── F2 ─────────────────────────────────────────────── -->
+  <div class="requirement" id="f2">
+    <div class="req-header">
+      <span class="req-id">F2</span>
+      <span class="req-title">Language Detection &amp; Code-Switch Handling</span>
+      <span class="priority p0">P0 Critical</span>
+    </div>
+    <div class="req-body">
+      <p class="req-desc">
+        The system shall automatically detect the caller's language from the first few seconds of speech
+        without requiring any user selection. The system must natively handle mid-sentence language switching
+        (code-switching) without requiring model re-initialization or call interruption.
+      </p>
+      <div class="req-detail-header">Detailed Requirements</div>
+      <ul class="req-list">
+        <li>Auto-detect language from first 2–3 seconds of natural speech with &ge;90% accuracy</li>
+        <li>Support token-level language identification within a single mixed-language utterance</li>
+        <li>Handle Hinglish (Hindi-English), Tanglish (Tamil-English), Kanglish (Kannada-English), and Bamglish (Bengali-English) natively via a unified model</li>
+        <li>No model switching or call re-initialization required during code-switching events</li>
+        <li>Generate a language confidence score (0.0–1.0); flag utterances with confidence &lt;0.75 for fallback handling</li>
+        <li>Caller may explicitly state language preference (e.g., "Please speak to me in Hindi"); system overrides auto-detection</li>
+        <li>Session-level language lock: once language confirmed, retain across all turns unless caller explicitly changes</li>
+      </ul>
+      <div class="acceptance">
+        <div class="req-detail-header">Acceptance Criteria</div>
+        <table>
+          <thead><tr><th>ID</th><th>Criterion</th><th>Measurement</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td class="ac-id">AC-F2.1</td><td>Language correctly identified within 3 seconds of call start at &ge;90% accuracy on test corpus</td><td>Language ID accuracy on 500-utterance multilingual test set</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F2.2</td><td>Hinglish utterance ("Mera account balance kya hai?") correctly transcribed end-to-end with correct mixed-script or Romanized output</td><td>Manual review of 200 Hinglish test utterances</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F2.3</td><td>Mid-sentence code-switch from Hindi to English handled without re-initialization or transcript gap &gt;300ms</td><td>Latency instrumentation test on 50 code-switch utterances</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── F3 ─────────────────────────────────────────────── -->
+  <div class="requirement" id="f3">
+    <div class="req-header">
+      <span class="req-id">F3</span>
+      <span class="req-title">LLM Orchestration &amp; Intent Resolution</span>
+      <span class="priority p0">P0 Critical</span>
+    </div>
+    <div class="req-body">
+      <p class="req-desc">
+        The LLM orchestration layer shall understand user intent, extract entities, manage slot filling,
+        maintain conversation state, and generate accurate, helpful, domain-grounded responses. All factual
+        content must be sourced from the RAG pipeline. The LLM shall also be capable of triggering backend
+        tool calls (APIs) to perform real actions such as balance lookups or service bookings.
+      </p>
+      <div class="req-detail-header">Detailed Requirements</div>
+      <ul class="req-list">
+        <li><strong>Intent classification:</strong> identify primary intent from each utterance (e.g., check_balance, report_fraud, book_service, request_loan_status)</li>
+        <li><strong>Entity extraction:</strong> extract named entities — account number, vehicle registration, date/time, amount, OTP, PIN (masked), name, location</li>
+        <li><strong>Slot filling:</strong> track which required parameters are missing for a given intent; generate targeted follow-up questions to collect them</li>
+        <li><strong>Context retention:</strong> maintain full conversation context within a call for up to 50 dialogue turns</li>
+        <li><strong>RAG integration:</strong> for every factual query, retrieve top-5 relevant chunks from vector DB before generating response</li>
+        <li><strong>Streaming response:</strong> use LLM streaming API so first tokens are forwarded to TTS as soon as generated</li>
+        <li><strong>Tool calling:</strong> invoke backend APIs (balance lookup, service booking, OTP dispatch, account status) via structured function calls</li>
+        <li><strong>Latency target:</strong> first token from LLM within 200ms (P95) under normal load conditions</li>
+        <li><strong>Conciseness:</strong> responses calibrated for voice — concise, structured, no markdown, no lists in audio</li>
+      </ul>
+      <div class="acceptance">
+        <div class="req-detail-header">Acceptance Criteria</div>
+        <table>
+          <thead><tr><th>ID</th><th>Criterion</th><th>Measurement</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td class="ac-id">AC-F3.1</td><td>Intent classification accuracy &ge;92% on held-out domain test set per vertical</td><td>Classification accuracy on 1000-sample test set (BFSI + Automotive)</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F3.2</td><td>Entity extraction F1 &ge;88% for critical entities (account number, date, amount, vehicle registration)</td><td>NER F1 score on annotated test corpus</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F3.3</td><td>LLM first token streamed within 200ms at P95 under expected production load</td><td>Load test with 200 concurrent simulated calls, latency percentiles</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F3.4</td><td>Correct RAG retrieval for &ge;90% of domain knowledge queries in pilot benchmark test</td><td>Retrieval precision evaluated on 200 domain Q&amp;A pairs</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── F4 ─────────────────────────────────────────────── -->
+  <div class="requirement" id="f4">
+    <div class="req-header">
+      <span class="req-id">F4</span>
+      <span class="req-title">Context &amp; Memory Management</span>
+      <span class="priority p1">P1 High</span>
+    </div>
+    <div class="req-body">
+      <p class="req-desc">
+        The system shall maintain short-term conversational memory within a call (intra-call context) and
+        long-term caller memory across multiple calls (cross-call profile), subject to caller consent and
+        applicable data protection regulations.
+      </p>
+      <div class="req-detail-header">Short-Term Memory (Intra-Call)</div>
+      <ul class="req-list">
+        <li>Store full conversation transcript in Redis with a unique session ID for the call duration</li>
+        <li>Maintain a sliding context window of the last 20 dialogue turns for LLM inference (to manage token limits)</li>
+        <li>Track resolved and pending intents within the call; never re-ask for confirmed information</li>
+        <li>Carry extracted entities across turns: account number confirmed in turn 2 reused in turn 7 without re-prompting</li>
+        <li>Session data cleared from Redis within 24 hours of call end</li>
+      </ul>
+      <div class="req-detail-header">Long-Term Memory (Cross-Call)</div>
+      <ul class="req-list">
+        <li>Store caller profile in PostgreSQL: name, language preference, frequent query types, satisfaction history, last call summary</li>
+        <li>Inject cross-call context into system prompt at call start: "Previous call (DD-MM-YYYY): [summary]"</li>
+        <li>Caller can opt out of cross-call memory storage (GDPR/DPDP compliance); opt-out removes all stored data within 24 hours</li>
+        <li>Cross-call context lookup completes within 200ms of call connect</li>
+        <li>Last interaction summary generated automatically at call end by LLM summarization step</li>
+      </ul>
+      <div class="acceptance">
+        <div class="req-detail-header">Acceptance Criteria</div>
+        <table>
+          <thead><tr><th>ID</th><th>Criterion</th><th>Measurement</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td class="ac-id">AC-F4.1</td><td>Entity extracted in turn 2 correctly referenced in turn 7 without re-asking caller</td><td>Scripted test call with controlled turns; verify entity propagation</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F4.2</td><td>Returning caller's name and language preference pre-loaded within 200ms of call connect</td><td>Latency measurement at call start for returning caller profile lookup</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F4.3</td><td>Memory opt-out request removes all stored caller data within 24 hours and is verifiable</td><td>Trigger opt-out, audit DB for complete data erasure within 24h</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── F5 ─────────────────────────────────────────────── -->
+  <div class="requirement" id="f5">
+    <div class="req-header">
+      <span class="req-id">F5</span>
+      <span class="req-title">Anti-Hallucination &amp; Domain Boundary Enforcement</span>
+      <span class="priority p0">P0 Critical</span>
+    </div>
+    <div class="req-body">
+      <p class="req-desc">
+        The agent must never fabricate product details, interest rates, regulatory information, or any factual claims.
+        All factual responses must be grounded exclusively in verified knowledge base content retrieved via RAG.
+        The system must also prevent the agent from answering questions outside its configured domain.
+      </p>
+      <div class="req-detail-header">Detailed Requirements</div>
+      <ul class="req-list">
+        <li>All factual responses must be derived from RAG-retrieved knowledge base content only — LLM must not infer or fabricate numeric values</li>
+        <li>RAG retrieval confidence threshold: if top chunk similarity score &lt;0.70, agent responds: "I don't have that specific information — let me connect you to a specialist."</li>
+        <li>Domain boundary check: queries outside the configured agent domain (e.g., a banking agent asked about cricket scores) must trigger a graceful out-of-domain response and redirect</li>
+        <li>Numeric facts (interest rates, processing fees, EMI amounts, deadlines) must ONLY be sourced from verified KB entries — never inferred by LLM generation</li>
+        <li>Post-generation guardrail layer: validates LLM output for hallucination signals (numeric contradictions, claims not found in retrieved context, out-of-domain factual assertions)</li>
+        <li>KB entries for rates and product information must be updated within 1 business day of any change by the business</li>
+        <li>Each response metadata includes the KB chunk IDs used for audit trail</li>
+      </ul>
+      <div class="acceptance">
+        <div class="req-detail-header">Acceptance Criteria</div>
+        <table>
+          <thead><tr><th>ID</th><th>Criterion</th><th>Measurement</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td class="ac-id">AC-F5.1</td><td>Zero hallucinated rate or fee values in QA testing on 500 adversarial test queries</td><td>Expert manual review of LLM outputs on adversarial prompt set</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F5.2</td><td>Out-of-domain question correctly redirected with graceful response in &ge;95% of 100 test cases</td><td>Out-of-domain test set evaluation with human judges</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F5.3</td><td>Guardrail layer blocks &ge;90% of injected hallucinated responses in adversarial guardrail testing</td><td>Automated injection of hallucinated outputs into guardrail; block rate measured</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── F6 ─────────────────────────────────────────────── -->
+  <div class="requirement" id="f6">
+    <div class="req-header">
+      <span class="req-id">F6</span>
+      <span class="req-title">Distraction &amp; Off-Topic Handling</span>
+      <span class="priority p1">P1 High</span>
+    </div>
+    <div class="req-body">
+      <p class="req-desc">
+        The agent shall gracefully handle user distractions, irrelevant questions, and deliberate attempts to
+        take the conversation off-topic, redirecting the conversation back to the pending task without being
+        dismissive or rude. After two failed redirection attempts, the agent must offer human escalation.
+      </p>
+      <div class="req-detail-header">Detailed Requirements</div>
+      <ul class="req-list">
+        <li>Maximum 2 off-topic redirect attempts before offering human agent escalation</li>
+        <li>Distraction categories: casual conversation, personal questions directed at the agent, competitor inquiries, unrelated complaints, testing/probing the AI identity</li>
+        <li>Each distraction category has a pre-approved, tenant-configurable graceful response template</li>
+        <li>After each redirect, agent always returns explicitly to the last pending task or unfilled slot</li>
+        <li>Agent identity questions handled specifically: "I'm Vaani AI's virtual assistant — I'm here to help with [domain]. Let me get back to [task]."</li>
+        <li>Feedback distractions acknowledged empathetically before redirect: "I understand your frustration — I'll note that. Now, let me help you with [pending task]."</li>
+        <li>All distraction handling events logged with category label for analytics review</li>
+      </ul>
+      <div class="req-detail-header">Response Examples</div>
+      <ul class="req-list">
+        <li><em>User: "Are you a robot?"</em> — Agent: "I'm Vaani AI's virtual assistant, here to help you with your banking queries. Now, about your account balance..."</li>
+        <li><em>User: "What's the weather today?"</em> — Agent: "I specialize in banking queries. Let me help you finish what we were working on — your [pending task]."</li>
+        <li><em>User: "Your app is terrible"</em> — Agent: "Thank you for that feedback — I've noted it. Now, let me make sure I resolve your query today..."</li>
+      </ul>
+      <div class="acceptance">
+        <div class="req-detail-header">Acceptance Criteria</div>
+        <table>
+          <thead><tr><th>ID</th><th>Criterion</th><th>Measurement</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td class="ac-id">AC-F6.1</td><td>All defined distraction categories produce a graceful redirect response (not error or silence)</td><td>Test each distraction category with 10 variations; evaluate response quality</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F6.2</td><td>Agent returns to the pending task correctly after distraction in &ge;95% of test scenarios</td><td>Scripted test conversations with mid-call distraction injection</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F6.3</td><td>Human escalation offered correctly after exactly 2 failed redirection attempts, no sooner or later</td><td>Scripted test with repeated distraction; verify escalation timing</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── F7 ─────────────────────────────────────────────── -->
+  <div class="requirement" id="f7">
+    <div class="req-header">
+      <span class="req-id">F7</span>
+      <span class="req-title">TTS with Streaming &amp; Language-Native Prosody</span>
+      <span class="priority p0">P0 Critical</span>
+    </div>
+    <div class="req-body">
+      <p class="req-desc">
+        The system shall convert LLM text responses to natural, language-appropriate speech using streaming TTS
+        that begins audio output on the first sentence fragment without waiting for the full response to complete.
+        Each language must use a native voice model — not a translated or accented fallback.
+      </p>
+      <div class="req-detail-header">Detailed Requirements</div>
+      <ul class="req-list">
+        <li>Streaming TTS: begin audio output on first complete sentence; do not wait for full LLM response before starting TTS</li>
+        <li>First audio chunk delivered within 75–150ms of TTS request (P95 target: &le;150ms)</li>
+        <li>Separate language-native voice model per language — no cross-language accent bleed</li>
+        <li>Voices available for: hi-IN, ta-IN, te-IN, mr-IN, bn-IN, kn-IN, gu-IN, pa-IN, en-IN, en-US, en-GB, and additional supported languages</li>
+        <li>SSML support: pauses (&lt;break&gt;), emphasis (&lt;emphasis&gt;), number pronunciation (&#8377;50,000 &rarr; "fifty thousand rupees"), date and time formatting, proper noun pronunciation</li>
+        <li>Voice persona: configurable per tenant — name, gender (male/female/neutral), speech rate, pitch</li>
+        <li>White-label persona: HDFC Bank deploys as "Priya," Maruti Suzuki deploys as "Ravi"</li>
+        <li>Output format: 8kHz PCM for telephony delivery via Twilio/Exotel; 24kHz MP3 for web SDK</li>
+      </ul>
+      <div class="acceptance">
+        <div class="req-detail-header">Acceptance Criteria</div>
+        <table>
+          <thead><tr><th>ID</th><th>Criterion</th><th>Measurement</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td class="ac-id">AC-F7.1</td><td>First audio chunk delivered within 150ms (P95) of TTS request across all supported languages</td><td>Automated latency test, 200 TTS requests per language</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F7.2</td><td>Hindi TTS correctly pronounces &#8377; amounts, Indian proper nouns, and mixed English words</td><td>Listening test on 50 curated SSML samples by native Hindi speaker</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F7.3</td><td>Mean Opinion Score (MOS) &ge;3.8/5 for Hindi and English India voices in blind listening test</td><td>ITU-T P.800 MOS evaluation with panel of 20 native speakers</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── F8 ─────────────────────────────────────────────── -->
+  <div class="requirement" id="f8">
+    <div class="req-header">
+      <span class="req-id">F8</span>
+      <span class="req-title">Dialogue &amp; Turn Management</span>
+      <span class="priority p0">P0 Critical</span>
+    </div>
+    <div class="req-body">
+      <p class="req-desc">
+        The system shall manage real-time conversation turn-taking, including barge-in detection,
+        end-of-utterance detection, silence handling, double-speak resolution, and maximum turn duration
+        enforcement. These mechanisms must work reliably over telephony audio.
+      </p>
+      <div class="req-detail-header">Detailed Requirements</div>
+      <ul class="req-list">
+        <li><strong>Barge-in:</strong> detect when the user speaks while the agent TTS is playing; immediately stop TTS audio output and begin processing the new user input</li>
+        <li><strong>End-of-utterance:</strong> detect speech completion using VAD silence threshold of 500ms (configurable per tenant from 300ms to 1500ms)</li>
+        <li><strong>Silence handling:</strong> after 5 seconds of user silence, agent prompts "Are you still there?"; after 10 seconds total silence, agent offers to repeat or escalate</li>
+        <li><strong>Double-speak:</strong> if user and agent audio overlap, agent audio is suppressed and user's speech is processed with priority</li>
+        <li><strong>Max turn duration:</strong> configurable per script state — e.g., 30 seconds for simple intent confirmation, 120 seconds for complex documentation queries</li>
+        <li><strong>Hold music:</strong> if backend API call takes &gt;2 seconds, play configurable hold music/message to prevent caller disengagement</li>
+        <li><strong>Interruption recovery:</strong> after barge-in and user turn processed, agent continues from logical next point (not from interrupted sentence start)</li>
+      </ul>
+      <div class="acceptance">
+        <div class="req-detail-header">Acceptance Criteria</div>
+        <table>
+          <thead><tr><th>ID</th><th>Criterion</th><th>Measurement</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td class="ac-id">AC-F8.1</td><td>Barge-in detected and TTS stopped within 200ms of user speech onset during agent TTS playback</td><td>Automated test: inject user audio during TTS; measure TTS stop latency</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F8.2</td><td>End-of-utterance correctly detected in &ge;90% of test utterances using 500ms silence threshold</td><td>VAD evaluation on 300 varied-length utterances with tail silence measurement</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F8.3</td><td>Silence handling prompts ("Are you still there?") triggered at correct 5-second and 10-second intervals</td><td>Scripted test call with injected silence; verify prompt timing via transcript timestamps</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── F9 ─────────────────────────────────────────────── -->
+  <div class="requirement" id="f9">
+    <div class="req-header">
+      <span class="req-id">F9</span>
+      <span class="req-title">Call Flow &amp; Script Engine</span>
+      <span class="priority p0">P0 Critical</span>
+    </div>
+    <div class="req-body">
+      <p class="req-desc">
+        The system shall execute configurable call scripts (conversation flows) defined by business admins
+        via a no-code visual builder, with conditional branching, variable interpolation, slot tracking,
+        and full versioning support. Pre-built industry templates shall accelerate BFSI and Automotive deployments.
+      </p>
+      <div class="req-detail-header">Detailed Requirements</div>
+      <ul class="req-list">
+        <li>Visual no-code script builder accessible from admin dashboard (drag-and-drop state machine interface)</li>
+        <li>Defined script states: greeting, authentication, intent_capture, information_delivery, action_confirmation, closing, escalation, error_recovery</li>
+        <li>Conditional transitions: if intent=check_balance &rarr; state=balance_lookup; if auth_failed &rarr; state=retry (max 3 attempts before escalation)</li>
+        <li>Variable interpolation in TTS text: "Hello {{caller_name}}, your balance is {{balance}} as of {{date}}."</li>
+        <li>Multi-turn slot filling: track required slots per intent; generate targeted prompts for each missing slot</li>
+        <li>Script versioning: maintain version history, support A/B testing of different script versions on configurable traffic splits</li>
+        <li>Rollback: revert to any previous script version within 5 minutes</li>
+        <li>Industry templates: pre-built BFSI script (balance inquiry, loan status, fraud reporting, account opening) and Automotive script (service booking, vehicle status, RSA request)</li>
+        <li>Full script execution log per call: each state transition, turn, intent, and variable resolution stored with timestamps</li>
+      </ul>
+      <div class="acceptance">
+        <div class="req-detail-header">Acceptance Criteria</div>
+        <table>
+          <thead><tr><th>ID</th><th>Criterion</th><th>Measurement</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td class="ac-id">AC-F9.1</td><td>Script with 10 states and 5 conditional branches executes correctly in 100% of automated test scenarios</td><td>Automated call simulation with scripted inputs; verify state traversal</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F9.2</td><td>Variable interpolation resolves correctly for all defined variable types (string, number, currency, date)</td><td>Unit test of interpolation engine with test fixture data</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F9.3</td><td>Script rollback to any prior version completes within 5 minutes of admin action</td><td>Timed rollback operation measured end-to-end from UI action to live deployment</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── F10 ────────────────────────────────────────────── -->
+  <div class="requirement" id="f10">
+    <div class="req-header">
+      <span class="req-id">F10</span>
+      <span class="req-title">Knowledge Base Management (RAG)</span>
+      <span class="priority p1">P1 High</span>
+    </div>
+    <div class="req-body">
+      <p class="req-desc">
+        The system shall maintain a domain-specific, searchable knowledge base per tenant, used to ground all
+        agent responses in verified factual content via Retrieval-Augmented Generation (RAG). The KB must support
+        multiple document formats, automatic processing, and live updates without system downtime.
+      </p>
+      <div class="req-detail-header">Detailed Requirements</div>
+      <ul class="req-list">
+        <li><strong>Ingestion formats:</strong> PDF, Word (.docx), Excel (.xlsx), plain text, web URLs (scrape + chunk), CSV</li>
+        <li><strong>Processing pipeline:</strong> automatic chunking (512 tokens, 50-token overlap), metadata extraction, embedding generation</li>
+        <li><strong>Embedding model:</strong> multilingual with Indic language support — multilingual-e5-large or text-embedding-3-large with multilingual fine-tuning</li>
+        <li><strong>Vector store:</strong> Pinecone or Weaviate with per-tenant namespace isolation</li>
+        <li><strong>Retrieval:</strong> top-k=5 chunks retrieved by cosine similarity, reranked by cross-encoder (Cohere Rerank or BGE Reranker) for final relevance ordering</li>
+        <li><strong>Update latency:</strong> new documents searchable within 1 hour of upload; no system restart required</li>
+        <li><strong>KB versioning:</strong> every response metadata includes the KB version tag and chunk IDs used (audit trail)</li>
+        <li><strong>Access control:</strong> strict tenant isolation — Tenant A's KB is inaccessible to Tenant B (enforced at namespace + API key level)</li>
+        <li><strong>Admin review workflow:</strong> uploaded documents go through admin-approval step before becoming active in production retrieval</li>
+      </ul>
+      <div class="acceptance">
+        <div class="req-detail-header">Acceptance Criteria</div>
+        <table>
+          <thead><tr><th>ID</th><th>Criterion</th><th>Measurement</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td class="ac-id">AC-F10.1</td><td>Document ingested, processed, and searchable within 1 hour of admin upload without engineering intervention</td><td>End-to-end upload-to-retrieval latency test on 5 document formats</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F10.2</td><td>Retrieval precision@5 &ge;80% on domain-specific Q&amp;A benchmark (BFSI + Automotive)</td><td>Evaluate top-5 retrieval on 200 annotated question-answer pairs</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F10.3</td><td>KB update (add or modify document) completed without any system downtime or service interruption</td><td>Monitor service availability metrics during 10 KB update operations</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── F11 ────────────────────────────────────────────── -->
+  <div class="requirement" id="f11">
+    <div class="req-header">
+      <span class="req-id">F11</span>
+      <span class="req-title">Self-Learning Module</span>
+      <span class="priority p1">P1 High</span>
+    </div>
+    <div class="req-body">
+      <p class="req-desc">
+        The system shall continuously improve agent quality by collecting call outcome signals, curating high-quality
+        training data from resolved calls, and running a regular fine-tuning pipeline on both the LLM and intent
+        classifier. All model updates must pass automated regression gates before deployment.
+      </p>
+      <div class="req-detail-header">Online Learning Signals (Real-Time)</div>
+      <ul class="req-list">
+        <li><strong>Call resolution signal:</strong> detected from call disposition tag (resolved / escalated / abandoned) or explicit user confirmation ("Yes, that answered my question")</li>
+        <li><strong>Escalation signal:</strong> call transfer to human agent is a negative quality signal logged against the LLM response that preceded it</li>
+        <li><strong>CSAT signal:</strong> post-call SMS/IVR rating (1–5 stars) linked to call session and specific agent turns</li>
+        <li><strong>Call duration signal:</strong> anomalously long calls (2x AHT) flagged for human review as potential confusion indicators</li>
+      </ul>
+      <div class="req-detail-header">Offline Learning Pipeline</div>
+      <ul class="req-list">
+        <li>Weekly: curate high-quality resolved calls (CSAT &ge;4, no escalation) as fine-tuning training data</li>
+        <li>Bi-weekly: LoRA/QLoRA fine-tune LLM on curated domain call transcript dataset; evaluate against baseline before deployment</li>
+        <li>Monthly: retrain intent classifier with new examples from live call distribution</li>
+        <li>Human annotation: sample 2% of all calls for human labeling in Label Studio; labeled data feeds into training pipeline</li>
+      </ul>
+      <div class="req-detail-header">RLHF &amp; A/B Testing</div>
+      <ul class="req-list">
+        <li>Reward model trained on human preference labels (which response was better?)</li>
+        <li>DPO (Direct Preference Optimization) or PPO fine-tuning using reward model</li>
+        <li>New model versions deployed to 10% traffic canary for 48 hours; promoted to 100% only after statistical evaluation</li>
+        <li>A/B test framework measures CSAT, escalation rate, resolution rate, and AHT as primary evaluation metrics</li>
+      </ul>
+      <div class="acceptance">
+        <div class="req-detail-header">Acceptance Criteria</div>
+        <table>
+          <thead><tr><th>ID</th><th>Criterion</th><th>Measurement</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td class="ac-id">AC-F11.1</td><td>CSAT improvement &ge;5% (absolute) after first fine-tuning cycle (4 weeks post-launch)</td><td>Compare average CSAT score pre- and post-first fine-tune cycle</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F11.2</td><td>Escalation rate decreases by &ge;10% (relative) after 8 weeks of continuous operation</td><td>Compare week-1 vs week-8 escalation rate on same tenant</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F11.3</td><td>A/B test framework correctly routes traffic at configured split (10%/90%) and measures statistical significance</td><td>Verify traffic routing logs and A/B evaluation report generation</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── F12 ────────────────────────────────────────────── -->
+  <div class="requirement" id="f12">
+    <div class="req-header">
+      <span class="req-id">F12</span>
+      <span class="req-title">Multi-Tenant &amp; Industry Customization</span>
+      <span class="priority p0">P0 Critical</span>
+    </div>
+    <div class="req-body">
+      <p class="req-desc">
+        The platform shall support multiple tenants with complete data isolation, per-tenant configuration,
+        industry-specific module add-ons, and self-service onboarding. No tenant's data or configuration
+        shall be accessible or shared with another tenant under any operational condition.
+      </p>
+      <div class="req-detail-header">Detailed Requirements</div>
+      <ul class="req-list">
+        <li><strong>Tenant isolation:</strong> separate Kubernetes namespaces, separate PostgreSQL schemas, separate vector DB namespaces, separate S3 prefixes</li>
+        <li><strong>Per-tenant config:</strong> system prompt, voice persona (name + gender + language), active language set, call script, knowledge base, branding (agent name)</li>
+        <li><strong>Industry modules:</strong> BFSI add-on (banking, insurance, loans) and Automotive add-on (service, sales, RSA) — activated per tenant subscription tier</li>
+        <li><strong>White-label:</strong> tenant configures their own agent name; Vaani AI branding is suppressed in tenant-facing outputs</li>
+        <li><strong>Usage metering:</strong> per-tenant tracking of call minutes, LLM tokens consumed, API calls, KB storage for billing reconciliation</li>
+        <li><strong>Self-service onboarding:</strong> new tenant can sign up, configure agent, and run a test call within 30 minutes using guided wizard</li>
+        <li><strong>Configuration hot-reload:</strong> tenant configuration changes applied without service restart or call interruption</li>
+      </ul>
+      <div class="acceptance">
+        <div class="req-detail-header">Acceptance Criteria</div>
+        <table>
+          <thead><tr><th>ID</th><th>Criterion</th><th>Measurement</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td class="ac-id">AC-F12.1</td><td>Tenant A's knowledge base is inaccessible from Tenant B's session (verified in penetration test)</td><td>Cross-tenant data access attempt in VAPT; must return 403 or empty result</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F12.2</td><td>Tenant configuration change (e.g., voice persona) applied to live calls within 60 seconds without service restart</td><td>Change persona via dashboard; verify new calls use updated config within 60s</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F12.3</td><td>New tenant onboarded and first test call completed within 30 minutes of account creation</td><td>Timed usability test with non-technical business admin as subject</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── F13 ────────────────────────────────────────────── -->
+  <div class="requirement" id="f13">
+    <div class="req-header">
+      <span class="req-id">F13</span>
+      <span class="req-title">Call Analytics &amp; Reporting</span>
+      <span class="priority p1">P1 High</span>
+    </div>
+    <div class="req-body">
+      <p class="req-desc">
+        The system shall provide a real-time and historical analytics dashboard covering both technical AI performance
+        metrics and business outcome metrics. Full call transcripts shall be searchable, and automated reports shall
+        be delivered on a configurable schedule.
+      </p>
+      <div class="req-detail-header">Technical Metrics (Real-Time)</div>
+      <ul class="req-list">
+        <li>ASR WER per language and per time period</li>
+        <li>LLM response latency: P50, P95, P99</li>
+        <li>TTS first audio chunk latency</li>
+        <li>End-to-end call latency (ASR+LLM+TTS combined)</li>
+        <li>Concurrent active call count and queue depth</li>
+      </ul>
+      <div class="req-detail-header">Business Metrics (Dashboard)</div>
+      <ul class="req-list">
+        <li>Call volume: total, by intent, by language, by time of day, by date range</li>
+        <li>Containment rate: percentage of calls fully resolved by AI without human escalation</li>
+        <li>Resolution rate: percentage of calls where the user query was successfully answered</li>
+        <li>Escalation rate: percentage of calls transferred to a human agent</li>
+        <li>Average Handle Time (AHT)</li>
+        <li>First Call Resolution (FCR)</li>
+        <li>CSAT score (where post-call survey collected)</li>
+        <li>Cost per call (computed from usage metering)</li>
+      </ul>
+      <div class="req-detail-header">Call Quality &amp; Audit</div>
+      <ul class="req-list">
+        <li>Full call transcript stored and searchable by keyword within 5 minutes of call end</li>
+        <li>Intent classification log, RAG retrieval chunk IDs, and confidence scores per turn</li>
+        <li>Timestamps for each pipeline stage (ASR start/end, LLM start/end, TTS start/end)</li>
+        <li>Optional call recording per tenant (compliance-configured; stored in encrypted S3)</li>
+        <li>Automated daily/weekly/monthly email reports; custom date-range CSV export</li>
+      </ul>
+      <div class="acceptance">
+        <div class="req-detail-header">Acceptance Criteria</div>
+        <table>
+          <thead><tr><th>ID</th><th>Criterion</th><th>Measurement</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td class="ac-id">AC-F13.1</td><td>Dashboard reflects completed call data within 60 seconds of call end</td><td>Measure dashboard update latency for 20 back-to-back test calls</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F13.2</td><td>All defined business and technical metrics visible in dashboard and exportable as CSV</td><td>Manual verification of all metric fields and export functionality</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F13.3</td><td>Call transcript searchable by keyword within 5 minutes of call completion</td><td>Search for known keyword in transcript; measure time-to-availability</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── F14 ────────────────────────────────────────────── -->
+  <div class="requirement" id="f14">
+    <div class="req-header">
+      <span class="req-id">F14</span>
+      <span class="req-title">API &amp; Integration Layer</span>
+      <span class="priority p0">P0 Critical</span>
+    </div>
+    <div class="req-body">
+      <p class="req-desc">
+        The system shall expose REST and WebSocket APIs for telephony integration, real-time audio streaming,
+        transcript retrieval, analytics querying, and knowledge base management. Pre-built integration
+        adapters shall be provided for major Indian telephony providers, CRM platforms, and core banking systems.
+      </p>
+      <div class="req-detail-header">Core REST APIs</div>
+      <ul class="req-list">
+        <li><code>POST /calls/start</code> — initiate an outbound call with specified tenant, script, and destination number</li>
+        <li><code>WebSocket /calls/{id}/stream</code> — bidirectional real-time audio stream for the call session</li>
+        <li><code>POST /calls/{id}/end</code> — terminate a call and trigger post-call processing</li>
+        <li><code>GET /calls/{id}/transcript</code> — retrieve full call transcript with timestamps and metadata</li>
+        <li><code>GET /analytics</code> — query metrics with filters (tenant, date range, language, intent)</li>
+        <li><code>POST /kb/upload</code> — upload a knowledge base document for processing and indexing</li>
+        <li><code>POST /tenants</code> — create a new tenant with initial configuration</li>
+      </ul>
+      <div class="req-detail-header">Pre-Built Integration Adapters</div>
+      <ul class="req-list">
+        <li><strong>Twilio:</strong> webhook handler for inbound call routing and audio streaming</li>
+        <li><strong>Exotel:</strong> inbound call handler for Indian local numbers (preferred for India telephony)</li>
+        <li><strong>Salesforce CRM:</strong> log call summary, update contact record, create case/ticket on escalation</li>
+        <li><strong>Finacle / Flexcube:</strong> balance lookup, account status, transaction history API wrapper</li>
+        <li><strong>DMS (Dealer Management System):</strong> service appointment booking, vehicle service history lookup</li>
+        <li><strong>Webhook events:</strong> call.started, call.ended, call.escalated, call.resolved — delivered within 2 seconds of event</li>
+      </ul>
+      <div class="acceptance">
+        <div class="req-detail-header">Acceptance Criteria</div>
+        <table>
+          <thead><tr><th>ID</th><th>Criterion</th><th>Measurement</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td class="ac-id">AC-F14.1</td><td>Twilio integration tested end-to-end with a real inbound phone call and full ASR+LLM+TTS pipeline</td><td>Live call test on Twilio number; verify full transcript generated</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F14.2</td><td>Non-streaming REST API endpoints respond within 100ms (P95) under expected load</td><td>Load test with 500 concurrent API requests; measure P95 response time</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F14.3</td><td>Webhook events delivered within 2 seconds of the corresponding event occurrence</td><td>Measure webhook delivery latency for 100 call.ended events</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── F15 ────────────────────────────────────────────── -->
+  <div class="requirement" id="f15">
+    <div class="req-header">
+      <span class="req-id">F15</span>
+      <span class="req-title">Security, Compliance &amp; Data Privacy</span>
+      <span class="priority p0">P0 Critical</span>
+    </div>
+    <div class="req-body">
+      <p class="req-desc">
+        The system shall enforce enterprise-grade security controls and comply with Indian and international data
+        protection regulations including GDPR, India's DPDP Act 2023, RBI data localization guidelines,
+        and IRDAI call recording requirements. All PII must be masked in stored transcripts.
+      </p>
+      <div class="req-detail-header">Data Security</div>
+      <ul class="req-list">
+        <li>All audio streams and API traffic encrypted with TLS 1.3 — no plaintext transmission</li>
+        <li>PII detection and masking in stored transcripts: Aadhaar numbers, bank account numbers, phone numbers, PAN, OTP values</li>
+        <li>Encryption at rest: AES-256 for all databases, S3 buckets, and vector stores</li>
+        <li>No audio files retained by default; configurable per tenant for compliance needs (IRDAI recording)</li>
+        <li>All secrets (API keys, DB credentials) managed via AWS Secrets Manager or HashiCorp Vault</li>
+      </ul>
+      <div class="req-detail-header">Regulatory Compliance</div>
+      <ul class="req-list">
+        <li><strong>GDPR:</strong> right to erasure (data deleted within 30 days of request), data portability (export in machine-readable format)</li>
+        <li><strong>India DPDP Act 2023:</strong> data fiduciary obligations, explicit consent management, purpose limitation</li>
+        <li><strong>RBI guidelines:</strong> payment-related data stored exclusively in AWS ap-south-1 (Mumbai) — no cross-border transfer</li>
+        <li><strong>IRDAI:</strong> insurance call recordings retained per IRDAI-specified duration; accessible only to compliance team</li>
+        <li><strong>SOC2 Type II:</strong> audit-ready logging of all data access events; annual SOC2 audit scheduled</li>
+      </ul>
+      <div class="req-detail-header">Authentication &amp; Access Control</div>
+      <ul class="req-list">
+        <li>Multi-factor authentication (MFA) mandatory for all admin portal users</li>
+        <li>Role-based access control (RBAC): Admin, Viewer, MLOps Engineer, Developer, Compliance Officer</li>
+        <li>API authentication: API key + short-lived JWT token (1-hour expiry)</li>
+        <li>IP whitelist option for enterprise tenants</li>
+        <li>Failed login lockout: 5 attempts &rarr; 15-minute lockout; 10 attempts &rarr; account suspension notification</li>
+      </ul>
+      <div class="acceptance">
+        <div class="req-detail-header">Acceptance Criteria</div>
+        <table>
+          <thead><tr><th>ID</th><th>Criterion</th><th>Measurement</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td class="ac-id">AC-F15.1</td><td>PII masking covers 100% of defined PII patterns in stored transcript data</td><td>Inject 50 transcripts with known PII; verify 100% masking in storage</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F15.2</td><td>Data erasure request fulfilled completely within 30 days (all systems purged)</td><td>Submit erasure request; audit all storage systems after 30-day window</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F15.3</td><td>All Indian tenant data stored exclusively in AWS ap-south-1 (Mumbai) region</td><td>AWS Config rule verification; data residency audit</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F15.4</td><td>Penetration test passes with no critical or high-severity vulnerabilities</td><td>Third-party VAPT report — zero critical, zero high findings</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── F16 ────────────────────────────────────────────── -->
+  <div class="requirement" id="f16">
+    <div class="req-header">
+      <span class="req-id">F16</span>
+      <span class="req-title">Admin Dashboard &amp; Configuration</span>
+      <span class="priority p1">P1 High</span>
+    </div>
+    <div class="req-body">
+      <p class="req-desc">
+        Business administrators shall be able to fully configure, monitor, and manage their AI voice agent through
+        a web-based dashboard — without requiring engineering support for routine operations such as script
+        updates, KB management, or user administration.
+      </p>
+      <div class="req-detail-header">Detailed Requirements</div>
+      <ul class="req-list">
+        <li><strong>Agent configuration:</strong> agent name, voice (language + gender), personality mode (formal / friendly / neutral), active language set</li>
+        <li><strong>Call script builder:</strong> visual drag-and-drop state machine builder with conditional transitions, slot definitions, and variable declarations</li>
+        <li><strong>Knowledge base manager:</strong> upload documents, view processing status, approve/reject documents before they go live in production retrieval</li>
+        <li><strong>Live call monitoring:</strong> view all active calls with real-time transcript display and current state in the call script</li>
+        <li><strong>Alerts and notifications:</strong> configurable alert thresholds for escalation rate spike, WER degradation, API latency degradation; delivered via email and SMS</li>
+        <li><strong>User management:</strong> invite users, assign roles (Admin / Viewer / Developer), deactivate users</li>
+        <li><strong>Billing and usage:</strong> view current period call minutes, token usage, cost summary; download invoices in PDF</li>
+      </ul>
+      <div class="acceptance">
+        <div class="req-detail-header">Acceptance Criteria</div>
+        <table>
+          <thead><tr><th>ID</th><th>Criterion</th><th>Measurement</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td class="ac-id">AC-F16.1</td><td>Non-technical admin can create and deploy a new call script from scratch in under 30 minutes</td><td>Timed usability test with non-technical subject using think-aloud protocol</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F16.2</td><td>KB document uploaded and searchable in production retrieval within 1 hour without engineering support</td><td>Admin uploads document; retrieval verified within 60 minutes by non-technical user</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F16.3</td><td>Alert triggered and delivered (email + SMS) within 5 minutes of configured threshold breach</td><td>Trigger synthetic threshold breach; measure time to alert receipt</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── F17 ────────────────────────────────────────────── -->
+  <div class="requirement" id="f17">
+    <div class="req-header">
+      <span class="req-id">F17</span>
+      <span class="req-title">Model Training, Fine-Tuning &amp; Versioning</span>
+      <span class="priority p1">P1 High</span>
+    </div>
+    <div class="req-body">
+      <p class="req-desc">
+        The system shall support continuous fine-tuning of ASR and LLM models for domain adaptation on a
+        regular cadence, without disrupting live service. All model updates must go through canary deployment
+        and automated evaluation gates before full rollout.
+      </p>
+      <div class="req-detail-header">Detailed Requirements</div>
+      <ul class="req-list">
+        <li><strong>Domain vocabulary boost:</strong> inject custom word lists (banking jargon, vehicle model names, regulatory terms) into ASR language model to improve recognition accuracy</li>
+        <li><strong>LLM fine-tuning:</strong> LoRA or QLoRA parameter-efficient fine-tuning on curated domain call transcripts; bi-weekly cadence</li>
+        <li><strong>Model versioning:</strong> every deployed model (ASR, LLM, TTS) has a version tag; full version history retained; rollback available within 15 minutes</li>
+        <li><strong>Canary deployment:</strong> new models deployed to 5–10% of live traffic; 48-hour monitoring window before full promotion</li>
+        <li><strong>Training data governance:</strong> all fine-tuning datasets stored with lineage (source call IDs, annotation date, annotator); human-reviewed before use in training</li>
+        <li><strong>Pre-deployment evaluation gate:</strong> model must achieve accuracy &ge; current production baseline on automated eval suite before being promoted to canary</li>
+        <li><strong>Training infrastructure:</strong> GPU-based training cluster (AWS SageMaker or self-hosted A100 instances); experiments tracked in Weights &amp; Biases</li>
+      </ul>
+      <div class="acceptance">
+        <div class="req-detail-header">Acceptance Criteria</div>
+        <table>
+          <thead><tr><th>ID</th><th>Criterion</th><th>Measurement</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td class="ac-id">AC-F17.1</td><td>ASR WER on banking terminology improves by &ge;15% (relative) after domain fine-tuning vs general model</td><td>WER evaluation on banking jargon test set: pre- vs post-fine-tune</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F17.2</td><td>Model rollback to previous production version completes within 15 minutes of trigger</td><td>Timed rollback operation from MLOps engineer action to traffic shift confirmation</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F17.3</td><td>Canary deployment routes traffic at the configured split percentage (&plusmn;2%)</td><td>Monitor traffic logs during canary window; verify routing split accuracy</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── F18 ────────────────────────────────────────────── -->
+  <div class="requirement" id="f18">
+    <div class="req-header">
+      <span class="req-id">F18</span>
+      <span class="req-title">Evaluation &amp; Quality Benchmarking</span>
+      <span class="priority p1">P1 High</span>
+    </div>
+    <div class="req-body">
+      <p class="req-desc">
+        The system shall maintain a continuous, automated evaluation framework that benchmarks all AI components
+        (ASR, LLM, TTS) against defined quality thresholds on a regular cadence. Regression gates shall block
+        any model deployment that degrades existing quality metrics beyond acceptable tolerance.
+      </p>
+      <div class="req-detail-header">ASR Evaluation</div>
+      <ul class="req-list">
+        <li>WER measured per language on curated held-out test sets (never used in training)</li>
+        <li>Real-time WER monitoring: alert triggered if WER degrades &gt;20% relative vs rolling 7-day baseline</li>
+        <li>Benchmark datasets: AI4Bharat IndicSUPERB (Indic languages), Mozilla Common Voice (multilingual), internal telephony test set</li>
+      </ul>
+      <div class="req-detail-header">LLM Evaluation</div>
+      <ul class="req-list">
+        <li>Intent classification accuracy on domain-specific test set (BFSI + Automotive)</li>
+        <li>Factual accuracy: hallucination detection rate on adversarial prompts</li>
+        <li>Response quality scoring: relevance, conciseness, grammatical correctness (automated via GPT-4 judge + periodic human review)</li>
+      </ul>
+      <div class="req-detail-header">TTS Evaluation</div>
+      <ul class="req-list">
+        <li>MOS score tracked quarterly via listener panel (20 native speakers per language)</li>
+        <li>First-chunk latency monitored continuously; alert on degradation &gt;50ms vs baseline</li>
+      </ul>
+      <div class="req-detail-header">End-to-End Evaluation</div>
+      <ul class="req-list">
+        <li>Weekly call simulation: 50 synthetic calls per vertical run against production agent; resolution rate and containment rate measured</li>
+        <li>Regression gate: any metric degrading &gt;2% vs baseline blocks deployment automatically</li>
+        <li>Human evaluation: 100 calls per week sampled for human scoring by trained annotators within 72 hours</li>
+      </ul>
+      <div class="acceptance">
+        <div class="req-detail-header">Acceptance Criteria</div>
+        <table>
+          <thead><tr><th>ID</th><th>Criterion</th><th>Measurement</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td class="ac-id">AC-F18.1</td><td>Weekly automated evaluation run generates a complete report covering all defined metrics across ASR, LLM, and TTS</td><td>Inspect weekly eval report for completeness of all metric fields</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F18.2</td><td>Regression gate automatically blocks deployment when any metric degrades &gt;2% vs production baseline</td><td>Inject deliberately degraded model; verify deployment is blocked by gate</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+            <tr><td class="ac-id">AC-F18.3</td><td>Human evaluation sample of 100 calls per week reviewed and scored by annotators within 72 hours</td><td>Track annotation SLA compliance over 4-week period</td><td><span class="ac-pass">PASS/FAIL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       NON-FUNCTIONAL REQUIREMENTS
+  ══════════════════════════════════════════════════════ -->
+  <div class="section" id="nfr">
+    <div class="section-header">
+      <span class="section-num">§NFR</span>
+      <h2>Non-Functional Requirements</h2>
+    </div>
+    <div class="section-body">
+
+      <div class="req-detail-header" style="margin-top:0;">Performance</div>
+      <table class="nfr-table">
+        <thead><tr><th>ID</th><th>Requirement</th><th>Target</th></tr></thead>
+        <tbody>
+          <tr><td class="nfr-id">NFR-P1</td><td>End-to-end call latency (ASR + LLM + TTS, first audio out)</td><td>&le;500ms at P95</td></tr>
+          <tr><td class="nfr-id">NFR-P2</td><td>ASR streaming — first partial transcript from speech onset</td><td>&le;300ms</td></tr>
+          <tr><td class="nfr-id">NFR-P3</td><td>TTS first audio chunk from request</td><td>&le;150ms at P95</td></tr>
+          <tr><td class="nfr-id">NFR-P4</td><td>REST API endpoints (non-streaming) response time</td><td>&le;100ms at P95</td></tr>
+          <tr><td class="nfr-id">NFR-P5</td><td>Concurrent call support per tenant at P0 quality</td><td>1,000 concurrent calls</td></tr>
+        </tbody>
+      </table>
+
+      <div class="req-detail-header">Availability &amp; Reliability</div>
+      <table class="nfr-table">
+        <thead><tr><th>ID</th><th>Requirement</th><th>Target</th></tr></thead>
+        <tbody>
+          <tr><td class="nfr-id">NFR-A1</td><td>Monthly uptime SLA (excluding scheduled maintenance)</td><td>99.9% (&le;43.8 min downtime/month)</td></tr>
+          <tr><td class="nfr-id">NFR-A2</td><td>Recovery Time Objective (RTO) for any component failure</td><td>&le;15 minutes</td></tr>
+          <tr><td class="nfr-id">NFR-A3</td><td>Recovery Point Objective (RPO) for data loss scenarios</td><td>&le;1 hour</td></tr>
+          <tr><td class="nfr-id">NFR-A4</td><td>Graceful degradation when ASR component fails</td><td>Automatic DTMF IVR fallback activated</td></tr>
+          <tr><td class="nfr-id">NFR-A5</td><td>Multi-region deployment for enterprise tenants</td><td>Mumbai primary (ap-south-1) + Singapore DR (ap-southeast-1)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="req-detail-header">Scalability</div>
+      <table class="nfr-table">
+        <thead><tr><th>ID</th><th>Requirement</th><th>Target</th></tr></thead>
+        <tbody>
+          <tr><td class="nfr-id">NFR-S1</td><td>Horizontal auto-scaling from idle to peak concurrent calls</td><td>0 to 1,000 concurrent calls within 5 minutes</td></tr>
+          <tr><td class="nfr-id">NFR-S2</td><td>Knowledge base document capacity per tenant</td><td>Up to 100,000 documents</td></tr>
+          <tr><td class="nfr-id">NFR-S3</td><td>Analytics pipeline event throughput</td><td>10 million call events per day</td></tr>
+        </tbody>
+      </table>
+
+      <div class="req-detail-header">Security</div>
+      <table class="nfr-table">
+        <thead><tr><th>ID</th><th>Requirement</th><th>Target</th></tr></thead>
+        <tbody>
+          <tr><td class="nfr-id">NFR-SEC1</td><td>Data in transit encryption</td><td>TLS 1.3 — mandatory, no fallback to older versions</td></tr>
+          <tr><td class="nfr-id">NFR-SEC2</td><td>Data at rest encryption</td><td>AES-256 for all databases, object storage, and vector stores</td></tr>
+          <tr><td class="nfr-id">NFR-SEC3</td><td>Penetration testing frequency</td><td>Annual third-party VAPT by CERT-IN empanelled organization</td></tr>
+          <tr><td class="nfr-id">NFR-SEC4</td><td>VAPT before major releases</td><td>Vulnerability Assessment &amp; Penetration Testing before each major release (v-dot releases)</td></tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+  <!-- ── RISKS & MITIGATIONS ────────────────────────────── -->
+  <div class="section" id="risks">
+    <div class="section-header">
+      <span class="section-num">§R</span>
+      <h2>Risks &amp; Mitigations</h2>
+    </div>
+    <div class="section-body">
+
+      <div class="risk-block">
+        <div class="risk-header">
+          <div class="risk-num">1</div>
+          <div class="risk-title">ASR accuracy poor on noisy telephony audio</div>
+        </div>
+        <div class="risk-body">
+          <div class="risk-label">Likelihood: High &nbsp;|&nbsp; Impact: High</div>
+          <div class="risk-mit">Use telephony-optimized ASR models (Deepgram Nova-2 or Soniox); implement RNNoise pre-processing for 8kHz noise suppression; collect real telephony call data for regular domain fine-tuning; maintain WER monitoring alerts for early detection of degradation.</div>
+        </div>
+      </div>
+
+      <div class="risk-block">
+        <div class="risk-header">
+          <div class="risk-num">2</div>
+          <div class="risk-title">LLM hallucination in high-stakes BFSI domains</div>
+        </div>
+        <div class="risk-body">
+          <div class="risk-label">Likelihood: Medium &nbsp;|&nbsp; Impact: Critical</div>
+          <div class="risk-mit">Enforce strict RAG-only responses for all factual queries; implement post-generation guardrail layer with hallucination detection; apply confidence threshold — if &lt;0.70, route to human specialist; QA team runs weekly adversarial hallucination testing; zero-tolerance policy: any confirmed hallucination triggers immediate investigation.</div>
+        </div>
+      </div>
+
+      <div class="risk-block">
+        <div class="risk-header">
+          <div class="risk-num">3</div>
+          <div class="risk-title">Latency spikes under peak load</div>
+        </div>
+        <div class="risk-body">
+          <div class="risk-label">Likelihood: Medium &nbsp;|&nbsp; Impact: High</div>
+          <div class="risk-mit">Load test to 2x expected peak before each major release; implement auto-scaling with 5-minute warm-up time; circuit breakers on all inter-service calls; local/lightweight TTS fallback for latency recovery (lower MOS but faster); LLM response caching for frequent queries (intent+entity hash).</div>
+        </div>
+      </div>
+
+      <div class="risk-block">
+        <div class="risk-header">
+          <div class="risk-num">4</div>
+          <div class="risk-title">Data breach or PII exposure</div>
+        </div>
+        <div class="risk-body">
+          <div class="risk-label">Likelihood: Low &nbsp;|&nbsp; Impact: Critical</div>
+          <div class="risk-mit">PII masking applied at transcript write time (not post-hoc); no audio retention by default; all secrets in Vault/Secrets Manager; SOC2 Type II certification; quarterly internal security audits; bug bounty program; incident response plan with 72-hour notification SLA per DPDP Act.</div>
+        </div>
+      </div>
+
+      <div class="risk-block">
+        <div class="risk-header">
+          <div class="risk-num">5</div>
+          <div class="risk-title">Regulatory non-compliance (RBI / IRDAI / DPDP)</div>
+        </div>
+        <div class="risk-body">
+          <div class="risk-label">Likelihood: Medium &nbsp;|&nbsp; Impact: Critical</div>
+          <div class="risk-mit">Legal review of all compliance requirements before MVP launch; RBI data localization enforced via AWS Config Rules; IRDAI call recording compliance built into platform configuration; in-house compliance officer engaged from day 1; external legal counsel for regulatory interpretation; compliance review scheduled quarterly.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── GLOSSARY ────────────────────────────────────────── -->
+  <div class="section" id="glossary">
+    <div class="section-header">
+      <span class="section-num">§G</span>
+      <h2>Glossary</h2>
+    </div>
+    <div class="section-body">
+      <div class="glossary-grid">
+        <div class="gloss-item"><div class="gloss-term">ASR</div><div class="gloss-def">Automatic Speech Recognition — converts spoken audio to text</div></div>
+        <div class="gloss-item"><div class="gloss-term">AHT</div><div class="gloss-def">Average Handle Time — mean duration of a call including wrap-up</div></div>
+        <div class="gloss-item"><div class="gloss-term">CSAT</div><div class="gloss-def">Customer Satisfaction Score — post-call rating collected from callers</div></div>
+        <div class="gloss-item"><div class="gloss-term">DPDP</div><div class="gloss-def">Digital Personal Data Protection Act (India, 2023)</div></div>
+        <div class="gloss-item"><div class="gloss-term">DPO</div><div class="gloss-def">Direct Preference Optimization — LLM alignment technique</div></div>
+        <div class="gloss-item"><div class="gloss-term">FCR</div><div class="gloss-def">First Call Resolution — query resolved without callback or escalation</div></div>
+        <div class="gloss-item"><div class="gloss-term">G.711</div><div class="gloss-def">ITU standard PCM audio codec used in telephony at 8kHz</div></div>
+        <div class="gloss-item"><div class="gloss-term">LLM</div><div class="gloss-def">Large Language Model — generative AI model for text understanding and generation</div></div>
+        <div class="gloss-item"><div class="gloss-term">LoRA</div><div class="gloss-def">Low-Rank Adaptation — parameter-efficient fine-tuning method for LLMs</div></div>
+        <div class="gloss-item"><div class="gloss-term">MOS</div><div class="gloss-def">Mean Opinion Score — perceptual audio quality rating (1–5 scale)</div></div>
+        <div class="gloss-item"><div class="gloss-term">PPO</div><div class="gloss-def">Proximal Policy Optimization — reinforcement learning algorithm used in RLHF</div></div>
+        <div class="gloss-item"><div class="gloss-term">RAG</div><div class="gloss-def">Retrieval-Augmented Generation — grounding LLM responses in retrieved documents</div></div>
+        <div class="gloss-item"><div class="gloss-term">RBAC</div><div class="gloss-def">Role-Based Access Control — permissions tied to user roles</div></div>
+        <div class="gloss-item"><div class="gloss-term">RLHF</div><div class="gloss-def">Reinforcement Learning from Human Feedback — alignment training using human preferences</div></div>
+        <div class="gloss-item"><div class="gloss-term">RPO</div><div class="gloss-def">Recovery Point Objective — maximum acceptable data loss window</div></div>
+        <div class="gloss-item"><div class="gloss-term">RTO</div><div class="gloss-def">Recovery Time Objective — maximum acceptable downtime window after failure</div></div>
+        <div class="gloss-item"><div class="gloss-term">RSA</div><div class="gloss-def">Roadside Assistance — emergency vehicle support service in Automotive vertical</div></div>
+        <div class="gloss-item"><div class="gloss-term">SSML</div><div class="gloss-def">Speech Synthesis Markup Language — XML-based TTS control format</div></div>
+        <div class="gloss-item"><div class="gloss-term">STS</div><div class="gloss-def">Speech-to-Speech — end-to-end voice pipeline: ASR &rarr; LLM &rarr; TTS</div></div>
+        <div class="gloss-item"><div class="gloss-term">TTS</div><div class="gloss-def">Text-to-Speech — converts text to synthesized spoken audio</div></div>
+        <div class="gloss-item"><div class="gloss-term">VAD</div><div class="gloss-def">Voice Activity Detection — identifies speech vs silence in audio stream</div></div>
+        <div class="gloss-item"><div class="gloss-term">VAPT</div><div class="gloss-def">Vulnerability Assessment and Penetration Testing</div></div>
+        <div class="gloss-item"><div class="gloss-term">WER</div><div class="gloss-def">Word Error Rate — primary ASR accuracy metric (lower is better)</div></div>
+        <div class="gloss-item"><div class="gloss-term">QLoRA</div><div class="gloss-def">Quantized Low-Rank Adaptation — memory-efficient LLM fine-tuning method</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DOCUMENT FOOTER ────────────────────────────────── -->
+  <div style="text-align:center; padding: 24px 0 8px; color:#94a3b8; font-size:12px; border-top:1px solid #e2e8f0; margin-top:8px;">
+    Vaani AI &mdash; Functional Requirements Document &nbsp;|&nbsp; Version 1.0 &nbsp;|&nbsp; March 2026 &nbsp;|&nbsp; <strong>Confidential</strong>
+    <br>This document contains proprietary information. Do not distribute without authorization.
+  </div>
+
+</div><!-- /container -->
+
+<!-- ++ Floating Navigation Bar ++ -->
+<style>
+  .vb-nav {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    gap: 8px;
+    z-index: 9999;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+  .vb-nav a, .vb-nav button {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: white;
+    color: #0D3B47;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 24px;
+    padding: 9px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 2px 14px rgba(0,0,0,0.13);
+    transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+    white-space: nowrap;
+  }
+  .vb-nav a:hover, .vb-nav button:hover {
+    background: #0D3B47;
+    color: white;
+    border-color: #0D3B47;
+    box-shadow: 0 4px 18px rgba(26,58,92,0.25);
+  }
+</style>
+<nav class="vb-nav" aria-label="Page navigation">
+  <a href="index.html" title="Go to Home">&#127968; Home</a>
+  <button onclick="history.back()" title="Go Back">&#8592; Back</button>
+  <button onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to Top">&#8593; Top</button>
+</nav>
+</body>
+</html>

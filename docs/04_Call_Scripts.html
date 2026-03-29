@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>04 - Call Scripts | RTCA Platform</title>
+<style>
+  :root {
+    --primary: #0D3B47;
+    --secondary: #0A8EA0;
+    --agent-bg: #DCF0F3;
+    --agent-border: #0A8EA0;
+    --user-bg: #dcfce7;
+    --user-border: #22c55e;
+    --system-bg: #f3f4f6;
+    --system-border: #9ca3af;
+    --hindi-bg: #fdf4ff;
+    --hindi-border: #a855f7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #FAF8F4;
+    color: #1e293b;
+    line-height: 1.6;
+  }
+  .page-header {
+    background: linear-gradient(135deg, #0D3B47 0%, #0A8EA0 100%);
+    color: white;
+    padding: 2.5rem 3rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.4rem; }
+  .page-header p { opacity: 0.85; font-size: 1rem; }
+  .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+    padding: 0.2rem 0.8rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+  /* TOC */
+  .toc-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    padding: 2rem;
+    margin-bottom: 2.5rem;
+  }
+  .toc-card h2 { color: var(--primary); font-size: 1.2rem; margin-bottom: 1.2rem; border-bottom: 2px solid var(--secondary); padding-bottom: 0.5rem; }
+  .toc-section-title { font-weight: 700; color: var(--primary); margin: 1rem 0 0.4rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.3rem 2rem; }
+  .toc-grid a {
+    color: var(--secondary);
+    text-decoration: none;
+    font-size: 0.88rem;
+    padding: 0.2rem 0;
+    border-bottom: 1px dashed #e2e8f0;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+  .toc-grid a:hover { color: var(--primary); }
+  .toc-num { font-weight: 700; color: var(--primary); min-width: 1.5rem; }
+
+  /* Script Card */
+  .script-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.09);
+    margin-bottom: 2.5rem;
+    overflow: hidden;
+  }
+  .script-header {
+    background: #0D3B47;
+    color: white;
+    padding: 1.2rem 1.8rem;
+  }
+  .script-header h2 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.4rem; }
+  .script-meta { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.5rem; }
+  .meta-tag {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 4px;
+    padding: 0.15rem 0.6rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+  }
+  .script-body { padding: 1.6rem 1.8rem; }
+
+  /* Dialogue bubbles */
+  .dialogue { margin-bottom: 0.7rem; }
+  .dialogue-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.25rem;
+  }
+  .bubble {
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+  .agent .dialogue-label { color: #1d4ed8; }
+  .agent .bubble { background: var(--agent-bg); border-left: 4px solid var(--agent-border); }
+  .user .dialogue-label { color: #15803d; }
+  .user .bubble { background: var(--user-bg); border-left: 4px solid var(--user-border); }
+  .system-action .dialogue-label { color: #6b7280; }
+  .system-action .bubble { background: var(--system-bg); border-left: 4px solid var(--system-border); font-style: italic; font-size: 0.85rem; color: #374151; }
+  .hinglish .dialogue-label { color: #7e22ce; }
+  .hinglish .bubble { background: var(--hindi-bg); border-left: 4px solid var(--hindi-border); }
+  .distraction .dialogue-label { color: #92400e; }
+  .distraction .bubble { background: #fffbeb; border-left: 4px solid #f59e0b; }
+
+  .section-divider {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #64748b;
+    margin: 1.2rem 0 0.6rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  /* Metrics / params */
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+  .info-box {
+    background: #FAF8F4;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+  }
+  .info-box h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: #64748b; margin-bottom: 0.4rem; }
+  .info-box ul { list-style: none; padding: 0; }
+  .info-box ul li { font-size: 0.85rem; color: #334155; padding: 0.15rem 0; padding-left: 1rem; position: relative; }
+  .info-box ul li::before { content: "•"; position: absolute; left: 0; color: var(--secondary); }
+
+  @media (max-width: 700px) {
+    .toc-grid, .info-grid { grid-template-columns: 1fr; }
+    .page-header { padding: 1.5rem; }
+    .script-body { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="badge">RTCA Platform — Document 04</div>
+  <h1>Call Scripts Library</h1>
+  <p>20 Detailed, Realistic Call Centre Dialogue Scripts — BFSI &amp; Automotive | English &amp; Hinglish</p>
+</div>
+
+<div class="container">
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc-card">
+  <h2>Table of Contents</h2>
+  <div class="toc-section-title">BFSI Scripts (Scripts 1–12)</div>
+  <div class="toc-grid">
+    <a href="#s1"><span class="toc-num">01</span> Home Loan Interest Rate Inquiry</a>
+    <a href="#s2"><span class="toc-num">02</span> Credit Card Transaction Dispute</a>
+    <a href="#s3"><span class="toc-num">03</span> Savings Account Balance &amp; Mini Statement</a>
+    <a href="#s4"><span class="toc-num">04</span> Debit Card Block — Lost/Stolen</a>
+    <a href="#s5"><span class="toc-num">05</span> EMI Payment Reminder — Outbound</a>
+    <a href="#s6"><span class="toc-num">06</span> KYC Update Inquiry</a>
+    <a href="#s7"><span class="toc-num">07</span> Fixed Deposit Inquiry &amp; Booking</a>
+    <a href="#s8"><span class="toc-num">08</span> Mutual Fund NAV Query &amp; SIP Setup</a>
+    <a href="#s9"><span class="toc-num">09</span> Insurance Claim Status Follow-up</a>
+    <a href="#s10"><span class="toc-num">10</span> Personal Loan Pre-Approval Check</a>
+    <a href="#s11"><span class="toc-num">11</span> Internet Banking Locked Account</a>
+    <a href="#s12"><span class="toc-num">12</span> Branch Locator &amp; Locker Inquiry</a>
+  </div>
+  <div class="toc-section-title">Automotive Scripts (Scripts 13–20)</div>
+  <div class="toc-grid">
+    <a href="#s13"><span class="toc-num">13</span> Service Booking — Maruti Swift</a>
+    <a href="#s14"><span class="toc-num">14</span> Roadside Assistance — Breakdown</a>
+    <a href="#s15"><span class="toc-num">15</span> Vehicle Complaint Registration</a>
+    <a href="#s16"><span class="toc-num">16</span> Test Drive Booking — Tata Nexon EV</a>
+    <a href="#s17"><span class="toc-num">17</span> Car Loan EMI Query &amp; Foreclosure</a>
+    <a href="#s18"><span class="toc-num">18</span> Warranty Claim — AC Not Working</a>
+    <a href="#s19"><span class="toc-num">19</span> AMC Renewal — Maruti Baleno</a>
+    <a href="#s20"><span class="toc-num">20</span> New Car Inquiry — Hyundai Creta vs Tata Harrier</a>
+  </div>
+</div>
+
+<!-- ==================== SCRIPT 1 ==================== -->
+<div class="script-card" id="s1">
+  <div class="script-header">
+    <h2>Script 01 — Home Loan Interest Rate Inquiry</h2>
+    <div class="script-meta">
+      <span class="meta-tag">Industry: BFSI</span>
+      <span class="meta-tag">Use Case: Inbound — New Loan Inquiry</span>
+      <span class="meta-tag">Complexity: Intermediate</span>
+      <span class="meta-tag">Duration: ~4 min</span>
+      <span class="meta-tag">Company: SBI</span>
+      <span class="meta-tag">Language: English + Hinglish</span>
+    </div>
+  </div>
+  <div class="script-body">
+    <div class="section-divider">Dialogue</div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent — Priya (Virtual Assistant)</div><div class="bubble">Good morning! Thank you for calling SBI Home Loan helpline. I'm Priya, your virtual assistant. How may I help you today?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">Hi, I want to know about home loan interest rates.</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">Intent detected: home_loan_inquiry | Slot: loan_type=home_loan</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">I'd be happy to share information about SBI home loan interest rates. Currently, SBI home loans start from 8.50% per annum for salaried customers, based on the Repo Linked Lending Rate (RLLR). May I ask what is your approximate loan requirement?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">Around 50 lakhs.</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">Entity extracted: loan_amount=5000000</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">Got it — ₹50 lakhs. For a loan of this amount, your approximate EMI would be ₹43,391 per month for a 20-year tenure at 8.50%. Are you a salaried employee or self-employed?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">I'm salaried, working in IT.</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">Entity extracted: employment_type=salaried | sector=IT</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">Great. Salaried IT professionals typically qualify for our best rates. To check your exact eligibility, I'd need your monthly income and credit score. Would you like to share those, or shall I arrange a callback from our home loan specialist?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">What documents would I need?</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">For SBI home loan, you'd typically need: identity proof (Aadhaar/PAN), address proof, last 3 months' salary slips, Form 16, last 6 months' bank statements, and property documents once finalized. The processing fee is 0.35% of loan amount, minimum ₹2,000, maximum ₹10,000 plus GST.</div></div>
+
+    <div class="section-divider">Hinglish Variation</div>
+    <div class="dialogue user hinglish"><div class="dialogue-label">User (Hinglish)</div><div class="bubble">Bhai, 50 lakh ka loan chahiye, rate kya milega? Aur processing fee kitni hai?</div></div>
+    <div class="dialogue agent hinglish"><div class="dialogue-label">Agent (Hinglish)</div><div class="bubble">50 lakh ke liye aapko 8.50% se rate milega — ye RLLR se linked hai. EMI hogi approximately ₹43,391 per month 20 saal ke liye. Processing fee 0.35% hogi, jo ki ₹10,000 tak capped hai plus GST.</div></div>
+
+    <div class="section-divider">Distraction Example</div>
+    <div class="dialogue user distraction"><div class="dialogue-label">User (Off-topic)</div><div class="bubble">By the way, which is better — SBI or HDFC for home loan?</div></div>
+    <div class="dialogue agent distraction"><div class="dialogue-label">Agent (Redirect)</div><div class="bubble">That's a great question! I can share details about SBI's offerings in full detail. For a comprehensive comparison, I'd recommend speaking with our specialist who can give you a holistic view. Now, shall we check your SBI eligibility?</div></div>
+
+    <div class="info-grid">
+      <div class="info-box">
+        <h4>Parameters Captured</h4>
+        <ul>
+          <li>loan_amount = ₹50,00,000</li>
+          <li>employment_type = salaried</li>
+          <li>sector = IT</li>
+          <li>property_type (pending)</li>
+          <li>income_range (pending)</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <h4>Resolution &amp; Success Metrics</h4>
+        <ul>
+          <li>Correct rate quoted (8.50% RLLR)</li>
+          <li>EMI calculation provided</li>
+          <li>Documents checklist shared</li>
+          <li>Lead captured for specialist callback</li>
+          <li>Customer satisfied — no escalation</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SCRIPT 2 ==================== -->
+<div class="script-card" id="s2">
+  <div class="script-header">
+    <h2>Script 02 — Credit Card Transaction Dispute</h2>
+    <div class="script-meta">
+      <span class="meta-tag">Industry: BFSI</span>
+      <span class="meta-tag">Use Case: Inbound — Dispute Filing</span>
+      <span class="meta-tag">Complexity: Complex</span>
+      <span class="meta-tag">Duration: ~6 min</span>
+      <span class="meta-tag">Company: HDFC Bank</span>
+      <span class="meta-tag">Language: English</span>
+    </div>
+  </div>
+  <div class="script-body">
+    <div class="section-divider">Dialogue</div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent — Ravi</div><div class="bubble">Thank you for calling HDFC Bank credit card customer care. I'm Ravi. May I have your registered mobile number to pull up your account?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">9876543210</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">OTP triggered to registered number ending 3210</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">I've sent a 6-digit OTP to your number ending in 210. Please share it when received.</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">It's 847291.</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">Authentication: SUCCESS | Account loaded: Rahul Sharma | Card ending 4521 | Available limit: ₹1,20,000</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">Thank you, Rahul. How can I help you today?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">There's a transaction on my card I don't recognize — 4,500 rupees from some website.</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">Intent detected: dispute_transaction | Slot: amount=4500</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">I understand your concern, Rahul. Could you tell me the approximate date of this transaction?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">It shows 25th March, around 2 PM.</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">Transaction retrieved: 25-Mar-2026 14:23 | Amount: ₹4,500 | Merchant: NETLFIX.COM (suspicious — note misspelling vs "Netflix") | MCC: 5968</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">I can see a transaction for ₹4,500 on March 25th from 'NETLFIX.COM' — please note the spelling is different from the real Netflix. This looks like a fraudulent merchant. I'm filing a dispute for this transaction right now. Your chargeback request number is CR20260325-4521. As per RBI guidelines, we'll investigate within 10 working days and you'll receive a provisional credit within 7 working days. Would you also like me to block your card as a precaution?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">Yes please, block it.</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">Card ending 4521: BLOCKED at 15:42 29-Mar-2026 | Replacement card scheduled: 5-7 business days | Dispatch to registered address</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">Your card ending 4521 has been blocked immediately — no further transactions are possible. A replacement card will be delivered to your registered address in 5-7 business days. The disputed amount of ₹4,500 will be provisionally credited within 7 working days as per RBI chargeback guidelines. Is there anything else I can help with?</div></div>
+
+    <div class="info-grid">
+      <div class="info-box">
+        <h4>Parameters Captured</h4>
+        <ul>
+          <li>card_last4 = 4521</li>
+          <li>transaction_date = 25-Mar-2026</li>
+          <li>transaction_amount = ₹4,500</li>
+          <li>merchant_name = NETLFIX.COM</li>
+          <li>dispute_type = fraudulent_merchant</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <h4>Resolution &amp; Success Metrics</h4>
+        <ul>
+          <li>Dispute filed: CR20260325-4521</li>
+          <li>Card blocked within same call</li>
+          <li>Provisional credit timeline communicated</li>
+          <li>RBI guideline correctly cited</li>
+          <li>Replacement card ordered</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SCRIPT 3 ==================== -->
+<div class="script-card" id="s3">
+  <div class="script-header">
+    <h2>Script 03 — Savings Account Balance &amp; Mini Statement</h2>
+    <div class="script-meta">
+      <span class="meta-tag">Industry: BFSI</span>
+      <span class="meta-tag">Use Case: Inbound — Self-Service Inquiry</span>
+      <span class="meta-tag">Complexity: Basic</span>
+      <span class="meta-tag">Duration: ~3 min</span>
+      <span class="meta-tag">Company: ICICI Bank</span>
+      <span class="meta-tag">Language: English + Hinglish</span>
+    </div>
+  </div>
+  <div class="script-body">
+    <div class="section-divider">Dialogue</div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent — Virtual Assistant</div><div class="bubble">Welcome to ICICI Bank! I'm your virtual assistant. For security, may I have your registered mobile number?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">9988776655</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">OTP sent to number ending 6655</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">OTP is 234561.</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">Authentication: SUCCESS | Account: Anita Kapoor | Savings A/C ending 8801 | Balance: ₹1,24,350.75</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">Authenticated successfully. Anita, your current savings account balance is ₹1,24,350.75. Available balance is ₹1,24,350.75. Would you also like your last 5 transactions?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">Yes please.</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">Here are your last 5 transactions:<br><br>
+      1. 28-Mar-2026 — UPI/Google Pay — Dr. ₹2,500 — Balance ₹1,24,350<br>
+      2. 27-Mar-2026 — SALARY CREDIT/TCS Ltd — Cr. ₹85,000 — Balance ₹1,26,850<br>
+      3. 25-Mar-2026 — ATM Withdrawal — Dr. ₹5,000 — Balance ₹41,850<br>
+      4. 24-Mar-2026 — NACH/HDFC Home Loan EMI — Dr. ₹18,500 — Balance ₹46,850<br>
+      5. 22-Mar-2026 — NEFT Transfer — Dr. ₹10,000 — Balance ₹65,350<br><br>
+      Shall I email this mini statement to your registered email ID?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">Yes, please send it.</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">Mini statement emailed to: a***kapoor@gmail.com | Timestamp: 29-Mar-2026 11:32 AM</div></div>
+
+    <div class="section-divider">Hinglish Variation</div>
+    <div class="dialogue user hinglish"><div class="dialogue-label">User (Hinglish)</div><div class="bubble">Mera balance kya hai? Last week kuch transactions bhi batao.</div></div>
+    <div class="dialogue agent hinglish"><div class="dialogue-label">Agent (Hinglish)</div><div class="bubble">Anita ji, aapka balance ₹1,24,350 hai abhi. Last 5 transactions main share kar raha hoon — 28 March ko Google Pay se ₹2,500 gaye, 27 March ko salary ₹85,000 aayi. Poori list SMS ya email karoon?</div></div>
+
+    <div class="info-grid">
+      <div class="info-box">
+        <h4>Parameters Captured</h4>
+        <ul>
+          <li>mobile_number = 9988776655</li>
+          <li>account_id = ending 8801</li>
+          <li>request_type = balance + mini_statement</li>
+          <li>delivery_preference = email</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <h4>Resolution &amp; Success Metrics</h4>
+        <ul>
+          <li>Balance shared accurately</li>
+          <li>Last 5 transactions listed</li>
+          <li>Statement emailed on request</li>
+          <li>No human handoff needed</li>
+          <li>Full self-service resolution</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SCRIPT 4 ==================== -->
+<div class="script-card" id="s4">
+  <div class="script-header">
+    <h2>Script 04 — Debit Card Block — Lost/Stolen</h2>
+    <div class="script-meta">
+      <span class="meta-tag">Industry: BFSI</span>
+      <span class="meta-tag">Use Case: Inbound — Emergency</span>
+      <span class="meta-tag">Complexity: Urgent</span>
+      <span class="meta-tag">Duration: ~4 min</span>
+      <span class="meta-tag">Company: Kotak Mahindra Bank</span>
+      <span class="meta-tag">Language: English + Hinglish</span>
+    </div>
+  </div>
+  <div class="script-body">
+    <div class="section-divider">Dialogue</div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent — Arjun</div><div class="bubble">Kotak Mahindra Bank, this is Arjun. How can I help you?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">My debit card is lost! Please block it immediately.</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">Intent detected: card_block | Priority: URGENT | Fast-track authentication initiated</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">I'll help you block it right away — your security is our priority. For quick authentication, please share your registered mobile number and date of birth.</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">9123456780, DOB is 15th August 1990.</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">Auth via DOB + mobile: SUCCESS | Account: Vikram Singh | Debit card ending 7234 | Account balance: ₹84,500</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">Vikram, I'm blocking your Kotak debit card ending 7234 right now.</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">Card status: BLOCKED at 11:47 AM 29-Mar-2026 | Confirmation: BLK20260329-7234</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">Done — your card ending 7234 has been blocked. No further transactions can be processed. For a replacement card, there's a nominal fee of ₹200 plus GST. Would you like me to request a replacement? It'll be delivered to your registered address in 5-7 working days.</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">Yes please. Also, can you check if any unauthorized transactions happened?</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">Last transaction: 28-Mar-2026, ₹450, Big Bazaar HSR Layout | No suspicious transactions in last 24 hours</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">The last transaction on your card was ₹450 at Big Bazaar on 28th March — does that look familiar?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">Yes, that was me.</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">Good news — no unauthorized transactions detected. Your replacement card request is confirmed. Reference: RPL20260329-7234. You'll receive an SMS once dispatched. Is there anything else I can help with?</div></div>
+
+    <div class="section-divider">Hinglish Variation</div>
+    <div class="dialogue user hinglish"><div class="dialogue-label">User (Hinglish)</div><div class="bubble">Mera ATM card kho gaya, jaldi block karo! Koi transaction toh nahi hua na?</div></div>
+    <div class="dialogue agent hinglish"><div class="dialogue-label">Agent (Hinglish)</div><div class="bubble">Bilkul sir, abhi block karta hoon. Verification ke liye apna registered number aur date of birth batayein. Block ho gaya — reference BLK20260329-7234. Last transaction Big Bazaar mein ₹450 ka tha — kya woh aapka tha?</div></div>
+
+    <div class="info-grid">
+      <div class="info-box">
+        <h4>Parameters Captured</h4>
+        <ul>
+          <li>customer_name = Vikram Singh</li>
+          <li>card_last4 = 7234</li>
+          <li>block_reason = lost_card</li>
+          <li>replacement_requested = yes</li>
+          <li>last_known_transaction = verified_genuine</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <h4>Resolution &amp; Success Metrics</h4>
+        <ul>
+          <li>Card blocked within 60 seconds of auth</li>
+          <li>Block reference: BLK20260329-7234</li>
+          <li>Replacement card ordered</li>
+          <li>Transaction history verified clean</li>
+          <li>Zero unauthorized transactions</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SCRIPT 5 ==================== -->
+<div class="script-card" id="s5">
+  <div class="script-header">
+    <h2>Script 05 — EMI Payment Reminder — Outbound</h2>
+    <div class="script-meta">
+      <span class="meta-tag">Industry: BFSI</span>
+      <span class="meta-tag">Use Case: Outbound — Proactive Reminder</span>
+      <span class="meta-tag">Complexity: Basic</span>
+      <span class="meta-tag">Duration: ~3 min</span>
+      <span class="meta-tag">Company: Bajaj Finserv</span>
+      <span class="meta-tag">Language: English + Hinglish</span>
+    </div>
+  </div>
+  <div class="script-body">
+    <div class="section-divider">Dialogue</div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent — Automated Voice (Bajaj Finserv)</div><div class="bubble">Hello, am I speaking with Meera Reddy?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">Yes, who's calling?</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">This is an automated reminder call from Bajaj Finserv. Meera, your personal loan EMI of ₹8,750 is due on 2nd April 2026 — that's 4 days from today. Would you like help making the payment right now?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">Oh yes, I actually forgot. How can I pay?</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">You can pay via: UPI — our UPI ID is bajajfinserv@ybl; NetBanking on bajajfinserv.com; NACH auto-debit if already set up; or call our helpline 8698010101. Shall I SMS you the payment link right away?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">Yes, send the SMS please.</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">SMS dispatched: Bajaj Finserv EMI payment link | Account: BFL-XXX9012 | Due: 2-Apr-2026 | Amount: ₹8,750 | Link valid 24 hours</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">What happens if I pay late?</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">Late payment attracts a penal interest of 2% per month on the overdue amount, plus a ₹400 bounce charge if the NACH debit fails. To protect your CIBIL score and avoid charges, please ensure payment by 2nd April.</div></div>
+
+    <div class="section-divider">Distraction Example</div>
+    <div class="dialogue user distraction"><div class="dialogue-label">User (Off-topic)</div><div class="bubble">By the way, can I take another loan from Bajaj?</div></div>
+    <div class="dialogue agent distraction"><div class="dialogue-label">Agent (Redirect)</div><div class="bubble">I'd be happy to note your interest in a new loan! But let me first ensure your current EMI is on track — timely payment also helps your CIBIL score for any future loan application. Shall we confirm today's payment via the link I just sent?</div></div>
+
+    <div class="section-divider">Hinglish Variation</div>
+    <div class="dialogue agent hinglish"><div class="dialogue-label">Agent (Hinglish)</div><div class="bubble">Meera ji, aapka Bajaj Finserv personal loan EMI ₹8,750 ka 2 April ko due hai — sirf 4 din baaki hain. Kya aap abhi payment karna chahenge? UPI ID hai bajajfinserv@ybl ya main SMS link bhej sakta hoon.</div></div>
+
+    <div class="info-grid">
+      <div class="info-box">
+        <h4>Parameters Captured</h4>
+        <ul>
+          <li>customer_confirmed = Meera Reddy</li>
+          <li>emi_amount = ₹8,750</li>
+          <li>due_date = 2-Apr-2026</li>
+          <li>payment_method_preference = SMS link</li>
+          <li>new_loan_interest = noted</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <h4>Resolution &amp; Success Metrics</h4>
+        <ul>
+          <li>Payment link sent via SMS</li>
+          <li>Late payment consequences explained</li>
+          <li>Lead captured for new loan inquiry</li>
+          <li>Customer confirmed intent to pay</li>
+          <li>Outbound call completed successfully</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SCRIPT 6 ==================== -->
+<div class="script-card" id="s6">
+  <div class="script-header">
+    <h2>Script 06 — KYC Update Inquiry</h2>
+    <div class="script-meta">
+      <span class="meta-tag">Industry: BFSI</span>
+      <span class="meta-tag">Use Case: Inbound — Compliance-Driven</span>
+      <span class="meta-tag">Complexity: Intermediate</span>
+      <span class="meta-tag">Duration: ~5 min</span>
+      <span class="meta-tag">Company: Yes Bank</span>
+      <span class="meta-tag">Language: English</span>
+    </div>
+  </div>
+  <div class="script-body">
+    <div class="section-divider">Dialogue</div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent — Sneha (Virtual Assistant)</div><div class="bubble">Thank you for calling Yes Bank. I'm Sneha, your virtual assistant. How may I help you today?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">I got an SMS saying my KYC needs to be updated. What documents do I need?</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">Intent detected: kyc_update_inquiry | Account status: KYC_PENDING | Deadline: 30-Apr-2026</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">Thank you for calling about this — you're right to act promptly. KYC re-verification is mandated by RBI guidelines for all account holders. For your savings account, you'll need any one identity proof — Aadhaar card is preferred as it's Digi-linked — and your PAN card. Do you have both readily available?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">Yes I do. How do I submit them?</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">You have three convenient options:<br><br>
+      1. <strong>Video KYC</strong> — I can initiate a video call right now; takes just 5 minutes, fully digital, no branch visit needed.<br>
+      2. <strong>Branch Visit</strong> — Carry original documents to any Yes Bank branch near you.<br>
+      3. <strong>Doorstep KYC</strong> — We send a bank agent to your registered address; available in 200+ cities.<br><br>
+      Which would you prefer?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">Video KYC sounds good. What do I need for that?</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">For Video KYC you'll need: your Aadhaar-linked mobile number for OTP verification, your original Aadhaar card held up to the camera, your PAN card, good lighting and a stable internet connection. The call takes about 5 minutes. Shall I schedule it now or send you the Video KYC link via SMS?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">Send me the link.</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">Video KYC link sent via SMS | Session ID: VKYC20260329-8912 | Valid for 48 hours | Assigned officer: KYC Team Pool</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">Done! The Video KYC link has been sent to your registered mobile. It's valid for 48 hours. Please keep your Aadhaar and PAN ready. Once completed, your KYC will be updated within 24 hours. Is there anything else I can help you with?</div></div>
+
+    <div class="info-grid">
+      <div class="info-box">
+        <h4>Parameters Captured</h4>
+        <ul>
+          <li>kyc_status = pending</li>
+          <li>documents_available = Aadhaar + PAN</li>
+          <li>preferred_channel = video_kyc</li>
+          <li>session_id = VKYC20260329-8912</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <h4>Resolution &amp; Success Metrics</h4>
+        <ul>
+          <li>KYC options clearly explained</li>
+          <li>Customer chose Video KYC</li>
+          <li>Link sent successfully</li>
+          <li>RBI compliance context communicated</li>
+          <li>No escalation required</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SCRIPT 7 ==================== -->
+<div class="script-card" id="s7">
+  <div class="script-header">
+    <h2>Script 07 — Fixed Deposit Inquiry &amp; Booking</h2>
+    <div class="script-meta">
+      <span class="meta-tag">Industry: BFSI</span>
+      <span class="meta-tag">Use Case: Inbound — Product Inquiry + Transaction</span>
+      <span class="meta-tag">Complexity: Intermediate</span>
+      <span class="meta-tag">Duration: ~5 min</span>
+      <span class="meta-tag">Company: SBI</span>
+      <span class="meta-tag">Language: English</span>
+    </div>
+  </div>
+  <div class="script-body">
+    <div class="section-divider">Dialogue</div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent — Virtual Assistant</div><div class="bubble">Good afternoon, SBI helpline. How can I assist you today?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">I want to open a fixed deposit. What rates are you offering?</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">Intent: fd_inquiry | Fetching current FD rates from rate engine</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">SBI currently offers these FD interest rates for general customers (effective March 2026):<br><br>
+      • 7 days to 45 days: 3.50%<br>
+      • 46 days to 179 days: 4.75%<br>
+      • 180 days to 210 days: 5.75%<br>
+      • 211 days to less than 1 year: 6.00%<br>
+      • 1 year to less than 2 years: 6.80%<br>
+      • 2 years to less than 3 years: 7.00%<br>
+      • 3 years to less than 5 years: 6.75%<br>
+      • 5 years and up to 10 years: 6.50%<br><br>
+      Senior citizens receive an additional 0.50% on all tenures. Are you a senior citizen?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">No. I want to put 2 lakhs for 2 years.</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">FD calculation: Principal ₹2,00,000 | Tenure: 2 years | Rate: 7.00% p.a. quarterly compounding | Maturity: ₹2,29,861</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">For ₹2,00,000 for 2 years at 7.00% per annum (compounded quarterly), you'd receive approximately ₹2,29,861 at maturity — a gain of ₹29,861. TDS applies only if annual interest exceeds ₹40,000. For your deposit, annual interest is approximately ₹14,000, so no TDS will be deducted. Shall I open this FD directly from your SBI savings account?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">Yes please. Go ahead.</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">OTP required for FD booking | FD request queued: ₹2,00,000 / 2 years / 7.00% p.a.</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">I've sent an OTP to your registered mobile for authorization. Please share it to confirm the FD booking.</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">112233.</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">OTP verified | FD booked: SBI FD A/C FD20260329-8801 | Principal: ₹2,00,000 | Maturity: 29-Mar-2028 | Maturity amount: ₹2,29,861</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">Your Fixed Deposit has been booked successfully! FD account number FD20260329-8801. Principal ₹2,00,000 will mature on 29th March 2028 to ₹2,29,861. You'll receive a confirmation on your registered email. Shall I set up auto-renewal as well?</div></div>
+
+    <div class="info-grid">
+      <div class="info-box">
+        <h4>Parameters Captured</h4>
+        <ul>
+          <li>principal_amount = ₹2,00,000</li>
+          <li>tenure = 2 years</li>
+          <li>customer_type = general (non-senior)</li>
+          <li>rate_applied = 7.00% p.a.</li>
+          <li>fd_account = FD20260329-8801</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <h4>Resolution &amp; Success Metrics</h4>
+        <ul>
+          <li>FD booked end-to-end in single call</li>
+          <li>Maturity amount correctly calculated</li>
+          <li>TDS implication explained</li>
+          <li>Confirmation reference provided</li>
+          <li>Upsell: auto-renewal offered</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SCRIPT 8 ==================== -->
+<div class="script-card" id="s8">
+  <div class="script-header">
+    <h2>Script 08 — Mutual Fund NAV Query &amp; SIP Top-Up</h2>
+    <div class="script-meta">
+      <span class="meta-tag">Industry: BFSI</span>
+      <span class="meta-tag">Use Case: Inbound — Portfolio Query + SIP Setup</span>
+      <span class="meta-tag">Complexity: Intermediate</span>
+      <span class="meta-tag">Duration: ~5 min</span>
+      <span class="meta-tag">Company: HDFC AMC</span>
+      <span class="meta-tag">Language: English</span>
+    </div>
+  </div>
+  <div class="script-body">
+    <div class="section-divider">Dialogue</div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent — Virtual Assistant</div><div class="bubble">Welcome to HDFC AMC helpline. How can I assist you today?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">I have a SIP in HDFC Midcap Opportunities Fund. What's today's NAV and how is my investment performing?</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">Auth via OTP: SUCCESS | Portfolio loaded | Fund: HDFC Mid-Cap Opportunities Fund - Direct Growth | Folio: HDFC-MF-20220601</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">Today's NAV for HDFC Mid-Cap Opportunities Fund - Direct Growth is ₹123.45 (as of 28-Mar-2026). Your portfolio details:<br><br>
+      • SIP Amount: ₹5,000/month<br>
+      • SIP Start Date: June 2022<br>
+      • Total Invested: ₹2,30,000 (46 months)<br>
+      • Current Value: ₹3,14,800<br>
+      • Absolute Returns: 36.87%<br>
+      • XIRR: approximately 22.4% p.a.<br><br>
+      The fund has outperformed its benchmark (Nifty Midcap 150 TRI) over this period. Would you like to increase your SIP amount?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">Yes, I want to add another ₹2,000 per month.</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">I'll set up an additional SIP of ₹2,000/month in HDFC Mid-Cap Opportunities Fund - Direct Growth, starting 5th April 2026. This will be debited via NACH from your registered bank account. May I confirm your bank account ending 3412?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">Yes, that's correct.</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">SIP top-up registered: ₹2,000/month from 5-Apr-2026 | New total SIP: ₹7,000/month | Confirmation: SIP20260329-7781</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">Your SIP top-up is confirmed — reference SIP20260329-7781. Your new monthly SIP total will be ₹7,000 starting April 5th. You'll receive a confirmation email and NACH mandate update. Is there anything else I can help with?</div></div>
+
+    <div class="info-grid">
+      <div class="info-box">
+        <h4>Parameters Captured</h4>
+        <ul>
+          <li>fund_name = HDFC Mid-Cap Opp. Fund</li>
+          <li>nav_date = 28-Mar-2026</li>
+          <li>current_value = ₹3,14,800</li>
+          <li>sip_topup_amount = ₹2,000/month</li>
+          <li>bank_account_last4 = 3412</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <h4>Resolution &amp; Success Metrics</h4>
+        <ul>
+          <li>NAV and portfolio data shared</li>
+          <li>XIRR correctly communicated</li>
+          <li>SIP top-up processed: SIP20260329-7781</li>
+          <li>Bank account confirmed before action</li>
+          <li>AUM growth opportunity captured</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SCRIPT 9 ==================== -->
+<div class="script-card" id="s9">
+  <div class="script-header">
+    <h2>Script 09 — Insurance Claim Status Follow-up</h2>
+    <div class="script-meta">
+      <span class="meta-tag">Industry: BFSI / Insurance</span>
+      <span class="meta-tag">Use Case: Inbound — Claim Escalation</span>
+      <span class="meta-tag">Complexity: Complex</span>
+      <span class="meta-tag">Duration: ~6 min</span>
+      <span class="meta-tag">Company: Bajaj Allianz General Insurance</span>
+      <span class="meta-tag">Language: English</span>
+    </div>
+  </div>
+  <div class="script-body">
+    <div class="section-divider">Dialogue</div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent — Virtual Assistant</div><div class="bubble">Bajaj Allianz General Insurance, good afternoon. How may I help you?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">I filed a motor insurance claim 10 days ago. My car was in an accident. What's the status?</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">I'm sorry to hear about the accident. May I have your claim number to pull up the details?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">It's BA2026032901234.</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">Claim loaded: BA2026032901234 | Vehicle: Maruti Swift 2022 | Incident date: 19-Mar-2026 | Workshop: Kapoor Motors, Andheri | Status: Under Survey | Surveyor: Ramesh Kumar</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">I can see your claim BA2026032901234 for your Maruti Swift. Current status is 'Under Survey' — our surveyor Ramesh Kumar visited the vehicle at Kapoor Motors workshop on 25th March and the survey report is currently under review. Expected completion is by 2nd April 2026. Once approved, repair authorization will be sent directly to the workshop within 24 hours.</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">It's been 10 days already! This is taking way too long.</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">I completely understand your frustration and I sincerely apologize for the delay. As per IRDAI guidelines, insurers are expected to complete the survey process within 7 working days. I'm escalating this claim for priority review right now. I'm flagging it as urgent — you should receive an update by tomorrow 5 PM. I'm generating a service escalation request: SR20260329-4512. You'll receive an SMS and email confirmation of this escalation.</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">I need my car fixed urgently, I use it for work.</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">Understood — I've also marked the urgency reason as 'vehicle required for livelihood' in the escalation notes, which gives this higher priority. Our senior claims officer will personally review this by end of day. Is there a preferred callback number if we need to reach you quickly?</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">Escalation SR20260329-4512 created | Priority: HIGH | Livelihood flag: YES | Assigned: Senior Claims Officer Team | Callback committed: 30-Mar-2026 17:00</div></div>
+
+    <div class="info-grid">
+      <div class="info-box">
+        <h4>Parameters Captured</h4>
+        <ul>
+          <li>claim_number = BA2026032901234</li>
+          <li>vehicle = Maruti Swift 2022</li>
+          <li>workshop = Kapoor Motors</li>
+          <li>escalation_reason = delay beyond IRDAI SLA</li>
+          <li>escalation_SR = SR20260329-4512</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <h4>Resolution &amp; Success Metrics</h4>
+        <ul>
+          <li>Claim status accurately retrieved</li>
+          <li>Delay acknowledged and escalated</li>
+          <li>IRDAI SLA context provided</li>
+          <li>Escalation SR created with callback</li>
+          <li>Livelihood urgency flag applied</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SCRIPT 10 ==================== -->
+<div class="script-card" id="s10">
+  <div class="script-header">
+    <h2>Script 10 — Personal Loan Pre-Approval Check</h2>
+    <div class="script-meta">
+      <span class="meta-tag">Industry: BFSI</span>
+      <span class="meta-tag">Use Case: Inbound — Loan Eligibility</span>
+      <span class="meta-tag">Complexity: Intermediate</span>
+      <span class="meta-tag">Duration: ~5 min</span>
+      <span class="meta-tag">Company: Axis Bank</span>
+      <span class="meta-tag">Language: English</span>
+    </div>
+  </div>
+  <div class="script-body">
+    <div class="section-divider">Dialogue</div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent — Maya</div><div class="bubble">Good morning, Axis Bank loans helpline. I'm Maya. How can I help you today?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">Am I eligible for a personal loan? I need 3 lakhs urgently.</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">I can check your pre-approved offer instantly. Are you an existing Axis Bank customer?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">Yes, I have a salary account with you.</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">Auth via OTP: SUCCESS | Account: Suresh Patel | Salary Account | Employer: TCS | Monthly Credit: ₹78,000 | Pre-approved offer: ₹3,50,000 at 10.75% p.a.</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">Great news, Suresh! Based on your salary account history with Axis Bank, you have a pre-approved personal loan offer of up to ₹3,50,000 at 10.75% per annum — with zero documentation required since you're an existing customer. For ₹3 lakhs over 3 years, your EMI would be ₹9,784 per month. Processing fee is 1.5%, which comes to ₹4,500. Shall I proceed with the application?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">Is the rate negotiable?</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">The rate is determined by your credit profile. Your current CIBIL score as per our records is 742, which is in the 'Good' range. Customers with scores above 750 can qualify for our best rate of 10.50%. If you've had any recent credit improvements, you could check your updated CIBIL score via the CRIF or CIBIL app — even a small improvement could bring down your rate. Would you like a few days to explore that, or shall we proceed at 10.75% today?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">I need the money urgently. Let's go ahead at 10.75%.</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">Loan application initiated: PL20260329-AXS-4421 | Amount: ₹3,00,000 | Rate: 10.75% | Tenure: 36 months | EMI: ₹9,784 | Disbursal expected: same day (pre-approved)</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">Application submitted — reference PL20260329-AXS-4421. Since this is a pre-approved offer, disbursal is expected directly to your Axis savings account today by 4 PM. You'll receive a sanction letter on your registered email. Is there anything else I can help with?</div></div>
+
+    <div class="info-grid">
+      <div class="info-box">
+        <h4>Parameters Captured</h4>
+        <ul>
+          <li>customer = Suresh Patel (existing)</li>
+          <li>loan_amount = ₹3,00,000</li>
+          <li>tenure = 36 months</li>
+          <li>rate = 10.75% p.a.</li>
+          <li>cibil_score = 742</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <h4>Resolution &amp; Success Metrics</h4>
+        <ul>
+          <li>Pre-approval offer surfaced instantly</li>
+          <li>EMI and processing fee explained</li>
+          <li>CIBIL score transparently shared</li>
+          <li>Application: PL20260329-AXS-4421</li>
+          <li>Same-day disbursal committed</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SCRIPT 11 ==================== -->
+<div class="script-card" id="s11">
+  <div class="script-header">
+    <h2>Script 11 — Internet Banking Locked Account</h2>
+    <div class="script-meta">
+      <span class="meta-tag">Industry: BFSI</span>
+      <span class="meta-tag">Use Case: Inbound — Account Unlock</span>
+      <span class="meta-tag">Complexity: Intermediate</span>
+      <span class="meta-tag">Duration: ~4 min</span>
+      <span class="meta-tag">Company: Kotak 811</span>
+      <span class="meta-tag">Language: English</span>
+    </div>
+  </div>
+  <div class="script-body">
+    <div class="section-divider">Dialogue</div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent — Aryan</div><div class="bubble">Welcome to Kotak 811 helpline. I'm Aryan. What issue are you facing today?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">I can't login to net banking. It says my account is locked.</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">Intent: account_unlock | Pulling account status by customer_id</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">I understand — accounts get locked after 3 incorrect password attempts as a security measure to protect you. Let me verify your identity. Please share your Customer ID and registered mobile number.</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">Customer ID 12345678, mobile 9876543210.</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">Account status: LOCKED | Failed attempts: 3 | Last attempt: 29-Mar-2026 10:15 AM | Customer: Rahul Mehta</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">I can see your account was locked at 10:15 AM today after 3 unsuccessful login attempts. I'll unlock it now — I'm sending an OTP to your registered mobile. Please share it when you receive it.</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">Got it — 762341.</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">OTP verified | Account unlocked | Temporary one-time password sent via SMS | Unlock timestamp: 29-Mar-2026 11:50 AM</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">Your account is now unlocked. I've sent a one-time temporary password to your registered mobile. Please use this to log in and immediately change your password to a new one. For security, your password should include uppercase letters, lowercase letters, a number, and a special character — minimum 8 characters. Is there anything else I can assist you with?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">No that's all, thanks.</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">You're welcome! If you face any further issues logging in, please don't hesitate to call us again on 1860-266-0811. Have a great day!</div></div>
+
+    <div class="info-grid">
+      <div class="info-box">
+        <h4>Parameters Captured</h4>
+        <ul>
+          <li>customer_id = 12345678</li>
+          <li>mobile = 9876543210</li>
+          <li>lock_reason = 3 failed attempts</li>
+          <li>unlock_method = OTP verification</li>
+          <li>customer = Rahul Mehta</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <h4>Resolution &amp; Success Metrics</h4>
+        <ul>
+          <li>Account unlocked within 2 minutes</li>
+          <li>OTP-based identity confirmed</li>
+          <li>Password security advice given</li>
+          <li>Full self-service resolution</li>
+          <li>No escalation to human agent</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SCRIPT 12 ==================== -->
+<div class="script-card" id="s12">
+  <div class="script-header">
+    <h2>Script 12 — Branch Locator &amp; Locker Inquiry</h2>
+    <div class="script-meta">
+      <span class="meta-tag">Industry: BFSI</span>
+      <span class="meta-tag">Use Case: Inbound — Product Inquiry</span>
+      <span class="meta-tag">Complexity: Basic</span>
+      <span class="meta-tag">Duration: ~4 min</span>
+      <span class="meta-tag">Company: HDFC Bank</span>
+      <span class="meta-tag">Language: English</span>
+    </div>
+  </div>
+  <div class="script-body">
+    <div class="section-divider">Dialogue</div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent — Virtual Assistant</div><div class="bubble">HDFC Bank helpline, good afternoon. How can I assist you?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">I need a bank locker. Which nearby branch has lockers available?</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">I'd be happy to check that for you. Which area or city are you in?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">I'm in Koramangala, Bangalore.</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">Location: Koramangala, Bangalore | Querying branch inventory: locker availability | Results: 2 branches within 3 km</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">HDFC Bank branches near Koramangala with locker availability:<br><br>
+      1. <strong>HDFC Bank Koramangala 5th Block</strong> — 100th Road | Lockers available immediately | Mon–Sat 9:30 AM–3:30 PM<br>
+      2. <strong>HDFC Bank HSR Layout</strong> — 27th Main Road | Lockers: waiting list currently 2–3 months<br><br>
+      I recommend visiting the 5th Block branch. For a locker, you'll need to: be an existing HDFC savings account holder, maintain a minimum ₹25,000 average quarterly balance, and pay annual locker rent. Small locker: ₹2,200/year + GST. Medium locker: ₹4,000/year + GST. Shall I book an appointment at the 5th Block branch?</div></div>
+    <div class="dialogue user"><div class="dialogue-label">User</div><div class="bubble">Yes, please book it for tomorrow morning.</div></div>
+    <div class="dialogue system-action"><div class="dialogue-label">System Action</div><div class="bubble">Appointment booked: HDFC Koramangala 5th Block | 30-Mar-2026 10:00 AM | Purpose: Locker inquiry | Ref: APT20260330-KRMG-0912</div></div>
+    <div class="dialogue agent"><div class="dialogue-label">Agent</div><div class="bubble">Appointment confirmed at HDFC Bank Koramangala 5th Block for tomorrow, 30th March at 10:00 AM. Reference: APT20260330-KRMG-0912. Please carry your Aadhaar, PAN, and a passport-size photo. You'll receive an SMS reminder. Anything else?</div></div>
+
+    <div class="info-grid">
+      <div class="info-box">
+        <h4>Parameters Captured</h4>
+        <ul>
+          <li>customer_location = Koramangala, Bangalore</li>
+          <li>service_required = bank_locker</li>
+          <li>preferred_branch = 5th Block</li>
+          <li>appointment_date = 30-Mar-2026 10:00 AM</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <h4>Resolution &amp; Success Metrics</h4>
+        <ul>
+          <li>Nearest branch with availability found</li>
+          <li>Locker fees correctly communicated</li>
+          <li>Appointment booked: APT20260330-KRMG-0912</li>
+          <li>Documents checklist provided</li>
+          <li>SMS reminder scheduled</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end container Part 1 -->
+
+<!-- PART 2: AUTOMOTIVE SCRIPTS 13-20 -->
+<div class="container">
+  <div style="background:#0D3B47;color:white;border-radius:12px;padding:20px 28px;margin:30px 0 24px;font-size:1.1rem;font-weight:700;letter-spacing:0.03em;">
+    🚗 Automotive Scripts (Scripts 13–20)
+  </div>
+
+  <!-- SCRIPT 13 -->
+  <!-- ==================== SCRIPT 13 ==================== -->
+  <div class="script-card" id="s13">
+    <div class="script-header">
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px;flex-wrap:wrap;">
+        <span style="background:rgba(255,255,255,0.15);border-radius:20px;padding:3px 12px;font-size:0.75rem;font-weight:700;">Script 13</span>
+        <span style="background:#16a34a;border-radius:20px;padding:3px 12px;font-size:0.75rem;font-weight:700;">Automotive</span>
+        <span style="background:#d97706;border-radius:20px;padding:3px 12px;font-size:0.75rem;font-weight:700;">Intermediate</span>
+      </div>
+      <h2 style="font-size:1.3rem;font-weight:700;margin-bottom:4px;">Periodic Service Booking — Maruti Swift</h2>
+      <p style="opacity:0.8;font-size:0.9rem;">Use Case: Inbound — Vehicle service scheduling | Duration: ~4 min | Company: Maruti Suzuki</p>
+    </div>
+    <div class="script-body">
+      <div style="background:#f0fdf4;border-left:4px solid #16a34a;padding:10px 16px;border-radius:0 8px 8px 0;margin-bottom:16px;font-size:0.85rem;">
+        <strong>Parameters Captured:</strong> registration_number, vehicle_model, last_service_km, preferred_date, preferred_service_center, pickup_drop_required, customer_address
+      </div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Hello! Thank you for calling Maruti Suzuki customer care. I'm Priya. How can I help you today?"</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "I want to book a service for my Swift."</div>
+      <div class="dialogue system"><span class="speaker">SYSTEM</span> Intent: service_booking | Slot needed: registration_number</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "I'd be happy to help schedule a service. Could you please share your vehicle registration number?"</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "KA01AB1234."</div>
+      <div class="dialogue system"><span class="speaker">SYSTEM</span> Vehicle: Maruti Swift VXI 2022 | Last service: 20,000 km Nov-2025 | Due: 30,000 km service</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Your Maruti Swift (KA01AB1234) last had service at 20,000 km in November 2025. It's due for the 30,000 km service — includes engine oil &amp; filter change, air filter inspection, brake check, and tyre rotation. Approximate cost: ₹4,500–₹5,500. Which Maruti Arena service center do you prefer?"</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "The one in Jayanagar, Bangalore."</div>
+      <div class="dialogue system"><span class="speaker">SYSTEM</span> Maruti Arena Jayanagar, Bangalore | Available 1-Apr-2026: 9 AM, 11 AM, 2 PM</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Available slots on 1st April at Jayanagar: 9 AM, 11 AM, or 2 PM. Which works for you?"</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "11 AM please. Do you offer pickup and drop?"</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Yes! Maruti TRUE SERVICE offers free pickup and drop within 10 km of the service center. What's your address?"</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "14, 5th Cross, JP Nagar, Bangalore."</div>
+      <div class="dialogue system"><span class="speaker">SYSTEM</span> Booking confirmed: SB20260401-1234 | Pickup: 10:30 AM | Est. delivery: 5 PM | SMS sent</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Booking confirmed! Reference SB20260401-1234. Our driver will pick up your Swift at 10:30 AM on 1st April from JP Nagar. Estimated delivery by 5 PM. You'll get real-time SMS updates via Maruti TRUE SERVICE. Is there anything else?"</div>
+      <div style="background:var(--hindi-bg,#fdf4ff);border-left:4px solid #a855f7;padding:10px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:0.85rem;">
+        <strong>HINGLISH VARIATION</strong><br>
+        <em>USER: "Swift ki service karwani hai, kitna time lagega aur kitna kharcha hoga?"</em><br>
+        <em>AGENT: "30,000 km service mein approximately ₹4,500–5,500 lagenge aur time lagega 4–6 ghante. Pickup-drop free hai 10 km ke andar. Kaunsa din suit karega?"</em>
+      </div>
+      <div style="background:#fef3c7;border-left:4px solid #f59e0b;padding:10px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:0.85rem;">
+        <strong>DISTRACTION:</strong> USER: "By the way, Hyundai i20 kaisi hai comparison mein?"<br>
+        AGENT: "Great question for your next purchase! I specialise in Maruti services right now. Let me make sure your Swift is taken care of first — shall we confirm the 1st April 11 AM slot?"
+      </div>
+      <div style="background:#d1fae5;border-left:4px solid #10b981;padding:10px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:0.85rem;">
+        <strong>Resolution:</strong> Service booked ✓ | Free pickup arranged ✓ | SMS confirmation sent ✓<br>
+        <strong>Success Metrics:</strong> Booking confirmed within call, correct service type identified, customer address captured
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT 14 -->
+  <!-- ==================== SCRIPT 14 ==================== -->
+  <div class="script-card" id="s14">
+    <div class="script-header">
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px;flex-wrap:wrap;">
+        <span style="background:rgba(255,255,255,0.15);border-radius:20px;padding:3px 12px;font-size:0.75rem;font-weight:700;">Script 14</span>
+        <span style="background:#16a34a;border-radius:20px;padding:3px 12px;font-size:0.75rem;font-weight:700;">Automotive</span>
+        <span style="background:#dc2626;border-radius:20px;padding:3px 12px;font-size:0.75rem;font-weight:700;">URGENT</span>
+      </div>
+      <h2 style="font-size:1.3rem;font-weight:700;margin-bottom:4px;">Roadside Assistance — Breakdown on Highway</h2>
+      <p style="opacity:0.8;font-size:0.9rem;">Use Case: Inbound Emergency — RSA dispatch | Duration: ~4 min | Company: Tata Motors RSA</p>
+    </div>
+    <div class="script-body">
+      <div style="background:#f0fdf4;border-left:4px solid #16a34a;padding:10px 16px;border-radius:0 8px 8px 0;margin-bottom:16px;font-size:0.85rem;">
+        <strong>Parameters Captured:</strong> registration_number, location (GPS/landmark/km marker), issue_description, warning_lights, caller_safety_status, RSA_vendor_ETA
+      </div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Tata Motors Roadside Assistance, available 24x7. This is Rahul. What is your emergency?"</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "My car has broken down on the highway! It won't start."</div>
+      <div class="dialogue system"><span class="speaker">SYSTEM</span> Intent: roadside_assistance | Priority: URGENT | Fast-track activated</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "I understand — let's get you help immediately. Please share your vehicle registration number and current location."</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "MH02CD5678. I'm on the Mumbai-Pune Expressway near km marker 42."</div>
+      <div class="dialogue system"><span class="speaker">SYSTEM</span> Vehicle: Tata Nexon 2023 | RSA: Active | Nearest vendor: 12 km away ETA 25 min | Ticket: RSA20260329-5678</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Your Tata Nexon has active RSA coverage. Dispatching a mechanic now — 12 km away, ETA approximately 25 minutes. Service request: RSA20260329-5678. Can you describe the issue? Any warning lights on the dashboard?"</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "Engine stopped suddenly. Red battery warning light is showing."</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "That sounds like a battery or alternator issue — usually fixable roadside. Please keep hazard lights on and stay inside your vehicle. Do NOT try restarting repeatedly. The technician carries jump-start equipment and a replacement battery. Are you safe? Is anyone with you?"</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "I'm alone but it's daytime and I'm on the shoulder."</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Good. The technician will call you 5 minutes before arrival — I'm sending their contact via SMS right now. If the issue isn't fixable roadside, we'll arrange free towing to the nearest Tata Motors workshop within 50 km, all covered under your RSA. Stay safe. I'll monitor the case on my end."</div>
+      <div style="background:#d1fae5;border-left:4px solid #10b981;padding:10px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:0.85rem;">
+        <strong>Resolution:</strong> RSA dispatched ✓ | ETA communicated ✓ | Towing pre-authorised ✓ | Customer safety confirmed ✓<br>
+        <strong>Success Metrics:</strong> Dispatch time &lt;3 min from call start, ETA accurate, customer reassured
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT 15 -->
+  <!-- ==================== SCRIPT 15 ==================== -->
+  <div class="script-card" id="s15">
+    <div class="script-header">
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px;flex-wrap:wrap;">
+        <span style="background:rgba(255,255,255,0.15);border-radius:20px;padding:3px 12px;font-size:0.75rem;font-weight:700;">Script 15</span>
+        <span style="background:#16a34a;border-radius:20px;padding:3px 12px;font-size:0.75rem;font-weight:700;">Automotive</span>
+        <span style="background:#d97706;border-radius:20px;padding:3px 12px;font-size:0.75rem;font-weight:700;">Intermediate</span>
+      </div>
+      <h2 style="font-size:1.3rem;font-weight:700;margin-bottom:4px;">Vehicle Complaint — AC Not Cooling (Hyundai Creta)</h2>
+      <p style="opacity:0.8;font-size:0.9rem;">Use Case: Inbound — Warranty complaint registration | Duration: ~5 min</p>
+    </div>
+    <div class="script-body">
+      <div style="background:#f0fdf4;border-left:4px solid #16a34a;padding:10px 16px;border-radius:0 8px 8px 0;margin-bottom:16px;font-size:0.85rem;">
+        <strong>Parameters Captured:</strong> registration_number, complaint_type, symptom_description, symptom_onset_date, warranty_status, preferred_workshop_city, appointment_date
+      </div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Hyundai India customer care, good morning. I'm Anjali. How can I help?"</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "My Creta's AC has not been cooling properly for the past 2 weeks."</div>
+      <div class="dialogue system"><span class="speaker">SYSTEM</span> Auth via registration | Vehicle: Hyundai Creta SX 2023 | Warranty: Active until June 2026 | Complaint: CRM20260329-9812</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "I understand — frustrating, especially in summer. Your Creta is under warranty until June 2026, so AC repair is covered at zero cost. Could you describe it — is it not cooling at all, or does it start then blow warm air?"</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "It cools for 10–15 minutes, then starts blowing warm air."</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "That symptom points to a refrigerant leak or compressor cycling issue — both fully covered under warranty. I'm registering complaint CRM20260329-9812. Which city are you in?"</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "Pune."</div>
+      <div class="dialogue system"><span class="speaker">SYSTEM</span> Nearest Hyundai authorised workshop: Baner, Pune | Next available: 31-Mar-2026 10 AM</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Booked at Hyundai Authorised Service, Baner, Pune — 31st March at 10 AM. Zero cost under warranty. Estimated repair time: 1–2 days. SMS updates at every stage. Shall I also arrange a complimentary courtesy drop within Pune?"</div>
+      <div style="background:#fef3c7;border-left:4px solid #f59e0b;padding:10px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:0.85rem;">
+        <strong>DISTRACTION:</strong> USER: "This is the second issue with this car. I'm thinking of selling it."<br>
+        AGENT: "I completely understand your frustration. Let's get this AC issue resolved first — a fully repaired car will also help its resale value. Your complaint is registered and the workshop appointment is confirmed. Anything else about the current issue?"
+      </div>
+      <div style="background:#d1fae5;border-left:4px solid #10b981;padding:10px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:0.85rem;">
+        <strong>Resolution:</strong> Complaint registered ✓ | Warranty confirmed (zero cost) ✓ | Workshop booked ✓<br>
+        <strong>Success Metrics:</strong> Complaint CRM created, correct warranty assessment, appointment confirmed within call
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT 16 -->
+  <!-- ==================== SCRIPT 16 ==================== -->
+  <div class="script-card" id="s16">
+    <div class="script-header">
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px;flex-wrap:wrap;">
+        <span style="background:rgba(255,255,255,0.15);border-radius:20px;padding:3px 12px;font-size:0.75rem;font-weight:700;">Script 16</span>
+        <span style="background:#16a34a;border-radius:20px;padding:3px 12px;font-size:0.75rem;font-weight:700;">Automotive</span>
+        <span style="background:#0A8EA0;border-radius:20px;padding:3px 12px;font-size:0.75rem;font-weight:700;">Basic</span>
+      </div>
+      <h2 style="font-size:1.3rem;font-weight:700;margin-bottom:4px;">Test Drive Booking — Tata Nexon EV</h2>
+      <p style="opacity:0.8;font-size:0.9rem;">Use Case: Inbound — EV pre-sales inquiry + test drive | Duration: ~5 min</p>
+    </div>
+    <div class="script-body">
+      <div style="background:#f0fdf4;border-left:4px solid #16a34a;padding:10px 16px;border-radius:0 8px 8px 0;margin-bottom:16px;font-size:0.85rem;">
+        <strong>Parameters Captured:</strong> model_of_interest, variant_preference, city, preferred_date_slot, customer_name, contact_number, existing_vehicle, finance_interest
+      </div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Welcome to Tata Motors! I'm your virtual assistant. How can I help you today?"</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "I want to book a test drive for the Nexon EV."</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Great choice — the Tata Nexon EV is India's best-selling electric car. We have two variants: Nexon EV (standard ~312 km ARAI range, from ₹14.49L) and Nexon EV Max (long range ~437 km, up to ₹19.29L). Which interests you, or shall I arrange both?"</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "What's the real-world range difference?"</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Real-world: standard gives 200–240 km per charge in city; Max variant gives 280–320 km. Home charging with a 7.2 kW wallbox: ~6 hours for full charge, costing around ₹150–180 — giving you ₹0.80–₹1 per km versus ₹6–₹7 for petrol. Significant savings on highway routes. Shall I book test drives for both variants?"</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "Yes please. I'm in Gurugram."</div>
+      <div class="dialogue system"><span class="speaker">SYSTEM</span> Tata EV Hub, DLF Cyber City, Gurugram | Available: Sat 1-Apr, Sun 2-Apr | EV specialist on standby</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Tata Motors EV showroom at DLF Cyber City, Gurugram has slots Saturday 1st April and Sunday 2nd April. Preferred time?"</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "Saturday 2 PM."</div>
+      <div class="dialogue system"><span class="speaker">SYSTEM</span> Test drive booked: TD20260401-EV-3321 | 1-Apr 2 PM | DLF Cyber City | EV specialist assigned</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Booked! Reference TD20260401-EV-3321. Our EV specialist will guide you through both variants. Please carry your driving licence. We'll also demo the home charging wallbox setup. See you Saturday at 2 PM!"</div>
+      <div style="background:#d1fae5;border-left:4px solid #10b981;padding:10px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:0.85rem;">
+        <strong>Resolution:</strong> Test drive booked ✓ | Range/cost comparison given accurately ✓ | EV specialist assigned ✓<br>
+        <strong>Success Metrics:</strong> Lead captured, test drive confirmed, real-world range figures correctly quoted
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT 17 -->
+  <!-- ==================== SCRIPT 17 ==================== -->
+  <div class="script-card" id="s17">
+    <div class="script-header">
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px;flex-wrap:wrap;">
+        <span style="background:rgba(255,255,255,0.15);border-radius:20px;padding:3px 12px;font-size:0.75rem;font-weight:700;">Script 17</span>
+        <span style="background:#16a34a;border-radius:20px;padding:3px 12px;font-size:0.75rem;font-weight:700;">Automotive</span>
+        <span style="background:#d97706;border-radius:20px;padding:3px 12px;font-size:0.75rem;font-weight:700;">Intermediate</span>
+      </div>
+      <h2 style="font-size:1.3rem;font-weight:700;margin-bottom:4px;">Car Loan EMI &amp; Foreclosure Query — Tata Capital</h2>
+      <p style="opacity:0.8;font-size:0.9rem;">Use Case: Inbound — Loan account management | Duration: ~5 min</p>
+    </div>
+    <div class="script-body">
+      <div style="background:#f0fdf4;border-left:4px solid #16a34a;padding:10px 16px;border-radius:0 8px 8px 0;margin-bottom:16px;font-size:0.85rem;">
+        <strong>Parameters Captured:</strong> loan_account_number, outstanding_principal, remaining_tenure_months, foreclosure_charge_calculated, prepayment_amount_if_interested
+      </div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Tata Capital Motors Finance, good afternoon. I'm Vikram. How can I assist?"</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "I want to know my remaining EMIs and the foreclosure charges on my car loan."</div>
+      <div class="dialogue system"><span class="speaker">SYSTEM</span> Auth via OTP | Loan: TML202300019234 | Borrower: Priya Sharma | Vehicle: Tata Harrier | Outstanding: ₹7,84,500 | Remaining: 34 EMIs | Rate: 9.25% p.a.</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Priya, your loan details:<br>
+        &nbsp;• Loan: TML202300019234 | Vehicle: Tata Harrier<br>
+        &nbsp;• Outstanding: ₹7,84,500 | EMI: ₹18,847/month<br>
+        &nbsp;• Remaining: 34 months (ends January 2029) | Rate: 9.25% p.a.<br><br>
+        Foreclosure charge: 2% of outstanding + 18% GST = ₹15,690 + ₹2,824 = ₹18,514.<br>
+        Full settlement today: ₹8,03,014."</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "That's expensive. Is there a part-prepayment option without charges?"</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Yes — you can prepay up to 25% of outstanding principal per year (₹1,96,125) with zero prepayment charge. For example, if you prepay ₹1 lakh today, your new EMI would reduce to approximately ₹16,460/month, saving ₹2,387 per month. Alternatively, keep the EMI same and reduce tenure by about 5 months. Which would you prefer?"</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "Reduce the EMI please."</div>
+      <div class="dialogue system"><span class="speaker">SYSTEM</span> Part-prepayment initiated: ₹1,00,000 | New EMI: ₹16,460 from next cycle | Payment link sent via SMS</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Done — I've sent a secure payment link for ₹1,00,000 to your registered mobile. Once payment is processed, your revised EMI of ₹16,460 will be effective from the next billing cycle. You'll receive a revised amortisation schedule via email. Anything else?"</div>
+      <div style="background:#d1fae5;border-left:4px solid #10b981;padding:10px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:0.85rem;">
+        <strong>Resolution:</strong> EMI details shared ✓ | Foreclosure amount calculated correctly ✓ | Part-prepayment initiated ✓<br>
+        <strong>Success Metrics:</strong> Accurate foreclosure calculation, customer understood savings from prepayment, payment link sent
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT 18 -->
+  <!-- ==================== SCRIPT 18 ==================== -->
+  <div class="script-card" id="s18">
+    <div class="script-header">
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px;flex-wrap:wrap;">
+        <span style="background:rgba(255,255,255,0.15);border-radius:20px;padding:3px 12px;font-size:0.75rem;font-weight:700;">Script 18</span>
+        <span style="background:#16a34a;border-radius:20px;padding:3px 12px;font-size:0.75rem;font-weight:700;">Automotive</span>
+        <span style="background:#d97706;border-radius:20px;padding:3px 12px;font-size:0.75rem;font-weight:700;">Intermediate</span>
+      </div>
+      <h2 style="font-size:1.3rem;font-weight:700;margin-bottom:4px;">Warranty Claim — AC Failure (Hyundai i20)</h2>
+      <p style="opacity:0.8;font-size:0.9rem;">Use Case: Inbound — Warranty claim within 18 months | Duration: ~5 min</p>
+    </div>
+    <div class="script-body">
+      <div style="background:#f0fdf4;border-left:4px solid #16a34a;padding:10px 16px;border-radius:0 8px 8px 0;margin-bottom:16px;font-size:0.85rem;">
+        <strong>Parameters Captured:</strong> registration_number, issue_description, vehicle_age_months, warranty_validity_confirmed, workshop_city, claim_number_generated
+      </div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Hyundai India customer care. I'm here to help — please share your registration number."</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "DL8CAB3456. My i20's AC has completely stopped. The car is only 18 months old!"</div>
+      <div class="dialogue system"><span class="speaker">SYSTEM</span> Vehicle: Hyundai i20 Asta 2024 | Age: 18 months | Mileage: 22,400 km | Warranty: 3 years/1,00,000 km — ACTIVE ✓</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Your Hyundai i20 is within its standard 3-year/1,00,000 km warranty — complete AC failure is fully covered at zero cost. Creating warranty claim WC20260329-3456 right now. You're in Delhi — which part?"</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "Dwarka Sector 10."</div>
+      <div class="dialogue system"><span class="speaker">SYSTEM</span> Nearest authorised: Hyundai Dwarka Sector 12 | Next slot: 30-Mar-2026 9:30 AM</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Booked at Hyundai Authorised Service, Dwarka Sector 12 — 30th March at 9:30 AM. The service advisor will inspect the AC compressor, condenser, and refrigerant system. All parts and labour covered under warranty. Estimated repair: 1–2 days. Shall I arrange a complimentary drop within Dwarka?"</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "Yes please. Will this definitely be covered at zero cost?"</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Yes — your vehicle is 18 months old, well within the 3-year warranty. AC failure from manufacturing defect is fully covered. The only exception would be physical damage from an accident, which you haven't mentioned. Claim WC20260329-3456 is raised — you'll get SMS updates at every stage. Nothing to pay."</div>
+      <div style="background:#d1fae5;border-left:4px solid #10b981;padding:10px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:0.85rem;">
+        <strong>Resolution:</strong> Warranty confirmed ✓ | Claim filed ✓ | Workshop booked ✓ | Zero cost confirmed ✓<br>
+        <strong>Success Metrics:</strong> Customer reassured on cost, claim number provided, appointment within 2 days
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT 19 -->
+  <!-- ==================== SCRIPT 19 ==================== -->
+  <div class="script-card" id="s19">
+    <div class="script-header">
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px;flex-wrap:wrap;">
+        <span style="background:rgba(255,255,255,0.15);border-radius:20px;padding:3px 12px;font-size:0.75rem;font-weight:700;">Script 19</span>
+        <span style="background:#16a34a;border-radius:20px;padding:3px 12px;font-size:0.75rem;font-weight:700;">Automotive</span>
+        <span style="background:#0A8EA0;border-radius:20px;padding:3px 12px;font-size:0.75rem;font-weight:700;">Basic</span>
+      </div>
+      <h2 style="font-size:1.3rem;font-weight:700;margin-bottom:4px;">AMC Renewal — Maruti Baleno (Outbound)</h2>
+      <p style="opacity:0.8;font-size:0.9rem;">Use Case: Outbound — Proactive AMC renewal reminder | Duration: ~4 min</p>
+    </div>
+    <div class="script-body">
+      <div style="background:#f0fdf4;border-left:4px solid #16a34a;padding:10px 16px;border-radius:0 8px 8px 0;margin-bottom:16px;font-size:0.85rem;">
+        <strong>Parameters Captured:</strong> registration_number, amc_expiry_date, current_mileage, amc_plan_selected, payment_confirmed
+      </div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Hello, am I speaking with the owner of Maruti Baleno registered DL01XY7890?"</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "Yes, who is calling?"</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "This is Maruti Suzuki customer care. Your Baleno's Annual Maintenance Contract expires on 30th April 2026 — just one month away. Renewing before expiry ensures continuous coverage, and since your car is at 47,000 km, the 50,000 km service is coming up soon. May I share the renewal options?"</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "Sure, go ahead."</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Three plans for your Baleno:<br>
+        &nbsp;• Basic (1 yr/10,000 km): ₹4,200 — 3 services, engine oil &amp; filter<br>
+        &nbsp;• Standard (1 yr/20,000 km): ₹7,800 — includes air filter, fuel filter, spark plug check at 50K service<br>
+        &nbsp;• Comprehensive (1 yr/30,000 km): ₹12,500 — brake pads + coolant flush added<br><br>
+        At 47,000 km, the Standard plan is ideal — it covers your upcoming 50,000 km service components."</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "Standard sounds right. Can I pay online?"</div>
+      <div class="dialogue system"><span class="speaker">SYSTEM</span> Payment link generated | AMC Standard ₹7,800 | Validity: 1-May-2026 to 30-Apr-2027 | SMS sent</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Secure payment link sent to your mobile for ₹7,800. Once paid, your AMC confirmation and schedule will be emailed within 2 hours. New AMC valid: 1st May 2026 to 30th April 2027. Is there anything else?"</div>
+      <div style="background:#d1fae5;border-left:4px solid #10b981;padding:10px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:0.85rem;">
+        <strong>Resolution:</strong> AMC renewal initiated ✓ | Correct plan recommended ✓ | Payment link sent ✓<br>
+        <strong>Success Metrics:</strong> Renewal conversion, correct plan matched to mileage, payment link delivered
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT 20 -->
+  <!-- ==================== SCRIPT 20 ==================== -->
+  <div class="script-card" id="s20">
+    <div class="script-header">
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px;flex-wrap:wrap;">
+        <span style="background:rgba(255,255,255,0.15);border-radius:20px;padding:3px 12px;font-size:0.75rem;font-weight:700;">Script 20</span>
+        <span style="background:#16a34a;border-radius:20px;padding:3px 12px;font-size:0.75rem;font-weight:700;">Automotive</span>
+        <span style="background:#7c3aed;border-radius:20px;padding:3px 12px;font-size:0.75rem;font-weight:700;">Complex</span>
+      </div>
+      <h2 style="font-size:1.3rem;font-weight:700;margin-bottom:4px;">New Car Inquiry — Hyundai Creta vs Tata Harrier Comparison</h2>
+      <p style="opacity:0.8;font-size:0.9rem;">Use Case: Inbound — Competitive comparison + showroom booking | Duration: ~7 min</p>
+    </div>
+    <div class="script-body">
+      <div style="background:#f0fdf4;border-left:4px solid #16a34a;padding:10px 16px;border-radius:0 8px 8px 0;margin-bottom:16px;font-size:0.85rem;">
+        <strong>Parameters Captured:</strong> models_of_interest, budget_range, family_size, primary_use, city, preferred_showroom_date, finance_interest, trade_in_vehicle
+      </div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Welcome to Hyundai India! I'm Neha, your virtual assistant. Looking for a new car today?"</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "Yes, I want to compare the Creta and Tata Harrier. Budget around ₹15–18 lakhs. Family of 4."</div>
+      <div class="dialogue system"><span class="speaker">SYSTEM</span> Intent: new_car_inquiry | Models: Creta, Harrier (cross-brand) | Budget: ₹15–18L | Family use | Highway mentioned</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Both are excellent — here's a quick comparison:<br><br>
+        <strong>Hyundai Creta 2024</strong> (₹10.99L–₹20.15L):<br>
+        &nbsp;• Compact SUV, 5-seater | Petrol + Diesel + Strong Hybrid options<br>
+        &nbsp;• Features: ADAS (lane keep, AEB), Bose sound, BlueLink connected car, panoramic sunroof<br>
+        &nbsp;• Fuel efficiency: 17.4 kmpl (petrol MT), 27+ kmpl (strong hybrid)<br><br>
+        <strong>Tata Harrier 2024</strong> (₹14.99L–₹26.44L):<br>
+        &nbsp;• Midsize SUV, 5-seater, more cabin space | Diesel only (2.0L)<br>
+        &nbsp;• Features: iRA connected, JBL audio, panoramic sunroof, 360° camera in top variants<br><br>
+        What's your primary use — city commute or highway trips?"</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "Mostly highway, 400–500 km weekend trips. Kids are 8 and 12."</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "For that use case in ₹15–18L:<br>
+        &nbsp;• Creta SX(O) Turbo Petrol DCT (~₹16.82L) — 7-speed dual-clutch for highway smoothness, ADAS safety, great for kids (smooth ride)<br>
+        &nbsp;• Harrier Emotion Diesel (~₹16.50L) — larger boot (425L), more rear legroom, diesel suits long distance<br><br>
+        The Creta gives fuel flexibility (petrol). The Harrier gives more space and presence. I'd recommend test-driving both. You're in which city?"</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "Bangalore. Can you book a test drive Sunday?"</div>
+      <div class="dialogue system"><span class="speaker">SYSTEM</span> Hyundai Whitefield, Bangalore | Sunday 2-Apr slots: 10 AM, 12 PM, 2 PM</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Hyundai Whitefield has slots Sunday 2nd April — 10 AM, 12 PM, or 2 PM. Preferred?"</div>
+      <div class="dialogue user"><span class="speaker">USER</span> "11 AM."</div>
+      <div class="dialogue system"><span class="speaker">SYSTEM</span> Test drive booked: TD20260402-CRT-8814 | 2-Apr 11 AM | Hyundai Whitefield, Bangalore | Product expert assigned</div>
+      <div class="dialogue agent"><span class="speaker">AGENT</span> "Confirmed — TD20260402-CRT-8814. Our product expert will walk you through Creta SX(O) variants. I'll also WhatsApp you a Creta vs Harrier feature comparison sheet. For Harrier, I'd suggest also visiting a Tata showroom so you can compare back-to-back. See you Sunday!"</div>
+      <div style="background:var(--hindi-bg,#fdf4ff);border-left:4px solid #a855f7;padding:10px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:0.85rem;">
+        <strong>HINGLISH VARIATION</strong><br>
+        <em>USER: "Creta aur Harrier mein se kaun lena chahiye? Highway ke liye 15-17 lakh budget hai."</em><br>
+        <em>AGENT: "Highway ke liye dono acchi hain. 15-17 lakh mein Creta SX(O) Turbo DCT (~₹16.82L) mein ADAS safety milti hai, smooth drive hota hai. Harrier Emotion (~₹16.50L) mein zyada space hai, diesel engine long drive ke liye better. Test drive dono ki karein — Sunday Whitefield mein book kar deta hoon?"</em>
+      </div>
+      <div style="background:#fef3c7;border-left:4px solid #f59e0b;padding:10px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:0.85rem;">
+        <strong>DISTRACTION — Competitor mention:</strong><br>
+        USER: "What about Maruti Grand Vitara? My friend says it's better."<br>
+        AGENT: "Grand Vitara is a strong option — especially the strong hybrid (27+ kmpl matches Creta hybrid!). I'm here representing Hyundai so I can best detail the Creta for you. I'd genuinely recommend driving all three to decide. Shall I still confirm your Creta test drive for Sunday?"
+      </div>
+      <div style="background:#d1fae5;border-left:4px solid #10b981;padding:10px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:0.85rem;">
+        <strong>Resolution:</strong> Feature comparison shared ✓ | Test drive booked ✓ | Lead captured ✓ | Competitor handled gracefully ✓<br>
+        <strong>Success Metrics:</strong> Accurate specs quoted (no hallucination), test drive confirmed, customer not lost despite competitor mention
+      </div>
+    </div>
+  </div>
+
+  <!-- Final summary -->
+  <div style="background:linear-gradient(135deg,#0D3B47,#0A8EA0);color:white;border-radius:12px;padding:32px;margin-top:40px;text-align:center;">
+    <h3 style="font-size:1.5rem;font-weight:700;margin-bottom:20px;">✅ All 20 Call Scripts Complete</h3>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px;max-width:720px;margin:0 auto;">
+      <div><div style="font-size:2.2rem;font-weight:800;color:#60a5fa">12</div><div style="font-size:0.75rem;opacity:0.75;margin-top:4px;text-transform:uppercase;letter-spacing:1px">BFSI Scripts</div></div>
+      <div><div style="font-size:2.2rem;font-weight:800;color:#34d399">8</div><div style="font-size:0.75rem;opacity:0.75;margin-top:4px;text-transform:uppercase;letter-spacing:1px">Auto Scripts</div></div>
+      <div><div style="font-size:2.2rem;font-weight:800;color:#f59e0b">20</div><div style="font-size:0.75rem;opacity:0.75;margin-top:4px;text-transform:uppercase;letter-spacing:1px">Total Scripts</div></div>
+      <div><div style="font-size:2.2rem;font-weight:800;color:#a78bfa">Real</div><div style="font-size:0.75rem;opacity:0.75;margin-top:4px;text-transform:uppercase;letter-spacing:1px">Data Only</div></div>
+    </div>
+  </div>
+
+</div><!-- end Part 2 container -->
+
+<!-- ++ Floating Navigation Bar ++ -->
+<style>
+  .vb-nav {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    gap: 8px;
+    z-index: 9999;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+  .vb-nav a, .vb-nav button {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: white;
+    color: #0D3B47;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 24px;
+    padding: 9px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 2px 14px rgba(0,0,0,0.13);
+    transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+    white-space: nowrap;
+  }
+  .vb-nav a:hover, .vb-nav button:hover {
+    background: #0D3B47;
+    color: white;
+    border-color: #0D3B47;
+    box-shadow: 0 4px 18px rgba(26,58,92,0.25);
+  }
+</style>
+<nav class="vb-nav" aria-label="Page navigation">
+  <a href="index.html" title="Go to Home">&#127968; Home</a>
+  <button onclick="history.back()" title="Go Back">&#8592; Back</button>
+  <button onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to Top">&#8593; Top</button>
+</nav>
+</body>
+</html>

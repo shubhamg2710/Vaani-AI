@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Knowledge Bank — BFSI & Automotive | Vaani AI AI Platform</title>
+  <style>
+    :root {
+      --primary:   #0D3B47;
+      --accent:    #e07b39;
+      --accent2:   #2e86ab;
+      --bg:        #f4f6f9;
+      --surface:   #ffffff;
+      --border:    #d0d8e4;
+      --text:      #1e2a38;
+      --muted:     #5a6a7a;
+      --success:   #2d9b6f;
+      --warn:      #c0392b;
+      --tag-bfsi:  #0D3B47;
+      --tag-auto:  #3a6b2e;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    /* ── TOP BANNER ── */
+    .banner {
+      background: linear-gradient(135deg, var(--primary) 0%, #0f2540 100%);
+      color: #fff;
+      padding: 40px 48px 36px;
+      border-bottom: 4px solid var(--accent);
+    }
+    .banner .label {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 3px;
+      margin-bottom: 14px;
+    }
+    .banner h1 { font-size: 28px; font-weight: 700; line-height: 1.3; margin-bottom: 8px; }
+    .banner p  { font-size: 14px; opacity: 0.82; max-width: 760px; }
+    .banner-meta {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      font-size: 13px;
+      opacity: 0.75;
+    }
+    .banner-meta span { display: flex; align-items: center; gap: 6px; }
+
+    /* ── TOC ── */
+    .toc-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin: 32px 48px;
+      padding: 28px 36px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 40px;
+    }
+    .toc-wrap h2 {
+      grid-column: 1/-1;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .toc-col { list-style: none; }
+    .toc-col li { margin-bottom: 7px; }
+    .toc-col a {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 500;
+    }
+    .toc-col a:hover { color: var(--accent); text-decoration: underline; }
+    .toc-col .toc-section { font-weight: 700; color: var(--accent); font-size: 12px;
+      text-transform: uppercase; letter-spacing: 0.8px; margin-top: 12px; margin-bottom: 4px; }
+
+    /* ── LAYOUT ── */
+    .main { padding: 0 48px 60px; }
+
+    /* ── SECTION HEADER ── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 40px 0 24px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid var(--border);
+    }
+    .section-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      font-weight: 700;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    .badge-bfsi { background: var(--tag-bfsi); color: #fff; }
+    .badge-auto { background: var(--tag-auto); color: #fff; }
+
+    .section-header h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .section-header p { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+    /* ── SUBSECTION ── */
+    .subsection {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+    .subsection-header {
+      background: #f0f4f8;
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .subsection-header .sub-id {
+      background: var(--primary);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+    .subsection-header.auto .sub-id { background: var(--tag-auto); }
+    .subsection-header h3 { font-size: 16px; font-weight: 700; color: var(--primary); }
+    .subsection-body { padding: 22px 24px; }
+
+    /* ── PRODUCT CARDS ── */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 14px;
+    }
+    .product-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px 20px;
+      background: #fafbfc;
+    }
+    .product-card h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .product-card ul { list-style: none; }
+    .product-card ul li {
+      font-size: 13.5px;
+      padding: 4px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .product-card ul li::before { content: "·"; color: var(--accent); font-weight: 900; flex-shrink: 0; }
+
+    /* ── STAT BOXES ── */
+    .stat-row { display: flex; flex-wrap: wrap; gap: 14px; margin: 16px 0; }
+    .stat-box {
+      background: linear-gradient(135deg, #e8f0fe, #d2e3fc);
+      border: 1px solid #aac4f0;
+      border-radius: 8px;
+      padding: 14px 20px;
+      flex: 1;
+      min-width: 160px;
+      text-align: center;
+    }
+    .stat-box .val { font-size: 22px; font-weight: 800; color: var(--primary); }
+    .stat-box .lbl { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+    .stat-box.warn { background: linear-gradient(135deg, #fdecea, #fcd5d2); border-color: #f5a9a5; }
+    .stat-box.warn .val { color: var(--warn); }
+    .stat-box.success { background: linear-gradient(135deg, #e4f6ee, #c9eedd); border-color: #99d6bb; }
+    .stat-box.success .val { color: var(--success); }
+
+    /* ── CALLOUT ── */
+    .callout {
+      border-left: 4px solid var(--accent);
+      background: #fff8f2;
+      padding: 14px 18px;
+      border-radius: 0 6px 6px 0;
+      margin: 14px 0;
+      font-size: 13.5px;
+    }
+    .callout.info {
+      border-color: var(--accent2);
+      background: #eef7fc;
+    }
+    .callout.warn {
+      border-color: var(--warn);
+      background: #fdf3f3;
+    }
+    .callout strong { color: var(--primary); }
+
+    /* ── TABLE ── */
+    .kb-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-top: 14px; }
+    .kb-table th {
+      background: var(--primary);
+      color: #fff;
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .kb-table td { padding: 9px 14px; border-bottom: 1px solid var(--border); }
+    .kb-table tr:nth-child(even) td { background: #f7f9fb; }
+    .kb-table tr:hover td { background: #edf2f9; }
+
+    /* ── LIST ── */
+    .kb-list { list-style: none; }
+    .kb-list li {
+      padding: 6px 0;
+      padding-left: 20px;
+      position: relative;
+      font-size: 14px;
+      border-bottom: 1px dotted #e0e6ef;
+    }
+    .kb-list li:last-child { border-bottom: none; }
+    .kb-list li::before {
+      content: "▸";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: 12px;
+      top: 8px;
+    }
+
+    /* ── BRAND CARD ── */
+    .brand-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .brand-card-header {
+      padding: 14px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f0f4f8;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand-card-header h4 { font-size: 16px; font-weight: 700; color: var(--primary); }
+    .brand-tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: #e0ead0;
+      color: var(--tag-auto);
+      letter-spacing: 0.5px;
+    }
+    .brand-card-body { padding: 18px 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .brand-card-body .bc-section h5 {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .model-pill {
+      display: inline-block;
+      background: #eef3fb;
+      border: 1px solid #c5d4ea;
+      border-radius: 4px;
+      font-size: 12px;
+      padding: 3px 9px;
+      margin: 3px 2px;
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* ── CONTACT TABLE ── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .contact-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 18px;
+      background: #fafbfc;
+    }
+    .contact-card .brand-name { font-weight: 700; font-size: 14px; color: var(--primary); margin-bottom: 6px; }
+    .contact-card .phone {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--success);
+      font-family: 'Courier New', monospace;
+    }
+    .contact-card .note { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+    /* ── FAQ ── */
+    .faq-item {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+    .faq-q {
+      padding: 13px 18px;
+      background: #f5f8fc;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--primary);
+      cursor: default;
+    }
+    .faq-a {
+      padding: 12px 18px;
+      font-size: 13.5px;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    /* ── SERVICE TABLE ── */
+    .svc-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    .svc-table th {
+      background: var(--tag-auto);
+      color: #fff;
+      padding: 10px 14px;
+      text-align: left;
+    }
+    .svc-table td { padding: 9px 14px; border-bottom: 1px solid var(--border); }
+    .svc-table tr:nth-child(even) td { background: #f4f8f4; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #1e2a38;
+      color: #8a9bb0;
+      text-align: center;
+      padding: 24px 48px;
+      font-size: 13px;
+      margin-top: 40px;
+    }
+    footer strong { color: #fff; }
+
+    /* ── UTILITY ── */
+    .tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .tag-bfsi { background: #dbe8f8; color: var(--tag-bfsi); }
+    .tag-auto { background: #dff0d8; color: var(--tag-auto); }
+    .tag-rbi  { background: #fde8d0; color: #a0440e; }
+
+    p { margin-bottom: 10px; }
+    strong { color: var(--primary); }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     TOP BANNER
+════════════════════════════════════════════════════════════════ -->
+<header class="banner">
+  <div class="label">Internal Reference Document — AI Agent Training</div>
+  <h1>Knowledge Bank: BFSI &amp; Automotive Industries</h1>
+  <p>Comprehensive domain reference material for training and grounding AI conversational agents deployed on the Vaani AI platform. This document covers products, regulatory context, complaint resolution flows, and customer-facing FAQ responses for both industry verticals.</p>
+  <div class="banner-meta">
+    <span>&#128197; Last Updated: March 2026</span>
+    <span>&#128196; Classification: Internal — AI Training Use</span>
+    <span>&#127758; Coverage: India-specific</span>
+    <span>&#128274; Reviewed against RBI / IRDAI / MoRTH guidelines</span>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     TABLE OF CONTENTS
+════════════════════════════════════════════════════════════════ -->
+<div class="toc-wrap">
+  <h2>Table of Contents</h2>
+  <ul class="toc-col">
+    <li class="toc-section">Section A — BFSI</li>
+    <li><a href="#a1">A1. Banking Products &amp; Services</a></li>
+    <li><a href="#a2">A2. Loan Products</a></li>
+    <li><a href="#a3">A3. Insurance (Bancassurance)</a></li>
+    <li><a href="#a4">A4. Digital Banking</a></li>
+    <li><a href="#a5">A5. Regulatory &amp; Compliance</a></li>
+    <li><a href="#a6">A6. Common Queries &amp; Answers</a></li>
+  </ul>
+  <ul class="toc-col">
+    <li class="toc-section">Section B — Automotive</li>
+    <li><a href="#b1">B1. Major Brands in India</a></li>
+    <li><a href="#b2">B2. Service &amp; Maintenance</a></li>
+    <li><a href="#b3">B3. Common Complaints &amp; Resolution</a></li>
+    <li><a href="#b4">B4. Vehicle Documentation</a></li>
+    <li><a href="#b5">B5. EV-Specific Knowledge</a></li>
+    <li><a href="#b6">B6. Customer Care Contacts</a></li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION A — BFSI
+════════════════════════════════════════════════════════════════ -->
+<div class="main">
+
+  <div class="section-header" id="section-a">
+    <div class="section-badge badge-bfsi">A</div>
+    <div>
+      <h2>BFSI Knowledge Bank</h2>
+      <p>Banking, Financial Services &amp; Insurance — Products, Rates, Regulations, and Customer Guidance</p>
+    </div>
+  </div>
+
+  <!-- ─── A1 ─── -->
+  <div class="subsection" id="a1">
+    <div class="subsection-header">
+      <span class="sub-id">A1</span>
+      <h3>Banking Products &amp; Services</h3>
+      <span class="tag tag-bfsi" style="margin-left:auto;">BFSI</span>
+    </div>
+    <div class="subsection-body">
+
+      <div class="product-grid">
+        <div class="product-card">
+          <h4>Savings Accounts</h4>
+          <ul>
+            <li><strong>Regular Savings:</strong> Min balance Rs.1,000–10,000 (branch-dependent)</li>
+            <li><strong>Zero Balance:</strong> SBI Basic Savings Bank Deposit (BSBD), Jan Dhan accounts</li>
+            <li><strong>Salary Account:</strong> Zero balance, employer-linked; reverts to regular if salary stops 3 months</li>
+            <li><strong>Senior Citizen Accounts:</strong> Higher interest, preferential services</li>
+            <li><strong>Interest Rate:</strong> 2.70–4.00% p.a. (SBI 2.70%, HDFC 3.0–3.5%, IDFC First up to 7% on higher balances)</li>
+            <li>Interest calculated daily on end-of-day balance; credited quarterly</li>
+          </ul>
+        </div>
+        <div class="product-card">
+          <h4>Current Accounts</h4>
+          <ul>
+            <li>Designed for businesses — high transaction volume, no interest paid</li>
+            <li>Overdraft facility available</li>
+            <li>Min balance: Rs.5,000–1,00,000 (varies by bank &amp; tier)</li>
+            <li>Charges for cash deposits beyond free limit (typically 0.3–1% of excess)</li>
+            <li>Types: Regular, Premium, Trade, Super Premium</li>
+          </ul>
+        </div>
+        <div class="product-card">
+          <h4>Fixed Deposits (FD)</h4>
+          <ul>
+            <li>Tenure: 7 days to 10 years</li>
+            <li><strong>SBI:</strong> 6.50–7.50% (general), 7.00–8.00% (senior citizen)</li>
+            <li><strong>HDFC Bank:</strong> 6.60–7.75%, SC +0.50%</li>
+            <li><strong>ICICI Bank:</strong> 6.70–7.75%, SC +0.25–0.50%</li>
+            <li>TDS deducted if interest &gt; Rs.40,000/year (Rs.50,000 for seniors)</li>
+            <li>Premature withdrawal penalty: 0.50–1.00%</li>
+            <li>Loan against FD: up to 90% of FD value</li>
+          </ul>
+        </div>
+        <div class="product-card">
+          <h4>Recurring Deposits (RD)</h4>
+          <ul>
+            <li>Fixed monthly installment savings product</li>
+            <li>Minimum deposit: Rs.100/month (SBI), Rs.500/month (HDFC)</li>
+            <li>Tenure: 6 months to 10 years</li>
+            <li>Interest: similar to FD for equivalent tenure</li>
+            <li>Suitable for disciplined monthly savings</li>
+          </ul>
+        </div>
+        <div class="product-card">
+          <h4>Investment Products</h4>
+          <ul>
+            <li><strong>Mutual Funds:</strong> Equity, Debt, Hybrid; SIP from Rs.100–500/month</li>
+            <li><strong>PPF:</strong> 15-year lock-in, current rate 7.1% p.a., Section 80C benefit</li>
+            <li><strong>NPS:</strong> Pension scheme; tax benefit under 80CCD(1B) up to Rs.50,000 extra</li>
+            <li><strong>ELSS:</strong> 3-year lock-in tax-saving MF, 80C deduction</li>
+            <li><strong>SSY:</strong> Sukanya Samriddhi Yojana — 8.2% for girl child</li>
+          </ul>
+        </div>
+        <div class="product-card">
+          <h4>Credit Cards</h4>
+          <ul>
+            <li>Types: Rewards, Cashback, Travel, Fuel, Co-branded (Amazon Pay, Flipkart Axis)</li>
+            <li>Billing cycle: typically 30 days; due date 15–20 days after statement</li>
+            <li>Minimum due: 5% of outstanding (minimum Rs.200)</li>
+            <li><strong>Interest on revolving credit:</strong> 2.5–3.5%/month = 30–42% p.a.</li>
+            <li>Credit limit based on income and CIBIL score</li>
+            <li>Late payment fee: Rs.500–1,300 depending on outstanding</li>
+          </ul>
+        </div>
+        <div class="product-card">
+          <h4>Debit Cards</h4>
+          <ul>
+            <li>Variants: Classic, Platinum, Business Debit, RuPay, Visa, Mastercard</li>
+            <li>Daily ATM withdrawal limit: Rs.20,000–1,00,000 (varies by variant)</li>
+            <li>Daily POS/online limit: Rs.50,000–5,00,000</li>
+            <li>International usage: must be enabled separately (RBI mandate)</li>
+            <li>RuPay: India's own network; accepted on UPI as well</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout info" style="margin-top:18px;">
+        <strong>AI Agent Note:</strong> When a customer asks about interest rates, always caveat that rates are subject to change and recommend they check the bank's official website or contact the branch for the latest applicable rate. Do NOT guarantee specific rates unless real-time data is integrated.
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── A2 ─── -->
+  <div class="subsection" id="a2">
+    <div class="subsection-header">
+      <span class="sub-id">A2</span>
+      <h3>Loan Products</h3>
+    </div>
+    <div class="subsection-body">
+
+      <table class="kb-table">
+        <thead>
+          <tr>
+            <th>Loan Type</th>
+            <th>Interest Rate (approx.)</th>
+            <th>Tenure</th>
+            <th>Key Features</th>
+            <th>CIBIL / Eligibility</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Home Loan</strong></td>
+            <td>8.50–9.50% p.a. (floating, linked to RLLR/MCLR)</td>
+            <td>Up to 30 years</td>
+            <td>LTV max 80–90%; PMAY subsidy for first-time buyers; processing fee 0.25–1%; hypothecation on property</td>
+            <td>700+ recommended; income proof mandatory; age 21–65</td>
+          </tr>
+          <tr>
+            <td><strong>Personal Loan</strong></td>
+            <td>10.50–24% p.a.</td>
+            <td>1–5 years</td>
+            <td>No collateral; quick disbursal (same day for pre-approved); salary/ITR proof; foreclosure charge 2–5%</td>
+            <td>700+ preferred; stable income source</td>
+          </tr>
+          <tr>
+            <td><strong>Car Loan</strong></td>
+            <td>8.50–12% p.a.</td>
+            <td>Up to 7 years</td>
+            <td>Down payment 10–20%; hypothecation on RC; new vs used car rates differ</td>
+            <td>650+ recommended</td>
+          </tr>
+          <tr>
+            <td><strong>Gold Loan</strong></td>
+            <td>9–17% p.a.</td>
+            <td>3–24 months typically</td>
+            <td>LTV max 75% (RBI cap); no income proof needed; quick disbursal (30–60 min); gold stored in bank vault</td>
+            <td>No CIBIL requirement typically</td>
+          </tr>
+          <tr>
+            <td><strong>Education Loan</strong></td>
+            <td>8–12% p.a.</td>
+            <td>Up to 15 years (incl. moratorium)</td>
+            <td>Vidya Lakshmi portal for applications; moratorium = course duration + 6–12 months; study abroad higher limits</td>
+            <td>Co-applicant (parent) income assessed</td>
+          </tr>
+          <tr>
+            <td><strong>Two-Wheeler Loan</strong></td>
+            <td>10–18% p.a.</td>
+            <td>Up to 48 months</td>
+            <td>Down payment 10–15%; quick processing; e-mandate for EMI</td>
+            <td>650+ preferred</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="product-grid" style="margin-top:20px;">
+        <div class="product-card">
+          <h4>Mudra Loan (MSME)</h4>
+          <ul>
+            <li><strong>Shishu:</strong> Up to Rs.50,000 — micro entrepreneurs</li>
+            <li><strong>Kishore:</strong> Rs.50,000 – Rs.5 Lakh — established small businesses</li>
+            <li><strong>Tarun:</strong> Rs.5 Lakh – Rs.10 Lakh — growth-stage businesses</li>
+            <li>No collateral required under CGTMSE guarantee cover</li>
+            <li>Applicable for non-farm income-generating activities</li>
+            <li>Apply via Mudra.org.in or any PSB/NBFC</li>
+          </ul>
+        </div>
+        <div class="product-card">
+          <h4>Key Loan Concepts</h4>
+          <ul>
+            <li><strong>MCLR:</strong> Marginal Cost of Funds Based Lending Rate — floating rate benchmark</li>
+            <li><strong>RLLR:</strong> Repo Linked Lending Rate — directly linked to RBI repo rate</li>
+            <li><strong>EMI:</strong> Equated Monthly Installment = (P × r × (1+r)^n) / ((1+r)^n - 1)</li>
+            <li><strong>Prepayment:</strong> Floating rate home loans — no prepayment penalty (RBI rule)</li>
+            <li><strong>Moratorium:</strong> EMI holiday during COVID / specific schemes — interest accrues</li>
+            <li><strong>CIBIL Score impact:</strong> Missed EMI = immediate negative impact; 30+ days late = significant drop</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── A3 ─── -->
+  <div class="subsection" id="a3">
+    <div class="subsection-header">
+      <span class="sub-id">A3</span>
+      <h3>Insurance Products (Bancassurance)</h3>
+    </div>
+    <div class="subsection-body">
+
+      <div class="product-grid">
+        <div class="product-card">
+          <h4>Life Insurance</h4>
+          <ul>
+            <li><strong>Term Insurance:</strong> Pure protection; Rs.1 Cr cover from ~Rs.700/month (healthy 30-yr male); no maturity benefit</li>
+            <li><strong>ULIPs:</strong> Market-linked investment + insurance; 5-year lock-in</li>
+            <li><strong>Endowment Plans:</strong> Savings + protection; lower returns but guaranteed</li>
+            <li>Key providers: LIC, HDFC Life, ICICI Prudential, SBI Life, Max Life, Bajaj Allianz</li>
+            <li>Section 80C: premium deduction up to Rs.1.5L; maturity under 10(10D)</li>
+          </ul>
+        </div>
+        <div class="product-card">
+          <h4>Health Insurance</h4>
+          <ul>
+            <li><strong>Individual:</strong> Covers single person; premium based on age &amp; sum insured</li>
+            <li><strong>Family Floater:</strong> All family members share one sum insured</li>
+            <li><strong>Critical Illness:</strong> Lump sum on diagnosis of listed illnesses (cancer, heart attack)</li>
+            <li><strong>Senior Citizen Plans:</strong> Higher premium; pre-existing disease waiting period 2–4 years</li>
+            <li>Cashless at network hospitals; reimbursement for non-network</li>
+            <li>Section 80D: deduction up to Rs.25,000 (Rs.50,000 for seniors)</li>
+          </ul>
+        </div>
+        <div class="product-card">
+          <h4>Motor Insurance</h4>
+          <ul>
+            <li><strong>Third-Party (TP):</strong> Mandatory by law (Motor Vehicles Act); premium fixed by IRDAI</li>
+            <li><strong>Comprehensive:</strong> TP + own damage; much higher coverage</li>
+            <li><strong>Key Add-ons:</strong> Zero Depreciation, Engine Protect, RSA (Roadside Assistance), NCB Protect, Invoice Value</li>
+            <li>NCB: 20% (Year 1) → 25% → 35% → 45% → 50% (Year 5+)</li>
+            <li>IDV: Insured Declared Value = market value at time of policy</li>
+          </ul>
+        </div>
+        <div class="product-card">
+          <h4>Government Schemes</h4>
+          <ul>
+            <li><strong>PMJJBY:</strong> Pradhan Mantri Jeevan Jyoti Bima Yojana — Rs.436/year → Rs.2 Lakh life cover (age 18–50)</li>
+            <li><strong>PMSBY:</strong> Pradhan Mantri Suraksha Bima Yojana — Rs.20/year → Rs.2 Lakh accident cover (age 18–70)</li>
+            <li><strong>PM Fasal Bima Yojana:</strong> Crop insurance for farmers</li>
+            <li>Both PMJJBY &amp; PMSBY: auto-debit from savings account; renew annually</li>
+            <li>Home Insurance: structure (RCC construction) + contents separately insurable</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout warn" style="margin-top:14px;">
+        <strong>Regulatory Note:</strong> IRDAI Ombudsman handles insurance complaints. Customers can approach Bima Bharosa portal (IRDAI's integrated grievance platform). Complaint must be filed within 1 year of insurer's final reply.
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── A4 ─── -->
+  <div class="subsection" id="a4">
+    <div class="subsection-header">
+      <span class="sub-id">A4</span>
+      <h3>Digital Banking</h3>
+    </div>
+    <div class="subsection-body">
+
+      <div class="product-grid">
+        <div class="product-card">
+          <h4>Internet Banking</h4>
+          <ul>
+            <li>Fund transfers: NEFT, RTGS, IMPS via net banking</li>
+            <li>Security: OTP on registered mobile, 2FA mandatory for transactions</li>
+            <li>Limits: RTGS min Rs.2 Lakh; self-account transfers typically unlimited</li>
+            <li>Common features: statement download, FD booking, loan repayment, tax payment</li>
+          </ul>
+        </div>
+        <div class="product-card">
+          <h4>Mobile Banking Apps</h4>
+          <ul>
+            <li><strong>SBI YONO:</strong> Full banking + marketplace; 7 Cr+ downloads</li>
+            <li><strong>HDFC Mobile Banking:</strong> Best UI ratings; PayZapp wallet integrated</li>
+            <li><strong>ICICI iMobile Pay:</strong> Open to non-ICICI customers for UPI</li>
+            <li><strong>Kotak 811:</strong> Zero-balance digital account via app</li>
+            <li>MPIN / biometric authentication for quick access</li>
+          </ul>
+        </div>
+        <div class="product-card">
+          <h4>UPI (Unified Payments Interface)</h4>
+          <ul>
+            <li>Operates 24x7x365 including holidays</li>
+            <li>Standard daily limit: Rs.1 Lakh per transaction/day; Rs.2 Lakh for verified users</li>
+            <li>Apps: BHIM (NPCI), Google Pay, PhonePe, Paytm, Amazon Pay</li>
+            <li><strong>UPI Lite:</strong> Offline small payments up to Rs.500/txn, Rs.2,000 wallet limit</li>
+            <li>UPI 123Pay: for feature phone users via IVR/missed call</li>
+            <li>UPI One World: for foreign nationals in India</li>
+          </ul>
+        </div>
+        <div class="product-card">
+          <h4>Fund Transfer Methods</h4>
+          <ul>
+            <li><strong>NEFT:</strong> Batch processing (every 30 min); free post Jan 2020 (RBI mandate); no min/max</li>
+            <li><strong>RTGS:</strong> Real-time gross settlement; minimum Rs.2 Lakh; for large value; available 7am–6pm weekdays</li>
+            <li><strong>IMPS:</strong> Instant 24x7; Rs.1–5 Lakh limit; charges Rs.2.50–25 (bank-dependent)</li>
+            <li><strong>Cheque / CTS:</strong> CTS clearing — same-day for local; 2 working days for outstation</li>
+          </ul>
+        </div>
+      </div>
+
+      <table class="kb-table" style="margin-top:18px;">
+        <thead>
+          <tr><th>Method</th><th>Timing</th><th>Min Amount</th><th>Max Amount</th><th>Charges</th><th>Best For</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>UPI</td><td>24x7 instant</td><td>Re. 1</td><td>Rs.1–2 Lakh/day</td><td>Free</td><td>Daily payments, P2P</td></tr>
+          <tr><td>IMPS</td><td>24x7 instant</td><td>Re. 1</td><td>Rs.5 Lakh</td><td>Rs.2.50–25</td><td>Urgent transfers &gt;UPI limit</td></tr>
+          <tr><td>NEFT</td><td>24x7 (30-min batches)</td><td>No minimum</td><td>No maximum</td><td>Free</td><td>Non-urgent, any amount</td></tr>
+          <tr><td>RTGS</td><td>7am–6pm weekdays</td><td>Rs.2 Lakh</td><td>No maximum</td><td>Rs.20–50 (some free)</td><td>Large value, urgent</td></tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+  <!-- ─── A5 ─── -->
+  <div class="subsection" id="a5">
+    <div class="subsection-header">
+      <span class="sub-id">A5</span>
+      <h3>Regulatory &amp; Compliance (RBI / IRDAI)</h3>
+    </div>
+    <div class="subsection-body">
+
+      <div class="product-grid">
+        <div class="product-card">
+          <h4>KYC Requirements</h4>
+          <ul>
+            <li>Officially Valid Documents (OVD): Aadhaar, PAN, Passport, Voter ID, Driving License, NREGA card</li>
+            <li>Aadhaar + PAN is the most common combination</li>
+            <li><strong>Video KYC (V-CIP):</strong> RBI-approved digital KYC; no branch visit needed</li>
+            <li>Periodic Re-KYC: every 2 years for high-risk, 8 years for low-risk customers</li>
+            <li>CKYC Registry (CERSAI) — single KYC valid across financial institutions</li>
+          </ul>
+        </div>
+        <div class="product-card">
+          <h4>CIBIL Score</h4>
+          <ul>
+            <li>Range: 300 (poorest) to 900 (best)</li>
+            <li>750+ = excellent; 700–749 = good; 650–699 = fair; &lt;650 = poor</li>
+            <li><strong>Payment History:</strong> 35% weightage (most critical)</li>
+            <li><strong>Credit Utilization:</strong> 30% (keep below 30% of limit)</li>
+            <li><strong>Length of Credit History:</strong> 15%</li>
+            <li><strong>Credit Mix:</strong> 10% (secured + unsecured blend)</li>
+            <li><strong>New Inquiries:</strong> 10% (each hard inquiry reduces score)</li>
+          </ul>
+        </div>
+        <div class="product-card">
+          <h4>Grievance Redressal</h4>
+          <ul>
+            <li><strong>Level 1:</strong> Bank's own complaint system (branch / toll-free / app)</li>
+            <li><strong>Level 2:</strong> RBI Integrated Ombudsman Scheme (free of cost) — cms.rbi.org.in</li>
+            <li>Ombudsman: file after 30 days of unresolved bank complaint</li>
+            <li><strong>IRDAI Bima Bharosa:</strong> Insurance grievances — igms.irda.gov.in</li>
+            <li>Consumer Forum: COPA for banking + insurance disputes &gt; Rs.1 Cr</li>
+          </ul>
+        </div>
+        <div class="product-card">
+          <h4>Card Security &amp; Data Privacy</h4>
+          <ul>
+            <li><strong>Card Tokenization:</strong> RBI mandate effective Oct 2022 — merchants cannot store raw card data; use tokens instead</li>
+            <li>Card-not-present transactions: AFA (2FA/OTP) mandatory for amounts &gt;Rs.2,000</li>
+            <li><strong>RBI Data Localization:</strong> Payment data must be stored in India</li>
+            <li><strong>DPDP Act 2023:</strong> Digital Personal Data Protection — explicit consent, data minimization, right to erasure</li>
+            <li>SARFAESI Act: bank empowered to recover NPA secured assets without court intervention</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout" style="margin-top:16px;">
+        <strong>For AI Agent:</strong> If a customer reports unauthorized transaction, the immediate response should be: (1) Ask them to block the card immediately via bank app or helpline, (2) Note down the transaction details, (3) File dispute within 3 working days for maximum zero-liability protection under RBI circular. Zero liability applies if customer reports within 3 days.
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── A6 ─── -->
+  <div class="subsection" id="a6">
+    <div class="subsection-header">
+      <span class="sub-id">A6</span>
+      <h3>Common Queries &amp; Suggested AI Responses</h3>
+    </div>
+    <div class="subsection-body">
+
+      <div class="faq-item">
+        <div class="faq-q">Q: How do I update my mobile number in my bank account?</div>
+        <div class="faq-a"><strong>A:</strong> You can update your registered mobile number through: (1) <strong>Bank branch</strong> — bring original Aadhaar + PAN, fill mobile update form; most banks process same day. (2) <strong>ATM</strong> — some banks (SBI, HDFC) allow via ATM with debit card + PIN. (3) <strong>Net banking / app</strong> — available if OTP can be received on old number. Note: if old number is completely inaccessible, branch visit is mandatory. The update is typically processed within 1–2 working days.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Q: How do I generate / download my account statement?</div>
+        <div class="faq-a"><strong>A:</strong> Options: (1) <strong>Net banking / Mobile app</strong> — log in → Accounts → Statement → select date range → download PDF. (2) <strong>Email statement</strong> — request via app or SMS (e.g., SBI: send "ESTMT &lt;Account Number&gt; &lt;month&gt; &lt;year&gt;" to 9223588888). (3) <strong>Passbook</strong> — update at branch or passbook printer kiosk. (4) <strong>ATM</strong> — mini-statement (last 5–10 transactions). For home loan/FD interest statements for tax purposes, use the annual interest certificate option in net banking.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Q: My debit/credit card is lost or stolen. What should I do?</div>
+        <div class="faq-a"><strong>A:</strong> Act immediately: (1) <strong>Block card instantly</strong> via bank's mobile app (Cards section → Block/Hot-list) or call 24x7 toll-free number. (2) Report to bank in writing within 24 hours for liability protection. (3) Request replacement card — typically delivered in 5–7 working days. (4) If fraudulent transactions already occurred, dispute them immediately. Under RBI circular, if reported within 3 days, zero liability for customer if it's third-party fraud. Keep all transaction details handy.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Q: How do I stop an ECS / NACH mandate (auto-debit)?</div>
+        <div class="faq-a"><strong>A:</strong> Two ways: (1) <strong>Through the originator</strong> (lender/institution who set up the mandate) — submit cancellation request minimum 15 days before next debit date. (2) <strong>Through your bank</strong> — NACH mandate cancellation request at branch or via net banking (Payments → Manage Mandates → Cancel). Effective from next cycle. Note: EMI mandates for active loans — contact lender first; cancellation doesn't waive the EMI. Keep cancellation acknowledgment.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Q: How do I find my bank's IFSC code / SWIFT code?</div>
+        <div class="faq-a"><strong>A:</strong> IFSC (for domestic transfers): (1) Printed on first page of cheque book, (2) Bank's website branch locator, (3) RBI website: rbi.org.in/Scripts/IFSCMICRDetails.aspx. Format: 4-letter bank code + 0 + 6-digit branch code (e.g., SBIN0001234). SWIFT code (for international transfers): 8–11 character code; check bank's website under international banking section. SBI example: SBININBB. Branch-specific SWIFT codes differ — contact international banking division for exact code.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Q: How do I update the nominee in my account / FD?</div>
+        <div class="faq-a"><strong>A:</strong> RBI has mandated simplified nominee process from January 2024. (1) <strong>Net banking:</strong> Services → Nomination → Add/Change nominee → enter nominee name, relation, DOB, address, share %. (2) <strong>Branch:</strong> Form DA1 (for accounts), Form 2 (for lockers). (3) Up to 4 nominees now allowed for bank accounts (as per recent amendment). Nomination does not affect legal heirship — it's for bank to facilitate handover; legal heirs may contest.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Q: How do I close my bank account?</div>
+        <div class="faq-a"><strong>A:</strong> Steps: (1) Ensure zero balance and no pending mandates/standing instructions. (2) Visit home branch with original passbook, debit card (to be surrendered), unused cheque leaves. (3) Fill account closure form. (4) If balance exists, it will be paid via DD or transfer to another account. <strong>Charges:</strong> Closure within 14 days — free. 14 days to 12 months — Rs.100–500 at most banks. After 1 year — usually free. Note: Joint account requires signatures from all holders.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       SECTION B — AUTOMOTIVE
+  ════════════════════════════════════════════════════════════════ -->
+
+  <div class="section-header" id="section-b" style="margin-top:52px;">
+    <div class="section-badge badge-auto">B</div>
+    <div>
+      <h2>Automotive Knowledge Bank</h2>
+      <p>Major brands, service protocols, vehicle documentation, EV knowledge, and customer support flows for India market</p>
+    </div>
+  </div>
+
+  <!-- ─── B1 ─── -->
+  <div class="subsection" id="b1">
+    <div class="subsection-header auto">
+      <span class="sub-id" style="background:var(--tag-auto);">B1</span>
+      <h3>Major Automotive Brands in India</h3>
+      <span class="tag tag-auto" style="margin-left:auto;">AUTOMOTIVE</span>
+    </div>
+    <div class="subsection-body">
+
+      <!-- Maruti -->
+      <div class="brand-card">
+        <div class="brand-card-header">
+          <h4>Maruti Suzuki India</h4>
+          <span class="brand-tag">~40% Market Share — Market Leader</span>
+        </div>
+        <div class="brand-card-body">
+          <div class="bc-section">
+            <h5>Popular Models &amp; Price Range</h5>
+            <span class="model-pill">Swift (Rs.6.49–9.64L)</span>
+            <span class="model-pill">Baleno (Rs.6.61–9.88L)</span>
+            <span class="model-pill">Dzire (Rs.6.51–9.44L)</span>
+            <span class="model-pill">Ertiga (Rs.8.35–12.79L)</span>
+            <span class="model-pill">Brezza (Rs.7.99–13.96L)</span>
+            <span class="model-pill">Grand Vitara Hybrid (Rs.10.70–19.99L)</span>
+          </div>
+          <div class="bc-section">
+            <h5>Key Service Information</h5>
+            <ul class="kb-list">
+              <li>Service network: 3,500+ workshops (Maruti Arena + Nexa)</li>
+              <li>Service interval: Every 10,000 km or 12 months (whichever first)</li>
+              <li>TRUE SERVICE: transparency initiative — pre-job estimate mandatory</li>
+              <li>Maruti RSA: 24x7 roadside assistance included with new vehicles</li>
+              <li>Customer Care: 1800-180-3278 (toll free)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tata -->
+      <div class="brand-card">
+        <div class="brand-card-header">
+          <h4>Tata Motors</h4>
+          <span class="brand-tag">Fast-Growing — EV Leader</span>
+        </div>
+        <div class="brand-card-body">
+          <div class="bc-section">
+            <h5>Popular Models &amp; Price Range</h5>
+            <span class="model-pill">Tiago (Rs.5.60–9.09L)</span>
+            <span class="model-pill">Altroz (Rs.6.99–10.48L)</span>
+            <span class="model-pill">Nexon (Rs.8.10–15.50L)</span>
+            <span class="model-pill">Nexon EV (Rs.14.49–19.29L)</span>
+            <span class="model-pill">Harrier (Rs.14.99–26.44L)</span>
+            <span class="model-pill">Safari (Rs.15.49–26.69L)</span>
+          </div>
+          <div class="bc-section">
+            <h5>Key Service Information</h5>
+            <ul class="kb-list">
+              <li>Service centers: TASC (Tata Authorized Service Centers)</li>
+              <li>iRA connected car technology (remote commands via app)</li>
+              <li>Tata.ev — dedicated EV sub-brand with own service protocol</li>
+              <li>Standard warranty: 3 years / 1,00,000 km; extendable to 5 years</li>
+              <li>Customer Care: 1800-209-7979</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hyundai -->
+      <div class="brand-card">
+        <div class="brand-card-header">
+          <h4>Hyundai India</h4>
+          <span class="brand-tag">#2 Manufacturer</span>
+        </div>
+        <div class="brand-card-body">
+          <div class="bc-section">
+            <h5>Popular Models &amp; Price Range</h5>
+            <span class="model-pill">Grand i10 Nios</span>
+            <span class="model-pill">i20 (Rs.7.04–11.70L)</span>
+            <span class="model-pill">Venue (Rs.7.94–13.35L)</span>
+            <span class="model-pill">Creta (Rs.10.99–20.15L)</span>
+            <span class="model-pill">Alcazar (Rs.14.99–21.45L)</span>
+            <span class="model-pill">Ioniq 5 EV</span>
+          </div>
+          <div class="bc-section">
+            <h5>Key Service Information</h5>
+            <ul class="kb-list">
+              <li>Standard warranty: 3 years / 1,00,000 km; extended to 5 years available</li>
+              <li>Hyundai BlueLink: connected car features — remote start, tracking</li>
+              <li>Hyundai Promise: certified pre-owned program</li>
+              <li>Customer Care: 1800-11-4645</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mahindra -->
+      <div class="brand-card">
+        <div class="brand-card-header">
+          <h4>Mahindra &amp; Mahindra</h4>
+          <span class="brand-tag">SUV &amp; Rural Leader</span>
+        </div>
+        <div class="brand-card-body">
+          <div class="bc-section">
+            <h5>Popular Models &amp; Price Range</h5>
+            <span class="model-pill">Thar (Rs.11.35–17.60L)</span>
+            <span class="model-pill">Scorpio-N (Rs.13.99–24.49L)</span>
+            <span class="model-pill">XUV700 (Rs.13.99–26.99L)</span>
+            <span class="model-pill">XUV400 EV (Rs.15.99–19.19L)</span>
+            <span class="model-pill">Bolero</span>
+          </div>
+          <div class="bc-section">
+            <h5>Key Service Information</h5>
+            <ul class="kb-list">
+              <li>Mahindra Genuine Service (MGS) centers across India</li>
+              <li>Standard warranty: 3 years / 1,00,000 km</li>
+              <li>Mahindra Adventure accessories brand for Thar/Scorpio</li>
+              <li>Customer Care: 1800-209-6006</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Honda & Kia side by side -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <div class="brand-card" style="margin-bottom:0;">
+          <div class="brand-card-header">
+            <h4>Honda Cars India</h4>
+            <span class="brand-tag">Premium B-Segment</span>
+          </div>
+          <div style="padding:16px 20px;">
+            <h5 style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:8px;">Models</h5>
+            <span class="model-pill">Amaze (Rs.7.41–9.58L)</span>
+            <span class="model-pill">City (Rs.11.50–15.98L)</span>
+            <span class="model-pill">City Hybrid</span>
+            <span class="model-pill">Elevate (Rs.11.00–15.98L)</span>
+            <ul class="kb-list" style="margin-top:12px;">
+              <li>Honda Care RSA program</li>
+              <li>HondaConnect telematics</li>
+              <li>Customer Care: 1800-103-3434</li>
+            </ul>
+          </div>
+        </div>
+        <div class="brand-card" style="margin-bottom:0;">
+          <div class="brand-card-header">
+            <h4>Kia India</h4>
+            <span class="brand-tag">Value Premium</span>
+          </div>
+          <div style="padding:16px 20px;">
+            <h5 style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:8px;">Models</h5>
+            <span class="model-pill">Sonet (Rs.7.99–15.65L)</span>
+            <span class="model-pill">Seltos (Rs.10.89–20.35L)</span>
+            <span class="model-pill">Carens (Rs.10.49–19.65L)</span>
+            <ul class="kb-list" style="margin-top:12px;">
+              <li>Kia Connect app for connected features</li>
+              <li>Warranty: 3 years / 1,00,000 km standard</li>
+              <li>Customer Care: 1800-108-5000</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── B2 ─── -->
+  <div class="subsection" id="b2">
+    <div class="subsection-header auto">
+      <span class="sub-id" style="background:var(--tag-auto);">B2</span>
+      <h3>Service &amp; Maintenance</h3>
+    </div>
+    <div class="subsection-body">
+
+      <table class="svc-table">
+        <thead>
+          <tr><th>Service Type</th><th>Interval</th><th>Key Work Done</th><th>Approx. Cost (Maruti Swift)</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1st Free Service</strong></td>
+            <td>1,000 km (typically 1 month)</td>
+            <td>Inspection, tightening, checking — no major parts replacement; oil may/may not be changed</td>
+            <td>Free (complimentary)</td>
+          </tr>
+          <tr>
+            <td><strong>2nd Service</strong></td>
+            <td>10,000 km or 12 months</td>
+            <td>Engine oil + oil filter change, air filter check, tire rotation, brake inspection, wheel alignment check</td>
+            <td>Rs.2,500–4,000</td>
+          </tr>
+          <tr>
+            <td><strong>3rd Service</strong></td>
+            <td>20,000 km or 24 months</td>
+            <td>Above + fuel filter replacement, spark plug check, brake fluid check, cabin air filter</td>
+            <td>Rs.4,500–7,000</td>
+          </tr>
+          <tr>
+            <td><strong>Major Service</strong></td>
+            <td>40,000 km or 48 months</td>
+            <td>All above + spark plug replacement, coolant flush, transmission fluid, drive belt inspection</td>
+            <td>Rs.10,000–18,000</td>
+          </tr>
+          <tr>
+            <td><strong>EV Service</strong></td>
+            <td>Every 12 months or 15,000 km</td>
+            <td>No engine oil; software updates, brake fluid, tire rotation, battery health check, cooling system</td>
+            <td>Rs.2,000–5,000 (lower than ICE)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout info" style="margin-top:16px;">
+        <strong>Important:</strong> Service intervals differ for diesel vehicles (some require 5,000–7,500 km intervals for older models). Always refer to the vehicle's owner manual for manufacturer-recommended intervals. Missing recommended service can impact warranty claims.
+      </div>
+
+      <div class="stat-row" style="margin-top:18px;">
+        <div class="stat-box"><div class="val">10,000 km</div><div class="lbl">Standard service interval (most modern petrol cars)</div></div>
+        <div class="stat-box"><div class="val">3,500+</div><div class="lbl">Maruti service workshops across India</div></div>
+        <div class="stat-box success"><div class="val">Rs.2,500</div><div class="lbl">Typical basic service cost (small hatchback)</div></div>
+        <div class="stat-box warn"><div class="val">Rs.18,000</div><div class="lbl">Major service ceiling (40,000 km)</div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── B3 ─── -->
+  <div class="subsection" id="b3">
+    <div class="subsection-header auto">
+      <span class="sub-id" style="background:var(--tag-auto);">B3</span>
+      <h3>Common Vehicle Complaints &amp; Resolution Guidance</h3>
+    </div>
+    <div class="subsection-body">
+
+      <div class="product-grid">
+        <div class="product-card">
+          <h4>Engine Issues</h4>
+          <ul>
+            <li><strong>Metal knocking / heavy thumping:</strong> SERIOUS — advise customer to stop driving immediately; tow to service center. Could be con-rod bearing failure</li>
+            <li><strong>Ticking / tapping noise:</strong> Often valve clearance issue or low oil level. Check oil immediately. Likely not roadside emergency but needs service</li>
+            <li><strong>Overheating:</strong> Check coolant level, thermostat, radiator blockage. Stop vehicle if temperature gauge in red</li>
+            <li><strong>Excessive oil consumption:</strong> Valve seal wear or piston ring issue; needs dealer inspection</li>
+            <li><strong>Hard starting:</strong> Battery, fuel pump, or spark plug issue depending on pattern</li>
+          </ul>
+        </div>
+        <div class="product-card">
+          <h4>Electrical Issues</h4>
+          <ul>
+            <li><strong>Battery drain overnight:</strong> Likely alternator not charging or parasitic draw (aftermarket accessory); test with multimeter</li>
+            <li><strong>AC not cooling:</strong> Most common cause — refrigerant recharge needed (Rs.800–2,000 typically); could also be compressor clutch or condenser issue</li>
+            <li><strong>Infotainment crash / freeze:</strong> Usually firmware bug; software update from service center resolves; factory reset as first step</li>
+            <li><strong>Check Engine light:</strong> OBD scan at service center; don't ignore — can be anything from loose fuel cap to serious sensor issue</li>
+          </ul>
+        </div>
+        <div class="product-card">
+          <h4>Transmission Issues</h4>
+          <ul>
+            <li><strong>Automatic — gear slipping or jerking:</strong> Transmission fluid check first; if fluid OK, solenoid or torque converter; workshop visit urgent</li>
+            <li><strong>Manual — clutch slipping:</strong> Clutch plate wear; high-speed driving with partial clutch accelerates wear</li>
+            <li><strong>CVT — vibration or noise:</strong> CVT fluid change often resolves; manufacturer-specific fluid must be used</li>
+            <li><strong>AMT — jerky shifts:</strong> Often software update resolves; inherent characteristic of AMT technology at low speeds</li>
+          </ul>
+        </div>
+        <div class="product-card">
+          <h4>Body, Rust &amp; Paint</h4>
+          <ul>
+            <li><strong>Rust warranty:</strong> Most manufacturers — 3 to 6 years anti-perforation rust warranty (structural rust)</li>
+            <li><strong>Paint defects:</strong> Manufacturing paint warranty typically 2 years; check for chipping, peeling, fading</li>
+            <li><strong>Wind noise / water leakage:</strong> Door seal / weatherstripping issue; warranty repair if within period</li>
+            <li><strong>Underbody rusting in coastal areas:</strong> Not always warranty-covered; dealer negotiation may help</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout warn" style="margin-top:14px;">
+        <strong>AI Agent Safety Protocol:</strong> For any complaint involving brakes, steering failure, or overheating — always advise the customer to stop the vehicle safely and do NOT attempt to drive further. Provide RSA helpline number immediately. Never suggest driving a vehicle with failed brakes or steering to the workshop.
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── B4 ─── -->
+  <div class="subsection" id="b4">
+    <div class="subsection-header auto">
+      <span class="sub-id" style="background:var(--tag-auto);">B4</span>
+      <h3>Vehicle Documentation</h3>
+    </div>
+    <div class="subsection-body">
+
+      <table class="kb-table">
+        <thead>
+          <tr><th>Document</th><th>Purpose</th><th>Validity</th><th>Key Details</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>RC (Registration Certificate)</strong></td>
+            <td>Proof of vehicle ownership &amp; registration</td>
+            <td>15 years (transport: 5 years, renewable)</td>
+            <td>Hypothecation noted if loan exists; transfer via Form 29/30 at RTO; RC in high-security card format</td>
+          </tr>
+          <tr>
+            <td><strong>Motor Insurance</strong></td>
+            <td>Mandatory (third-party at minimum)</td>
+            <td>1 year (TP: 3/5 years for new vehicles as per MoRTH)</td>
+            <td>NCB transfer within 90 days; comprehensive + TP strongly recommended; IDV determines own-damage claim max</td>
+          </tr>
+          <tr>
+            <td><strong>PUC Certificate</strong></td>
+            <td>Pollution compliance (Pollution Under Control)</td>
+            <td>6 months (most vehicles); 1 year (BS6 new vehicles)</td>
+            <td>First offense fine: Rs.10,000 or 6 months imprisonment; available at petrol pumps and test centers</td>
+          </tr>
+          <tr>
+            <td><strong>Driving License</strong></td>
+            <td>Authorization to drive</td>
+            <td>20 years or until age 50 (whichever earlier); renewal at 10-year intervals post-50</td>
+            <td>LMV, MCWG, HMV categories; DigiLocker accepted in many states; learner's license before full DL</td>
+          </tr>
+          <tr>
+            <td><strong>Fitness Certificate</strong></td>
+            <td>Commercial vehicles only</td>
+            <td>Annual renewal</td>
+            <td>Not required for private passenger vehicles; mandatory for taxis, buses, trucks</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout" style="margin-top:14px;">
+        <strong>Hypothecation Removal:</strong> After full loan repayment, customer must get Form 35 (NOC from bank) and submit at RTO with RC, insurance, PUC. Process takes 7–15 working days. New RC issued without hypothecation notation. Online process available in some states via Parivahan portal.
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── B5 ─── -->
+  <div class="subsection" id="b5">
+    <div class="subsection-header auto">
+      <span class="sub-id" style="background:var(--tag-auto);">B5</span>
+      <h3>EV-Specific Knowledge</h3>
+    </div>
+    <div class="subsection-body">
+
+      <div class="product-grid">
+        <div class="product-card">
+          <h4>Government Schemes</h4>
+          <ul>
+            <li><strong>FAME II:</strong> Faster Adoption and Manufacturing of EVs — subsidy scheme (ended March 2024)</li>
+            <li><strong>PM E-Drive:</strong> Successor scheme announced — Rs.10,900 Cr outlay for EV ecosystem</li>
+            <li><strong>State subsidies:</strong> Maharashtra, Delhi, Gujarat, Tamil Nadu offer additional subsidies (varies)</li>
+            <li>EV road tax waiver: most states (Delhi, Maharashtra, UP, etc.)</li>
+            <li>GST on EVs: 5% (vs 28% + cess for ICE — massive advantage)</li>
+          </ul>
+        </div>
+        <div class="product-card">
+          <h4>Charging Infrastructure</h4>
+          <ul>
+            <li><strong>AC Home Charging:</strong> Wall box 3.3 kW to 7.2 kW; installed cost Rs.15,000–50,000 (incl. electrician); charges overnight</li>
+            <li><strong>DC Fast Charging:</strong> 30–100 kW; 0–80% in 30–60 minutes; connector: CCS2 (most common), CHAdeMO</li>
+            <li><strong>AC Public:</strong> Type 2 connector; slower but cheaper per unit</li>
+            <li>Networks: Tata Power, ChargeZone, Ather Grid, BPCL Pulse, Statiq, Ola Electric</li>
+            <li>Cost: Rs.12–18 per kWh at public chargers vs Rs.6–8 at home</li>
+          </ul>
+        </div>
+        <div class="product-card">
+          <h4>Range &amp; Real-World Performance</h4>
+          <ul>
+            <li><strong>Tata Nexon EV:</strong> ARAI 312 km; real-world 200–250 km (city), 180–220 km (highway)</li>
+            <li><strong>MG ZS EV:</strong> ARAI 461 km; real-world 350–400 km</li>
+            <li><strong>Hyundai Ioniq 5:</strong> ARAI 631 km (LR); real-world 450–500 km</li>
+            <li>Range affecting factors: AC usage (–15%), speed (highway faster = less range), ambient temperature (cold = less range), load</li>
+            <li>Charge to 80% for daily use; 100% for long trips (battery longevity best at 20–80%)</li>
+          </ul>
+        </div>
+        <div class="product-card">
+          <h4>Battery Warranty</h4>
+          <ul>
+            <li><strong>Tata Motors:</strong> 8 years / 1,60,000 km (battery &amp; motor)</li>
+            <li><strong>Hyundai:</strong> 8 years / 1,60,000 km; battery capacity guarantee ≥70%</li>
+            <li><strong>Mahindra XUV400:</strong> 8 years / 1,60,000 km</li>
+            <li>Battery degradation: expect 2–3% per year in Indian conditions (heat is key factor)</li>
+            <li>Battery replacement cost (post-warranty): Rs.4–8 Lakh depending on capacity; prices expected to fall</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── B6 ─── -->
+  <div class="subsection" id="b6">
+    <div class="subsection-header auto">
+      <span class="sub-id" style="background:var(--tag-auto);">B6</span>
+      <h3>Customer Care Contacts — Automotive Brands</h3>
+    </div>
+    <div class="subsection-body">
+
+      <div class="contact-grid">
+        <div class="contact-card">
+          <div class="brand-name">Maruti Suzuki</div>
+          <div class="phone">1800-180-3278</div>
+          <div class="note">Toll free | 24x7 RSA available</div>
+        </div>
+        <div class="contact-card">
+          <div class="brand-name">Tata Motors</div>
+          <div class="phone">1800-209-7979</div>
+          <div class="note">Toll free | EV dedicated support available</div>
+        </div>
+        <div class="contact-card">
+          <div class="brand-name">Hyundai India</div>
+          <div class="phone">1800-11-4645</div>
+          <div class="note">Toll free | BlueLink support line</div>
+        </div>
+        <div class="contact-card">
+          <div class="brand-name">Mahindra</div>
+          <div class="phone">1800-209-6006</div>
+          <div class="note">Toll free | Adventure RSA available</div>
+        </div>
+        <div class="contact-card">
+          <div class="brand-name">Honda Cars India</div>
+          <div class="phone">1800-103-3434</div>
+          <div class="note">Toll free | Honda Care RSA</div>
+        </div>
+        <div class="contact-card">
+          <div class="brand-name">Kia India</div>
+          <div class="phone">1800-108-5000</div>
+          <div class="note">Toll free | Kia Connect support</div>
+        </div>
+      </div>
+
+      <div class="callout info" style="margin-top:18px;">
+        <strong>AI Agent Protocol for Service Booking:</strong> When a customer wants to book a service appointment, collect: (1) Vehicle registration number, (2) Current odometer reading, (3) Primary complaint or reason for visit, (4) Preferred date &amp; time, (5) Preferred service center (if they have preference). Then confirm the nearest authorized service center and provide booking reference. For RSA (Roadside Assistance), collect current location (GPS preferred) and nature of breakdown, then connect to respective brand RSA helpline.
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- ═══════════════════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════════════════════ -->
+<footer>
+  <strong>Vaani AI AI Platform</strong> — Knowledge Bank Document v1.0 &nbsp;|&nbsp;
+  Classification: Internal — AI Training &amp; Grounding &nbsp;|&nbsp;
+  Coverage: India BFSI &amp; Automotive &nbsp;|&nbsp;
+  Last Updated: March 2026 &nbsp;|&nbsp;
+  <em>All figures are indicative and subject to change. Verify critical data from official sources before agent deployment.</em>
+</footer>
+
+
+<!-- ++ Floating Navigation Bar ++ -->
+<style>
+  .vb-nav {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    gap: 8px;
+    z-index: 9999;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+  .vb-nav a, .vb-nav button {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: white;
+    color: #0D3B47;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 24px;
+    padding: 9px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 2px 14px rgba(0,0,0,0.13);
+    transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+    white-space: nowrap;
+  }
+  .vb-nav a:hover, .vb-nav button:hover {
+    background: #0D3B47;
+    color: white;
+    border-color: #0D3B47;
+    box-shadow: 0 4px 18px rgba(26,58,92,0.25);
+  }
+</style>
+<nav class="vb-nav" aria-label="Page navigation">
+  <a href="index.html" title="Go to Home">&#127968; Home</a>
+  <button onclick="history.back()" title="Go Back">&#8592; Back</button>
+  <button onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to Top">&#8593; Top</button>
+</nav>
+</body>
+</html>

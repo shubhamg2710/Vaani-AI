@@ -1,0 +1,868 @@
+================================================================================
+VOXBHARAT — CALL SCRIPTS (from 04_Call_Scripts.html)
+Industry: BFSI | Scripts 01–12
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT 01 — HOME LOAN INTEREST RATE INQUIRY
+────────────────────────────────────────────────────────────────────────────────
+Industry    : BFSI
+Use Case    : Inbound — New Loan Inquiry
+Complexity  : Intermediate
+Duration    : ~4 min
+Company     : SBI (State Bank of India)
+Language    : English + Hinglish
+
+DIALOGUE
+--------
+AGENT : "Good morning! Thank you for calling SBI Home Loan helpline. I'm
+         Priya, your virtual assistant. How may I help you today?"
+
+USER  : "Hi, I want to know about home loan interest rates."
+
+[SYSTEM] Intent detected: home_loan_inquiry | Slot: loan_type=home_loan
+
+AGENT : "I'd be happy to share information about SBI home loan interest
+         rates. Currently, SBI home loans start from 8.50% per annum for
+         salaried customers, based on the Repo Linked Lending Rate (RLLR).
+         May I ask what is your approximate loan requirement?"
+
+USER  : "Around 50 lakhs."
+
+[SYSTEM] Entity extracted: loan_amount=5000000
+
+AGENT : "Got it — ₹50 lakhs. For a loan of this amount, your approximate EMI
+         would be ₹43,391 per month for a 20-year tenure at 8.50%. Are you
+         a salaried employee or self-employed?"
+
+USER  : "I'm salaried, working in IT."
+
+[SYSTEM] Entity extracted: employment_type=salaried | sector=IT
+
+AGENT : "Great. Salaried IT professionals typically qualify for our best
+         rates. To check your exact eligibility, I'd need your monthly income
+         and credit score. Would you like to share those, or shall I arrange
+         a callback from our home loan specialist?"
+
+USER  : "What documents would I need?"
+
+AGENT : "For SBI home loan, you'd typically need: identity proof
+         (Aadhaar/PAN), address proof, last 3 months' salary slips, Form 16,
+         last 6 months' bank statements, and property documents once
+         finalized. The processing fee is 0.35% of loan amount, minimum
+         ₹2,000, maximum ₹10,000 plus GST."
+
+HINGLISH VARIATION
+------------------
+USER  : "Bhai, 50 lakh ka loan chahiye, rate kya milega? Aur processing fee
+         kitni hai?"
+
+AGENT : "50 lakh ke liye aapko 8.50% se rate milega — ye RLLR se linked
+         hai. EMI hogi approximately ₹43,391 per month 20 saal ke liye.
+         Processing fee 0.35% hogi, jo ki ₹10,000 tak capped hai plus GST."
+
+DISTRACTION EXAMPLE
+-------------------
+USER  : "By the way, which is better — SBI or HDFC for home loan?"
+
+AGENT : "That's a great question! I can share details about SBI's offerings
+         in full detail. For a comprehensive comparison, I'd recommend
+         speaking with our specialist who can give you a holistic view.
+         Now, shall we check your SBI eligibility?"
+
+PARAMETERS CAPTURED
+-------------------
+  loan_amount = ₹50,00,000
+  employment_type = salaried
+  sector = IT
+  property_type (pending)
+  income_range (pending)
+
+RESOLUTION & SUCCESS METRICS
+-----------------------------
+  Correct rate quoted (8.50% RLLR)
+  EMI calculation provided (₹43,391/month)
+  Documents checklist shared
+  Lead captured for specialist callback
+  Customer satisfied — no escalation
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT 02 — CREDIT CARD TRANSACTION DISPUTE
+────────────────────────────────────────────────────────────────────────────────
+Industry    : BFSI
+Use Case    : Inbound — Dispute Filing
+Complexity  : Complex
+Duration    : ~6 min
+Company     : HDFC Bank
+Language    : English
+
+DIALOGUE
+--------
+AGENT : "Thank you for calling HDFC Bank credit card customer care. I'm
+         Ravi. May I have your registered mobile number to pull up your
+         account?"
+
+USER  : "9876543210"
+
+[SYSTEM] OTP triggered to registered number ending 3210
+
+AGENT : "I've sent a 6-digit OTP to your number ending in 210. Please share
+         it when received."
+
+USER  : "It's 847291."
+
+[SYSTEM] Authentication: SUCCESS | Account: Rahul Sharma | Card ending 4521
+         Available limit: ₹1,20,000
+
+AGENT : "Thank you, Rahul. How can I help you today?"
+
+USER  : "There's a transaction on my card I don't recognize — 4,500 rupees
+         from some website."
+
+[SYSTEM] Intent detected: dispute_transaction | Slot: amount=4500
+
+AGENT : "I understand your concern, Rahul. Could you tell me the approximate
+         date of this transaction?"
+
+USER  : "It shows 25th March, around 2 PM."
+
+[SYSTEM] Transaction retrieved: 25-Mar-2026 14:23 | Amount: ₹4,500
+         Merchant: NETLFIX.COM (suspicious — note misspelling vs "Netflix")
+
+AGENT : "I can see a transaction for ₹4,500 on March 25th from 'NETLFIX.COM'
+         — please note the spelling is different from the real Netflix. This
+         looks like a fraudulent merchant. I'm filing a dispute right now.
+         Chargeback request number: CR20260325-4521. As per RBI guidelines,
+         we'll investigate within 10 working days and you'll receive a
+         provisional credit within 7 working days. Would you also like me
+         to block your card as a precaution?"
+
+USER  : "Yes please, block it."
+
+[SYSTEM] Card ending 4521: BLOCKED at 15:42 29-Mar-2026
+         Confirmation: BLK20260329-7234 | Replacement: 5-7 business days
+
+AGENT : "Your card ending 4521 has been blocked immediately — no further
+         transactions are possible. A replacement card will be delivered to
+         your registered address in 5-7 business days. The disputed amount
+         of ₹4,500 will be provisionally credited within 7 working days as
+         per RBI chargeback guidelines. Is there anything else?"
+
+PARAMETERS CAPTURED
+-------------------
+  card_last4 = 4521
+  transaction_date = 25-Mar-2026
+  transaction_amount = ₹4,500
+  merchant_name = NETLFIX.COM
+  dispute_type = fraudulent_merchant
+
+RESOLUTION & SUCCESS METRICS
+-----------------------------
+  Dispute filed: CR20260325-4521
+  Card blocked within same call
+  Provisional credit timeline communicated (7 days)
+  RBI guideline correctly cited
+  Replacement card ordered: RPL20260329-7234
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT 03 — SAVINGS ACCOUNT BALANCE & MINI STATEMENT
+────────────────────────────────────────────────────────────────────────────────
+Industry    : BFSI
+Use Case    : Inbound — Self-Service Inquiry
+Complexity  : Basic
+Duration    : ~3 min
+Company     : ICICI Bank
+Language    : English + Hinglish
+
+DIALOGUE
+--------
+AGENT : "Welcome to ICICI Bank! I'm your virtual assistant. For security,
+         may I have your registered mobile number?"
+
+USER  : "9988776655"
+
+[SYSTEM] OTP sent to number ending 6655
+
+USER  : "OTP is 234561."
+
+[SYSTEM] Authentication: SUCCESS | Account: Anita Kapoor
+         Savings A/C ending 8801 | Balance: ₹1,24,350.75
+
+AGENT : "Authenticated successfully. Anita, your current savings account
+         balance is ₹1,24,350.75. Available balance is ₹1,24,350.75. Would
+         you also like your last 5 transactions?"
+
+USER  : "Yes please."
+
+AGENT : "Here are your last 5 transactions:
+         1. 28-Mar-2026 — UPI/Google Pay — Dr. ₹2,500 — Balance ₹1,24,350
+         2. 27-Mar-2026 — SALARY CREDIT/TCS Ltd — Cr. ₹85,000 — ₹1,26,850
+         3. 25-Mar-2026 — ATM Withdrawal — Dr. ₹5,000 — Balance ₹41,850
+         4. 24-Mar-2026 — NACH/HDFC Home Loan EMI — Dr. ₹18,500 — ₹46,850
+         5. 22-Mar-2026 — NEFT Transfer — Dr. ₹10,000 — Balance ₹65,350
+         Shall I email this mini statement to your registered email ID?"
+
+USER  : "Yes, please send it."
+
+[SYSTEM] Mini statement emailed to: a***kapoor@gmail.com
+         Timestamp: 29-Mar-2026 11:32 AM
+
+HINGLISH VARIATION
+------------------
+USER  : "Mera balance kya hai? Last week kuch transactions bhi batao."
+
+AGENT : "Anita ji, aapka balance ₹1,24,350 hai abhi. Last 5 transactions
+         main share kar raha hoon — 28 March ko Google Pay se ₹2,500 gaye,
+         27 March ko salary ₹85,000 aayi. Poori list SMS ya email karoon?"
+
+PARAMETERS CAPTURED
+-------------------
+  mobile_number = 9988776655
+  account_id = ending 8801
+  request_type = balance + mini_statement
+  delivery_preference = email
+
+RESOLUTION & SUCCESS METRICS
+-----------------------------
+  Balance shared accurately (₹1,24,350.75)
+  Last 5 transactions listed with dates
+  Statement emailed on request
+  No human handoff needed — full self-service
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT 04 — DEBIT CARD BLOCK — LOST / STOLEN
+────────────────────────────────────────────────────────────────────────────────
+Industry    : BFSI
+Use Case    : Inbound — Emergency
+Complexity  : Urgent
+Duration    : ~4 min
+Company     : Kotak Mahindra Bank
+Language    : English + Hinglish
+
+DIALOGUE
+--------
+AGENT : "Kotak Mahindra Bank, this is Arjun. How can I help you?"
+
+USER  : "My debit card is lost! Please block it immediately."
+
+[SYSTEM] Intent detected: card_block | Priority: URGENT
+         Fast-track authentication initiated
+
+AGENT : "I'll help you block it right away — your security is our priority.
+         For quick authentication, please share your registered mobile number
+         and date of birth."
+
+USER  : "9123456780, DOB is 15th August 1990."
+
+[SYSTEM] Auth via DOB + mobile: SUCCESS | Account: Vikram Singh
+         Debit card ending 7234 | Account balance: ₹84,500
+
+AGENT : "Vikram, I'm blocking your Kotak debit card ending 7234 right now."
+
+[SYSTEM] Card status: BLOCKED at 11:47 AM 29-Mar-2026
+         Confirmation: BLK20260329-7234
+
+AGENT : "Done — your card ending 7234 has been blocked. No further
+         transactions can be processed. For a replacement card, there's a
+         nominal fee of ₹200 plus GST. Would you like me to request a
+         replacement? It'll be delivered to your registered address in 5-7
+         working days."
+
+USER  : "Yes please. Also, can you check if any unauthorized transactions
+         happened?"
+
+[SYSTEM] Last transaction: 28-Mar-2026, ₹450, Big Bazaar HSR Layout
+         No suspicious transactions in last 24 hours
+
+AGENT : "The last transaction on your card was ₹450 at Big Bazaar on 28th
+         March — does that look familiar?"
+
+USER  : "Yes, that was me."
+
+AGENT : "Good news — no unauthorized transactions detected. Your replacement
+         card request is confirmed. Reference: RPL20260329-7234. You'll
+         receive an SMS once dispatched. Is there anything else I can help
+         with?"
+
+HINGLISH VARIATION
+------------------
+USER  : "Mera ATM card kho gaya, jaldi block karo! Koi transaction toh
+         nahi hua na?"
+
+AGENT : "Bilkul sir, abhi block karta hoon. Verification ke liye apna
+         registered number aur date of birth batayein. Block ho gaya —
+         reference BLK20260329-7234. Last transaction Big Bazaar mein
+         ₹450 ka tha — kya woh aapka tha?"
+
+PARAMETERS CAPTURED
+-------------------
+  customer_name = Vikram Singh
+  card_last4 = 7234
+  block_reason = lost_card
+  replacement_requested = yes
+  last_known_transaction = verified_genuine
+
+RESOLUTION & SUCCESS METRICS
+-----------------------------
+  Card blocked within 60 seconds of authentication
+  Block reference: BLK20260329-7234
+  Replacement card ordered: RPL20260329-7234
+  Transaction history verified — zero unauthorized transactions
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT 05 — EMI PAYMENT REMINDER — OUTBOUND
+────────────────────────────────────────────────────────────────────────────────
+Industry    : BFSI
+Use Case    : Outbound — Proactive Reminder
+Complexity  : Basic
+Duration    : ~3 min
+Company     : Bajaj Finserv
+Language    : English + Hinglish
+
+DIALOGUE
+--------
+AGENT : "Hello, am I speaking with Meera Reddy?"
+
+USER  : "Yes, who's calling?"
+
+AGENT : "This is an automated reminder call from Bajaj Finserv. Meera, your
+         personal loan EMI of ₹8,750 is due on 2nd April 2026 — that's 4
+         days from today. Would you like help making the payment right now?"
+
+USER  : "Oh yes, I actually forgot. How can I pay?"
+
+AGENT : "You can pay via: UPI — our UPI ID is bajajfinserv@ybl; NetBanking
+         on bajajfinserv.com; NACH auto-debit if already set up; or call our
+         helpline 8698010101. Shall I SMS you the payment link right away?"
+
+USER  : "Yes, send the SMS please."
+
+[SYSTEM] SMS dispatched: Bajaj Finserv EMI payment link
+         Account: BFL-XXX9012 | Due: 2-Apr-2026 | Amount: ₹8,750
+         Link valid 24 hours
+
+USER  : "What happens if I pay late?"
+
+AGENT : "Late payment attracts a penal interest of 2% per month on the
+         overdue amount, plus a ₹400 bounce charge if the NACH debit fails.
+         To protect your CIBIL score and avoid charges, please ensure
+         payment by 2nd April."
+
+DISTRACTION EXAMPLE
+-------------------
+USER  : "By the way, can I take another loan from Bajaj?"
+
+AGENT : "I'd be happy to note your interest in a new loan! But let me first
+         ensure your current EMI is on track — timely payment also helps
+         your CIBIL score for any future loan application. Shall we confirm
+         today's payment via the link I just sent?"
+
+HINGLISH VARIATION
+------------------
+AGENT : "Meera ji, aapka Bajaj Finserv personal loan EMI ₹8,750 ka 2 April
+         ko due hai — sirf 4 din baaki hain. Kya aap abhi payment karna
+         chahenge? UPI ID hai bajajfinserv@ybl ya main SMS link bhej sakta
+         hoon."
+
+PARAMETERS CAPTURED
+-------------------
+  customer_confirmed = Meera Reddy
+  emi_amount = ₹8,750
+  due_date = 2-Apr-2026
+  payment_method_preference = SMS link
+  new_loan_interest = noted
+
+RESOLUTION & SUCCESS METRICS
+-----------------------------
+  Payment link sent via SMS
+  Late payment consequences explained
+  New loan interest lead captured
+  Customer confirmed intent to pay
+  Outbound call completed successfully
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT 06 — KYC UPDATE INQUIRY
+────────────────────────────────────────────────────────────────────────────────
+Industry    : BFSI
+Use Case    : Inbound — Compliance-Driven
+Complexity  : Intermediate
+Duration    : ~5 min
+Company     : Yes Bank
+Language    : English
+
+DIALOGUE
+--------
+AGENT : "Thank you for calling Yes Bank. I'm Sneha, your virtual assistant.
+         How may I help you today?"
+
+USER  : "I got an SMS saying my KYC needs to be updated. What documents do
+         I need?"
+
+[SYSTEM] Intent detected: kyc_update_inquiry | Account status: KYC_PENDING
+         Deadline: 30-Apr-2026
+
+AGENT : "Thank you for calling about this — you're right to act promptly.
+         KYC re-verification is mandated by RBI guidelines for all account
+         holders. For your savings account, you'll need any one identity
+         proof — Aadhaar card is preferred as it's Digi-linked — and your
+         PAN card. Do you have both readily available?"
+
+USER  : "Yes I do. How do I submit them?"
+
+AGENT : "You have three convenient options:
+         1. VIDEO KYC — I can initiate a video call right now; takes just
+            5 minutes, fully digital, no branch visit needed.
+         2. BRANCH VISIT — Carry original documents to any Yes Bank branch.
+         3. DOORSTEP KYC — We send a bank agent to your registered address;
+            available in 200+ cities.
+         Which would you prefer?"
+
+USER  : "Video KYC sounds good. What do I need for that?"
+
+AGENT : "For Video KYC you'll need: your Aadhaar-linked mobile number for
+         OTP verification, your original Aadhaar card held up to the camera,
+         your PAN card, good lighting and a stable internet connection. The
+         call takes about 5 minutes. Shall I schedule it now or send you
+         the Video KYC link via SMS?"
+
+USER  : "Send me the link."
+
+[SYSTEM] Video KYC link sent via SMS | Session ID: VKYC20260329-8912
+         Valid for 48 hours | Assigned officer: KYC Team Pool
+
+AGENT : "Done! The Video KYC link has been sent to your registered mobile.
+         It's valid for 48 hours. Please keep your Aadhaar and PAN ready.
+         Once completed, your KYC will be updated within 24 hours. Is there
+         anything else I can help you with?"
+
+PARAMETERS CAPTURED
+-------------------
+  kyc_status = pending
+  documents_available = Aadhaar + PAN
+  preferred_channel = video_kyc
+  session_id = VKYC20260329-8912
+
+RESOLUTION & SUCCESS METRICS
+-----------------------------
+  All three KYC options clearly explained
+  Customer chose Video KYC
+  Link sent — session ID confirmed
+  RBI compliance context communicated
+  No escalation required
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT 07 — FIXED DEPOSIT INQUIRY & BOOKING
+────────────────────────────────────────────────────────────────────────────────
+Industry    : BFSI
+Use Case    : Inbound — Product Inquiry + Transaction
+Complexity  : Intermediate
+Duration    : ~5 min
+Company     : SBI
+Language    : English
+
+DIALOGUE
+--------
+AGENT : "Good afternoon, SBI helpline. How can I assist you today?"
+
+USER  : "I want to open a fixed deposit. What rates are you offering?"
+
+[SYSTEM] Intent: fd_inquiry | Fetching current FD rates from rate engine
+
+AGENT : "SBI currently offers these FD interest rates for general customers
+         (effective March 2026):
+         • 7 days to 45 days            : 3.50%
+         • 46 days to 179 days          : 4.75%
+         • 180 days to 210 days         : 5.75%
+         • 211 days to less than 1 year : 6.00%
+         • 1 year to less than 2 years  : 6.80%
+         • 2 years to less than 3 years : 7.00%
+         • 3 years to less than 5 years : 6.75%
+         • 5 years and up to 10 years   : 6.50%
+         Senior citizens receive an additional 0.50% on all tenures.
+         Are you a senior citizen?"
+
+USER  : "No. I want to put 2 lakhs for 2 years."
+
+[SYSTEM] FD calculation: Principal ₹2,00,000 | Tenure: 2 years | Rate: 7.00%
+         Quarterly compounding | Maturity: ₹2,29,861
+
+AGENT : "For ₹2,00,000 for 2 years at 7.00% per annum (compounded
+         quarterly), you'd receive approximately ₹2,29,861 at maturity —
+         a gain of ₹29,861. TDS applies only if annual interest exceeds
+         ₹40,000. For your deposit, annual interest is approximately
+         ₹14,000, so no TDS will be deducted. Shall I open this FD
+         directly from your SBI savings account?"
+
+USER  : "Yes please. Go ahead."
+
+[SYSTEM] OTP required for FD booking | FD request queued
+
+USER  : "112233." [OTP]
+
+[SYSTEM] OTP verified | FD booked: FD20260329-8801
+         Principal: ₹2,00,000 | Maturity: 29-Mar-2028 | Amount: ₹2,29,861
+
+AGENT : "Your Fixed Deposit has been booked successfully! FD account number
+         FD20260329-8801. Principal ₹2,00,000 will mature on 29th March 2028
+         to ₹2,29,861. You'll receive a confirmation on your registered
+         email. Shall I set up auto-renewal as well?"
+
+PARAMETERS CAPTURED
+-------------------
+  principal_amount = ₹2,00,000
+  tenure = 2 years
+  customer_type = general (non-senior)
+  rate_applied = 7.00% p.a.
+  fd_account = FD20260329-8801
+
+RESOLUTION & SUCCESS METRICS
+-----------------------------
+  FD booked end-to-end in single call
+  Maturity amount correctly calculated (₹2,29,861)
+  TDS implication explained (no TDS applicable)
+  Upsell: auto-renewal offered
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT 08 — MUTUAL FUND NAV QUERY & SIP TOP-UP
+────────────────────────────────────────────────────────────────────────────────
+Industry    : BFSI
+Use Case    : Inbound — Portfolio Query + SIP Setup
+Complexity  : Intermediate
+Duration    : ~5 min
+Company     : HDFC AMC
+Language    : English
+
+DIALOGUE
+--------
+AGENT : "Welcome to HDFC AMC helpline. How can I assist you today?"
+
+USER  : "I have a SIP in HDFC Midcap Opportunities Fund. What's today's NAV
+         and how is my investment performing?"
+
+[SYSTEM] Auth via OTP: SUCCESS | Portfolio loaded
+         Fund: HDFC Mid-Cap Opportunities Fund - Direct Growth
+         Folio: HDFC-MF-20220601
+
+AGENT : "Today's NAV for HDFC Mid-Cap Opportunities Fund - Direct Growth is
+         ₹123.45 (as of 28-Mar-2026). Your portfolio details:
+         • SIP Amount: ₹5,000/month
+         • SIP Start Date: June 2022
+         • Total Invested: ₹2,30,000 (46 months)
+         • Current Value: ₹3,14,800
+         • Absolute Returns: 36.87%
+         • XIRR: approximately 22.4% p.a.
+         The fund has outperformed its benchmark (Nifty Midcap 150 TRI).
+         Would you like to increase your SIP amount?"
+
+USER  : "Yes, I want to add another ₹2,000 per month."
+
+AGENT : "I'll set up an additional SIP of ₹2,000/month in HDFC Mid-Cap
+         Opportunities Fund - Direct Growth, starting 5th April 2026. This
+         will be debited via NACH from your registered bank account. May I
+         confirm your bank account ending 3412?"
+
+USER  : "Yes, that's correct."
+
+[SYSTEM] SIP top-up registered: ₹2,000/month from 5-Apr-2026
+         New total SIP: ₹7,000/month | Confirmation: SIP20260329-7781
+
+AGENT : "Your SIP top-up is confirmed — reference SIP20260329-7781. Your
+         new monthly SIP total will be ₹7,000 starting April 5th. You'll
+         receive a confirmation email and NACH mandate update. Is there
+         anything else I can help with?"
+
+PARAMETERS CAPTURED
+-------------------
+  fund_name = HDFC Mid-Cap Opp. Fund Direct Growth
+  nav_date = 28-Mar-2026 | nav = ₹123.45
+  current_portfolio_value = ₹3,14,800
+  sip_topup_amount = ₹2,000/month
+  bank_account_last4 = 3412
+
+RESOLUTION & SUCCESS METRICS
+-----------------------------
+  NAV and portfolio data shared accurately
+  XIRR (22.4%) correctly communicated
+  SIP top-up processed: SIP20260329-7781
+  Bank account confirmed before action
+  AUM growth opportunity captured (₹84,000/year)
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT 09 — INSURANCE CLAIM STATUS FOLLOW-UP
+────────────────────────────────────────────────────────────────────────────────
+Industry    : BFSI / Insurance
+Use Case    : Inbound — Claim Escalation
+Complexity  : Complex
+Duration    : ~6 min
+Company     : Bajaj Allianz General Insurance
+Language    : English
+
+DIALOGUE
+--------
+AGENT : "Bajaj Allianz General Insurance, good afternoon. How may I help?"
+
+USER  : "I filed a motor insurance claim 10 days ago. My car was in an
+         accident. What's the status?"
+
+AGENT : "I'm sorry to hear about the accident. May I have your claim number?"
+
+USER  : "It's BA2026032901234."
+
+[SYSTEM] Claim loaded: BA2026032901234 | Vehicle: Maruti Swift 2022
+         Incident date: 19-Mar-2026 | Workshop: Kapoor Motors, Andheri
+         Status: Under Survey | Surveyor: Ramesh Kumar
+
+AGENT : "I can see your claim BA2026032901234 for your Maruti Swift. Current
+         status is 'Under Survey' — our surveyor Ramesh Kumar visited the
+         vehicle at Kapoor Motors workshop on 25th March and the survey
+         report is under review. Expected completion: 2nd April 2026. Once
+         approved, repair authorization will be sent to the workshop within
+         24 hours."
+
+USER  : "It's been 10 days already! This is taking way too long."
+
+AGENT : "I completely understand your frustration and I sincerely apologize
+         for the delay. As per IRDAI guidelines, insurers are expected to
+         complete the survey process within 7 working days. I'm escalating
+         this claim for priority review right now — flagging it as urgent.
+         You should receive an update by tomorrow 5 PM. Escalation request:
+         SR20260329-4512. You'll receive SMS and email confirmation."
+
+USER  : "I need my car fixed urgently, I use it for work."
+
+AGENT : "Understood — I've marked the urgency reason as 'vehicle required
+         for livelihood' in the escalation notes, which gives this higher
+         priority. Our senior claims officer will personally review this by
+         end of day. Is there a preferred callback number if we need to
+         reach you quickly?"
+
+[SYSTEM] Escalation SR20260329-4512 created | Priority: HIGH
+         Livelihood flag: YES | Callback committed: 30-Mar-2026 17:00
+
+PARAMETERS CAPTURED
+-------------------
+  claim_number = BA2026032901234
+  vehicle = Maruti Swift 2022
+  workshop = Kapoor Motors, Andheri
+  escalation_reason = delay beyond IRDAI SLA
+  escalation_SR = SR20260329-4512
+
+RESOLUTION & SUCCESS METRICS
+-----------------------------
+  Claim status accurately retrieved
+  Delay acknowledged — IRDAI 7-day SLA cited
+  Escalation SR created with callback commitment
+  Livelihood urgency flag applied for priority
+  Customer frustration de-escalated
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT 10 — PERSONAL LOAN PRE-APPROVAL CHECK
+────────────────────────────────────────────────────────────────────────────────
+Industry    : BFSI
+Use Case    : Inbound — Loan Eligibility
+Complexity  : Intermediate
+Duration    : ~5 min
+Company     : Axis Bank
+Language    : English
+
+DIALOGUE
+--------
+AGENT : "Good morning, Axis Bank loans helpline. I'm Maya. How can I help
+         you today?"
+
+USER  : "Am I eligible for a personal loan? I need 3 lakhs urgently."
+
+AGENT : "I can check your pre-approved offer instantly. Are you an existing
+         Axis Bank customer?"
+
+USER  : "Yes, I have a salary account with you."
+
+[SYSTEM] Auth via OTP: SUCCESS | Account: Suresh Patel | Salary Account
+         Employer: TCS | Monthly Credit: ₹78,000
+         Pre-approved offer: ₹3,50,000 at 10.75% p.a.
+
+AGENT : "Great news, Suresh! Based on your salary account history with Axis
+         Bank, you have a pre-approved personal loan offer of up to
+         ₹3,50,000 at 10.75% per annum — with zero documentation required
+         since you're an existing customer. For ₹3 lakhs over 3 years, your
+         EMI would be ₹9,784 per month. Processing fee is 1.5% = ₹4,500.
+         Shall I proceed with the application?"
+
+USER  : "Is the rate negotiable?"
+
+AGENT : "The rate is determined by your credit profile. Your current CIBIL
+         score as per our records is 742, which is in the 'Good' range.
+         Customers with scores above 750 can qualify for our best rate of
+         10.50%. Would you like a few days to explore that, or shall we
+         proceed at 10.75% today?"
+
+USER  : "I need the money urgently. Let's go ahead at 10.75%."
+
+[SYSTEM] Loan application: PL20260329-AXS-4421 | Amount: ₹3,00,000
+         Rate: 10.75% | Tenure: 36 months | EMI: ₹9,784
+         Disbursal: same day (pre-approved)
+
+AGENT : "Application submitted — reference PL20260329-AXS-4421. Since this
+         is a pre-approved offer, disbursal is expected directly to your
+         Axis savings account today by 4 PM. You'll receive a sanction
+         letter on your registered email."
+
+PARAMETERS CAPTURED
+-------------------
+  customer = Suresh Patel (existing Axis Bank)
+  loan_amount = ₹3,00,000
+  tenure = 36 months
+  rate = 10.75% p.a.
+  cibil_score = 742
+
+RESOLUTION & SUCCESS METRICS
+-----------------------------
+  Pre-approved offer surfaced instantly
+  EMI and processing fee clearly explained
+  CIBIL score transparently shared (742)
+  Application PL20260329-AXS-4421 submitted
+  Same-day disbursal committed (4 PM)
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT 11 — INTERNET BANKING LOCKED ACCOUNT
+────────────────────────────────────────────────────────────────────────────────
+Industry    : BFSI
+Use Case    : Inbound — Account Unlock
+Complexity  : Intermediate
+Duration    : ~4 min
+Company     : Kotak 811
+Language    : English
+
+DIALOGUE
+--------
+AGENT : "Welcome to Kotak 811 helpline. I'm Aryan. What issue are you
+         facing today?"
+
+USER  : "I can't login to net banking. It says my account is locked."
+
+[SYSTEM] Intent: account_unlock | Pulling account status by customer_id
+
+AGENT : "I understand — accounts get locked after 3 incorrect password
+         attempts as a security measure to protect you. Let me verify your
+         identity. Please share your Customer ID and registered mobile
+         number."
+
+USER  : "Customer ID 12345678, mobile 9876543210."
+
+[SYSTEM] Account status: LOCKED | Failed attempts: 3
+         Last attempt: 29-Mar-2026 10:15 AM | Customer: Rahul Mehta
+
+AGENT : "I can see your account was locked at 10:15 AM today after 3
+         unsuccessful login attempts. I'll unlock it now — I'm sending an
+         OTP to your registered mobile. Please share it when you receive it."
+
+USER  : "Got it — 762341."
+
+[SYSTEM] OTP verified | Account unlocked
+         Temporary one-time password sent via SMS
+         Unlock timestamp: 29-Mar-2026 11:50 AM
+
+AGENT : "Your account is now unlocked. I've sent a one-time temporary
+         password to your registered mobile. Please use this to log in and
+         immediately change your password to a new one. For security, your
+         password should include uppercase letters, lowercase letters, a
+         number, and a special character — minimum 8 characters. Is there
+         anything else I can assist you with?"
+
+USER  : "No that's all, thanks."
+
+AGENT : "You're welcome! If you face any further issues logging in, please
+         don't hesitate to call us again on 1860-266-0811. Have a great day!"
+
+PARAMETERS CAPTURED
+-------------------
+  customer_id = 12345678
+  mobile = 9876543210
+  lock_reason = 3 failed login attempts
+  unlock_method = OTP verification
+  customer = Rahul Mehta
+
+RESOLUTION & SUCCESS METRICS
+-----------------------------
+  Account unlocked within 2 minutes of call start
+  OTP-based identity confirmed securely
+  Password security guidelines provided
+  Full self-service resolution — no escalation
+
+
+────────────────────────────────────────────────────────────────────────────────
+SCRIPT 12 — BRANCH LOCATOR & LOCKER INQUIRY
+────────────────────────────────────────────────────────────────────────────────
+Industry    : BFSI
+Use Case    : Inbound — Product Inquiry
+Complexity  : Basic
+Duration    : ~4 min
+Company     : HDFC Bank
+Language    : English
+
+DIALOGUE
+--------
+AGENT : "HDFC Bank helpline, good afternoon. How can I assist you?"
+
+USER  : "I need a bank locker. Which nearby branch has lockers available?"
+
+AGENT : "I'd be happy to check that for you. Which area or city are you in?"
+
+USER  : "I'm in Koramangala, Bangalore."
+
+[SYSTEM] Location: Koramangala, Bangalore
+         Branch inventory query: locker availability within 3 km
+         Results: 2 branches found
+
+AGENT : "HDFC Bank branches near Koramangala with locker availability:
+         1. HDFC Bank Koramangala 5th Block — 100th Road
+            Lockers available immediately | Mon–Sat 9:30 AM–3:30 PM
+         2. HDFC Bank HSR Layout — 27th Main Road
+            Lockers: waiting list currently 2–3 months
+         I recommend visiting the 5th Block branch. For a locker, you'll
+         need to: be an existing HDFC savings account holder, maintain a
+         minimum ₹25,000 average quarterly balance, and pay annual locker
+         rent. Small locker: ₹2,200/year + GST. Medium: ₹4,000/year + GST.
+         Shall I book an appointment at the 5th Block branch?"
+
+USER  : "Yes, please book it for tomorrow morning."
+
+[SYSTEM] Appointment booked: HDFC Koramangala 5th Block
+         30-Mar-2026 10:00 AM | Purpose: Locker inquiry
+         Ref: APT20260330-KRMG-0912
+
+AGENT : "Appointment confirmed at HDFC Bank Koramangala 5th Block for
+         tomorrow, 30th March at 10:00 AM. Reference: APT20260330-KRMG-0912.
+         Please carry your Aadhaar, PAN, and a passport-size photo. You'll
+         receive an SMS reminder. Anything else?"
+
+PARAMETERS CAPTURED
+-------------------
+  customer_location = Koramangala, Bangalore
+  service_required = bank_locker
+  preferred_branch = 5th Block Koramangala
+  appointment_date = 30-Mar-2026 10:00 AM
+  ref = APT20260330-KRMG-0912
+
+RESOLUTION & SUCCESS METRICS
+-----------------------------
+  Nearest branch with immediate availability found
+  Locker fee structure correctly communicated
+  Appointment booked: APT20260330-KRMG-0912
+  Document checklist (Aadhaar, PAN, photo) provided
+  SMS reminder scheduled
+
+
+================================================================================
+END OF FILE — BFSI SCRIPTS 01 TO 12 (from 04_Call_Scripts.html)
+================================================================================

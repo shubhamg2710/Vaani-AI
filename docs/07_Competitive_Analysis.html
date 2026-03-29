@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Competitive &amp; Market Analysis — Vaani AI</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#061A1E;--surface:#0D2B32;--surface2:#112F37;--border:#1A3D47;
+  --saffron:#F4923A;--teal:#26C6DA;--gold:#E9C46A;--green:#4CAF7D;
+  --red:#E05252;--purple:#A78BFA;
+  --t1:#F0EDE8;--t2:#A8B8BC;--t3:#5A7A82;
+  --font:'Segoe UI',system-ui,sans-serif;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--t1);line-height:1.6}
+
+/* Header */
+.page-header{background:linear-gradient(135deg,#0D3B47 0%,#0A8EA0 100%);padding:44px 40px 36px;border-bottom:1px solid var(--border)}
+.page-header .badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);border-radius:20px;padding:4px 14px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px}
+.page-header h1{font-size:2.2rem;font-weight:800;color:#fff;margin-bottom:6px}
+.page-header p{color:rgba(255,255,255,.75);font-size:1rem;max-width:700px}
+.meta-row{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px}
+.meta-tag{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 12px;font-size:12px;color:rgba(255,255,255,.75)}
+
+/* TOC */
+.toc{background:var(--surface);border-left:3px solid var(--saffron);margin:28px 40px;padding:18px 24px;border-radius:0 8px 8px 0;border:1px solid var(--border);border-left:3px solid var(--saffron)}
+.toc h3{color:var(--saffron);margin-bottom:10px;font-size:.85rem;text-transform:uppercase;letter-spacing:.08em}
+.toc ol{padding-left:18px;columns:2;column-gap:32px}
+.toc li{margin:.35rem 0;font-size:.88rem}
+.toc a{color:var(--teal);text-decoration:none}.toc a:hover{text-decoration:underline}
+
+/* Container */
+.container{max-width:1200px;margin:0 auto;padding:0 36px 60px}
+
+/* Section */
+.section{background:var(--surface);border-radius:12px;border:1px solid var(--border);margin-bottom:28px;overflow:hidden}
+.section-header{background:linear-gradient(135deg,#0D3B47,#0A5A6B);padding:16px 24px;display:flex;align-items:center;gap:12px}
+.section-header h2{font-size:1.15rem;font-weight:700;color:#fff}
+.section-header .num{background:var(--saffron);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;flex-shrink:0}
+.section-body{padding:24px}
+
+/* Section label */
+.sec-label{font-size:10px;font-weight:700;color:var(--saffron);text-transform:uppercase;letter-spacing:2px;display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* Stat cards */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+@media(max-width:800px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
+.stat-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
+.stat-card .n{font-size:1.6rem;font-weight:800;line-height:1.1}
+.stat-card .l{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-top:4px}
+.stat-card .s{font-size:11px;color:var(--t2);margin-top:2px}
+
+/* Market segment bars */
+.market-bar{margin:10px 0}
+.market-bar .lbl{font-size:12px;color:var(--t2);margin-bottom:4px;display:flex;justify-content:space-between}
+.market-bar .track{background:rgba(255,255,255,.06);border-radius:4px;height:8px;overflow:hidden}
+.market-bar .fill{height:100%;border-radius:4px;transition:width .3s}
+
+/* Competitor card */
+.competitor-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:16px}
+.comp-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.comp-name{font-size:1.05rem;font-weight:700;color:var(--t1)}
+.comp-meta{font-size:11px;color:var(--t3);margin-top:2px}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.badge-pill{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap}
+.badge-saffron{background:rgba(244,146,58,.15);color:var(--saffron);border:1px solid rgba(244,146,58,.25)}
+.badge-teal{background:rgba(38,198,218,.12);color:var(--teal);border:1px solid rgba(38,198,218,.2)}
+.badge-gold{background:rgba(233,196,106,.12);color:var(--gold);border:1px solid rgba(233,196,106,.2)}
+.badge-green{background:rgba(76,175,125,.12);color:var(--green);border:1px solid rgba(76,175,125,.2)}
+.badge-red{background:rgba(224,82,82,.12);color:var(--red);border:1px solid rgba(224,82,82,.2)}
+.badge-purple{background:rgba(167,139,250,.12);color:var(--purple);border:1px solid rgba(167,139,250,.2)}
+
+.comp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+@media(max-width:700px){.comp-grid{grid-template-columns:1fr 1fr}}
+.comp-fact{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:10px 12px}
+.comp-fact .cf-label{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px}
+.comp-fact .cf-val{font-size:13px;color:var(--t1);font-weight:600}
+
+.sw-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sw-box{border-radius:8px;padding:12px}
+.sw-box.str{background:rgba(76,175,125,.06);border:1px solid rgba(76,175,125,.15)}
+.sw-box.weak{background:rgba(224,82,82,.06);border:1px solid rgba(224,82,82,.15)}
+.sw-box h4{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
+.sw-box.str h4{color:var(--green)}
+.sw-box.weak h4{color:var(--red)}
+.sw-box ul{padding-left:14px;font-size:12px;color:var(--t2);line-height:1.7}
+
+/* Comparison table */
+.comp-table{width:100%;border-collapse:collapse;font-size:12px}
+.comp-table th{background:#0D3B47;color:var(--saffron);padding:10px 12px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.8px;white-space:nowrap}
+.comp-table th:first-child{position:sticky;left:0;z-index:2}
+.comp-table td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--t2);vertical-align:top}
+.comp-table td:first-child{font-weight:600;color:var(--t1);background:var(--surface2);position:sticky;left:0}
+.comp-table tr:hover td{background:rgba(255,255,255,.02)}
+.comp-table .vaani td{background:rgba(244,146,58,.07)!important;color:var(--t1)!important}
+.comp-table .vaani td:first-child{color:var(--saffron)!important}
+.check{color:var(--green);font-weight:700}
+.cross{color:var(--red)}
+.partial{color:var(--gold)}
+.table-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--border)}
+
+/* Funding bar chart */
+.fund-bar-wrap{display:flex;flex-direction:column;gap:8px}
+.fund-row{display:grid;grid-template-columns:130px 1fr 80px;align-items:center;gap:10px;font-size:12px}
+.fund-row .name{color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fund-row .bar-bg{background:rgba(255,255,255,.06);border-radius:3px;height:16px}
+.fund-row .bar-fill{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:6px;font-size:10px;font-weight:700;color:rgba(255,255,255,.8);white-space:nowrap}
+.fund-row .amt{color:var(--t1);font-weight:700;text-align:right}
+
+/* Positioning quadrant text */
+.quad-section{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media(max-width:600px){.quad-section{grid-template-columns:1fr}}
+.quad-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px}
+.quad-card h4{font-size:13px;font-weight:700;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.quad-card ul{padding-left:14px;font-size:12px;color:var(--t2);line-height:1.8}
+
+/* Vaani positioning */
+.positioning-box{background:linear-gradient(135deg,rgba(244,146,58,.12),rgba(38,198,218,.08));border:1px solid rgba(244,146,58,.3);border-radius:12px;padding:24px}
+
+/* Divider */
+.divider{height:1px;background:var(--border);margin:28px 0}
+
+/* Footer */
+.footer{text-align:center;padding:28px;color:var(--t3);font-size:11px;border-top:1px solid var(--border)}
+
+/* Nav */
+.vb-nav{position:fixed;bottom:24px;right:24px;display:flex;gap:8px;z-index:9999;font-family:var(--font)}
+.vb-nav a,.vb-nav button{display:inline-flex;align-items:center;gap:5px;background:rgba(13,59,71,.85);color:var(--t2);border:1px solid var(--border);border-radius:24px;padding:9px 18px;font-size:13px;font-weight:600;text-decoration:none;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.4);backdrop-filter:blur(8px);transition:background .18s,color .18s;white-space:nowrap}
+.vb-nav a:hover,.vb-nav button:hover{background:var(--saffron);color:white;border-color:var(--saffron)}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="badge">Document 07 · Competitive Intelligence</div>
+  <h1>Competitive &amp; Market Landscape</h1>
+  <p>In-depth analysis of 11 competitors across business, revenue, product, technology, and market dimensions — grounded in verified public data (March 2026)</p>
+  <div class="meta-row">
+    <span class="meta-tag">11 Competitors Analysed</span>
+    <span class="meta-tag">India + Global Markets</span>
+    <span class="meta-tag">Live Data: Mar 2026</span>
+    <span class="meta-tag">BFSI + Automotive Focus</span>
+  </div>
+</div>
+
+<div class="toc">
+  <h3>Table of Contents</h3>
+  <ol>
+    <li><a href="#exec-summary">Executive Summary</a></li>
+    <li><a href="#market-size">Market Size &amp; Opportunity</a></li>
+    <li><a href="#landscape-map">Competitive Landscape Map</a></li>
+    <li><a href="#competitor-profiles">Competitor Profiles (11)</a></li>
+    <li><a href="#comparison-matrix">Multi-Dimension Comparison Matrix</a></li>
+    <li><a href="#funding-scale">Funding &amp; Scale Analysis</a></li>
+    <li><a href="#tech-comparison">Technology Comparison</a></li>
+    <li><a href="#vaani-positioning">Vaani AI Positioning &amp; Moats</a></li>
+    <li><a href="#strategic-gaps">Strategic Gaps &amp; Opportunities</a></li>
+  </ol>
+</div>
+
+<div class="container">
+
+<!-- ═══════════════════════════════════════════════════════ EXEC SUMMARY -->
+<div class="section" id="exec-summary">
+  <div class="section-header"><div class="num">1</div><h2>Executive Summary</h2></div>
+  <div class="section-body">
+    <p style="color:var(--t2);font-size:.95rem;line-height:1.75;margin-bottom:20px">
+      The India conversational AI market is at an inflection point — growing from <strong style="color:var(--saffron)">$455M in 2024 to $1.85B by 2030</strong> (CAGR 26.3%). Voice AI specifically is growing at <strong style="color:var(--saffron)">35.7% CAGR</strong>, driven by 600M+ non-English speakers, BFSI digitisation, and the world's largest telephony base. Vaani AI enters at the perfect moment: global players lack native Indic depth; Indian players lack real-time latency and enterprise scale.
+    </p>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="n" style="color:var(--saffron)">$455M</div><div class="l">India Conv. AI 2024</div><div class="s">→ $1.85B by 2030</div></div>
+      <div class="stat-card"><div class="n" style="color:var(--teal)">35.7%</div><div class="l">Voice AI CAGR</div><div class="s">India, 2025–2030</div></div>
+      <div class="stat-card"><div class="n" style="color:var(--gold)">$8.1B</div><div class="l">AI in BFSI India 2033</div><div class="s">28.8% CAGR from $830M</div></div>
+      <div class="stat-card"><div class="n" style="color:var(--green)">600M+</div><div class="l">Non-English speakers</div><div class="s">India's voice-first users</div></div>
+    </div>
+    <div style="background:rgba(244,146,58,.08);border:1px solid rgba(244,146,58,.2);border-radius:10px;padding:18px;margin-top:4px">
+      <p style="font-size:.9rem;color:var(--t2);line-height:1.7"><strong style="color:var(--saffron)">Key Insight:</strong> No single competitor owns the intersection of (1) real-time &lt;500ms latency, (2) native Indic code-switching, (3) enterprise BFSI + Automotive compliance, and (4) self-improving AI. Global leaders (ElevenLabs, Kore.ai, Google) lack deep Indic intelligence. Indian leaders (Sarvam, Gnani, SquadStack) lack global-grade latency, enterprise scale, or full-stack voice platforms. <strong style="color:var(--saffron)">Vaani AI is designed to own that white space.</strong></p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ MARKET SIZE -->
+<div class="section" id="market-size">
+  <div class="section-header"><div class="num">2</div><h2>Market Size &amp; Opportunity</h2></div>
+  <div class="section-body">
+    <div class="sec-label">India Market Segments</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px">
+      <div>
+        <div class="fund-bar-wrap">
+          <div style="font-size:11px;color:var(--t3);margin-bottom:8px;text-transform:uppercase;letter-spacing:.8px">Market Size (2024 → 2030)</div>
+          <div class="fund-row">
+            <div class="name">Conv. AI (India)</div>
+            <div class="bar-bg"><div class="bar-fill" style="width:25%;background:linear-gradient(90deg,var(--saffron),var(--gold))">$455M</div></div>
+            <div class="amt" style="color:var(--saffron)">→$1.85B</div>
+          </div>
+          <div class="fund-row">
+            <div class="name">Voice AI (India)</div>
+            <div class="bar-bg"><div class="bar-fill" style="width:16%;background:linear-gradient(90deg,var(--teal),#4ECDC4)">$153M</div></div>
+            <div class="amt" style="color:var(--teal)">→$957M</div>
+          </div>
+          <div class="fund-row">
+            <div class="name">AI in BFSI (India)</div>
+            <div class="bar-bg"><div class="bar-fill" style="width:45%;background:linear-gradient(90deg,var(--gold),var(--saffron))">$830M</div></div>
+            <div class="amt" style="color:var(--gold)">→$8.1B</div>
+          </div>
+          <div class="fund-row">
+            <div class="name">Chatbot (India)</div>
+            <div class="bar-bg"><div class="bar-fill" style="width:13%;background:linear-gradient(90deg,var(--green),#78C9A4)">$243M</div></div>
+            <div class="amt" style="color:var(--green)">→$1.5B</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--t3);margin-bottom:8px;text-transform:uppercase;letter-spacing:.8px">Key Growth Drivers</div>
+        <ul style="font-size:12px;color:var(--t2);line-height:2;padding-left:16px">
+          <li>600M+ non-English internet users in India</li>
+          <li>50M+ BFSI contact center interactions / month</li>
+          <li>80% efficiency gains reported with voice AI</li>
+          <li>30–35% cost reduction per call vs human agents</li>
+          <li>Only 10% of India's population is English-fluent</li>
+          <li>450M+ regional language internet users (2023)</li>
+          <li>India's DPDP Act 2023 pushing data localisation</li>
+          <li>UPI + Jan Dhan → 500M+ banked users needing support</li>
+        </ul>
+      </div>
+    </div>
+    <div class="sec-label" style="margin-top:24px">Global Context</div>
+    <div class="stat-grid" style="grid-template-columns:repeat(3,1fr)">
+      <div class="stat-card"><div class="n" style="color:var(--saffron)">$2.5B</div><div class="l">Global Call Center AI 2025</div><div class="s">→ $8.8B by 2035, CAGR 13.5%</div></div>
+      <div class="stat-card"><div class="n" style="color:var(--teal)">$781M</div><div class="l">ElevenLabs total raised</div><div class="s">Signals voice AI investor appetite</div></div>
+      <div class="stat-card"><div class="n" style="color:var(--gold)">$870M</div><div class="l">Uniphore total raised</div><div class="s">$2.5B valuation Oct 2025</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ LANDSCAPE MAP -->
+<div class="section" id="landscape-map">
+  <div class="section-header"><div class="num">3</div><h2>Competitive Landscape Map</h2></div>
+  <div class="section-body">
+    <div class="quad-section">
+      <div class="quad-card" style="border-color:rgba(244,146,58,.3)">
+        <h4 style="color:var(--saffron)">🌍 Global Voice AI Infrastructure</h4>
+        <ul>
+          <li><strong>ElevenLabs</strong> — TTS + voice cloning, $11B valuation, 70+ languages</li>
+          <li><strong>Google CCAI</strong> — Full-stack CX AI, Gemini-powered, enterprise</li>
+          <li><strong>Kore.ai</strong> — Enterprise XO Platform, $300M raised, Fortune 2000</li>
+          <li><strong>Uniphore</strong> — Conversation analytics + voice AI, $870M raised</li>
+        </ul>
+      </div>
+      <div class="quad-card" style="border-color:rgba(38,198,218,.3)">
+        <h4 style="color:var(--teal)">🇮🇳 India-Born Enterprise Voice AI</h4>
+        <ul>
+          <li><strong>Yellow.ai</strong> — Conversational AI + VoiceX, $133M raised, 1300+ clients</li>
+          <li><strong>Gnani.ai</strong> — BFSI voice AI, 12 Indic TTS, Bengaluru</li>
+          <li><strong>SquadStack</strong> — AI + human hybrid calling, India BFSI focus</li>
+          <li><strong>Sarvam AI</strong> — Sovereign Indic AI, $41M raised + $250M pipeline</li>
+        </ul>
+      </div>
+      <div class="quad-card" style="border-color:rgba(233,196,106,.3)">
+        <h4 style="color:var(--gold)">🏛️ Govtech &amp; Domain-Specific AI</h4>
+        <ul>
+          <li><strong>CoRover / BharatGPT</strong> — IRCTC, NPCI, LIC, SEBI; Google DeepMind-backed</li>
+          <li><strong>Devnagri</strong> — NLP translation for Indic enterprises, pre-Series A</li>
+        </ul>
+      </div>
+      <div class="quad-card" style="border-color:rgba(244,146,58,.5);background:rgba(244,146,58,.05)">
+        <h4 style="color:var(--saffron)">⭐ Vaani AI — Target White Space</h4>
+        <ul>
+          <li>Real-time &lt;500ms voice AI <strong>for India + global</strong></li>
+          <li>Native Indic code-switching (Hinglish, Tanglish)</li>
+          <li>BFSI + Automotive enterprise compliance built-in</li>
+          <li>Self-learning from every call outcome</li>
+          <li>Telephony-optimised (8kHz noisy audio)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ PROFILES -->
+<div class="section" id="competitor-profiles">
+  <div class="section-header"><div class="num">4</div><h2>Competitor Profiles</h2></div>
+  <div class="section-body">
+
+    <!-- ElevenLabs -->
+    <div class="competitor-card">
+      <div class="comp-header">
+        <div>
+          <div class="comp-name">ElevenLabs</div>
+          <div class="comp-meta">Founded 2022 · Warsaw / New York · Bengaluru office (2025)</div>
+          <div class="badges">
+            <span class="badge-pill badge-saffron">$781M Raised</span>
+            <span class="badge-pill badge-teal">$11B Valuation</span>
+            <span class="badge-pill badge-gold">$330M ARR (2025)</span>
+            <span class="badge-pill badge-green">Global TTS Leader</span>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--t3);text-align:right">Series D · Feb 2026<br>NVIDIA-backed</div>
+      </div>
+      <div class="comp-grid">
+        <div class="comp-fact"><div class="cf-label">Total Funding</div><div class="cf-val">$781M (Series D $500M at $11B)</div></div>
+        <div class="comp-fact"><div class="cf-label">ARR</div><div class="cf-val">$330M (2025), +175% YoY</div></div>
+        <div class="comp-fact"><div class="cf-label">Enterprise Reach</div><div class="cf-val">41% of Fortune 500</div></div>
+        <div class="comp-fact"><div class="cf-label">Languages</div><div class="cf-val">70+ incl. Hindi, Tamil, Bengali</div></div>
+        <div class="comp-fact"><div class="cf-label">Key Customers</div><div class="cf-val">Deutsche Telekom, Revolut, Meta, Salesforce</div></div>
+        <div class="comp-fact"><div class="cf-label">Core Product</div><div class="cf-val">TTS + Voice Cloning + Conversational Agents</div></div>
+      </div>
+      <div class="sw-grid">
+        <div class="sw-box str"><h4>✦ Strengths</h4><ul><li>World-class TTS quality (MOS 4.5+)</li><li>Massive enterprise customer base</li><li>&lt;75ms first audio chunk (Flash v2.5)</li><li>Voice cloning from 3-second prompt</li><li>70+ languages with Indian support</li></ul></div>
+        <div class="sw-box weak"><h4>✦ Weaknesses vs Vaani AI</h4><ul><li>Not a complete conversational agent platform</li><li>No native Indic code-switching</li><li>No telephony-optimised ASR (8kHz)</li><li>No BFSI / RBI compliance built-in</li><li>No call script engine or dialogue management</li></ul></div>
+      </div>
+    </div>
+
+    <!-- Sarvam AI -->
+    <div class="competitor-card">
+      <div class="comp-header">
+        <div>
+          <div class="comp-name">Sarvam AI</div>
+          <div class="comp-meta">Founded Aug 2023 · Bengaluru · IIT Madras / AI4Bharat lineage</div>
+          <div class="badges">
+            <span class="badge-pill badge-saffron">$41M Raised</span>
+            <span class="badge-pill badge-teal">$250M Pipeline</span>
+            <span class="badge-pill badge-gold">IndiaAI Mission Selected</span>
+            <span class="badge-pill badge-green">22 Indian Languages</span>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--t3);text-align:right">Series A · Lightspeed<br>Peak XV · Khosla</div>
+      </div>
+      <div class="comp-grid">
+        <div class="comp-fact"><div class="cf-label">Total Funding</div><div class="cf-val">$41M (raising $200–250M)</div></div>
+        <div class="comp-fact"><div class="cf-label">Pricing</div><div class="cf-val">₹1/min for voice agents (API)</div></div>
+        <div class="comp-fact"><div class="cf-label">Languages</div><div class="cf-val">22 Indian languages + English</div></div>
+        <div class="comp-fact"><div class="cf-label">LLM Scale</div><div class="cf-val">Sarvam-30B + Sarvam-105B</div></div>
+        <div class="comp-fact"><div class="cf-label">Key Customers</div><div class="cf-val">Tata Capital, UIDAI / Aadhaar</div></div>
+        <div class="comp-fact"><div class="cf-label">Deployment</div><div class="cf-val">Sarvam Cloud + VPC + On-Prem (ISO, SOC2)</div></div>
+      </div>
+      <div class="sw-grid">
+        <div class="sw-box str"><h4>✦ Strengths</h4><ul><li>Sovereign Indic AI — full-stack (ASR, LLM, TTS)</li><li>Government mandate (IndiaAI Mission)</li><li>22 Indian languages native support</li><li>₹1/min pricing — very competitive</li><li>IIT Madras AI4Bharat academic credibility</li></ul></div>
+        <div class="sw-box weak"><h4>✦ Weaknesses vs Vaani AI</h4><ul><li>No proven enterprise-scale BFSI deployment yet</li><li>Latency benchmarks not publicly validated</li><li>Limited automotive / non-government traction</li><li>Self-learning / RLHF pipeline not documented</li><li>Call analytics and reporting unproven</li></ul></div>
+      </div>
+    </div>
+
+    <!-- Yellow.ai -->
+    <div class="competitor-card">
+      <div class="comp-header">
+        <div>
+          <div class="comp-name">Yellow.ai</div>
+          <div class="comp-meta">Founded 2016 · Bengaluru · 50+ countries · 1,300+ enterprise clients</div>
+          <div class="badges">
+            <span class="badge-pill badge-saffron">$133M Raised</span>
+            <span class="badge-pill badge-teal">$79.5M Revenue (2024)</span>
+            <span class="badge-pill badge-gold">1,300+ Enterprises</span>
+            <span class="badge-pill badge-green">VoiceX Platform</span>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--t3);text-align:right">Series C · WestBridge<br>Salesforce Ventures</div>
+      </div>
+      <div class="comp-grid">
+        <div class="comp-fact"><div class="cf-label">Total Funding</div><div class="cf-val">$133M (Series C $78M)</div></div>
+        <div class="comp-fact"><div class="cf-label">Revenue</div><div class="cf-val">$79.5M (2024), rapid growth</div></div>
+        <div class="comp-fact"><div class="cf-label">Enterprise Clients</div><div class="cf-val">1,300+ across 85 countries</div></div>
+        <div class="comp-fact"><div class="cf-label">Key India Clients</div><div class="cf-val">HDFC Bank, Bajaj Finance, IndiGo</div></div>
+        <div class="comp-fact"><div class="cf-label">Voice Product</div><div class="cf-val">VoiceX — human-like voice agents</div></div>
+        <div class="comp-fact"><div class="cf-label">Channels</div><div class="cf-val">Voice, Chat, WhatsApp, Email, Social</div></div>
+      </div>
+      <div class="sw-grid">
+        <div class="sw-box str"><h4>✦ Strengths</h4><ul><li>Largest India-born conversational AI by revenue</li><li>Strong HDFC Bank, Bajaj Finance relationships</li><li>Multi-channel (chat + voice + WhatsApp)</li><li>Salesforce Ventures backing (CRM integration)</li><li>1,300+ enterprise reference base</li></ul></div>
+        <div class="sw-box weak"><h4>✦ Weaknesses vs Vaani AI</h4><ul><li>ChatGPT arrival disrupted core chatbot business</li><li>Voice AI (VoiceX) is newer, less proven</li><li>Indic language depth limited vs Sarvam/Gnani</li><li>Not telephony-first (8kHz optimization)</li><li>No self-learning from call outcomes documented</li></ul></div>
+      </div>
+    </div>
+
+    <!-- Kore.ai -->
+    <div class="competitor-card">
+      <div class="comp-header">
+        <div>
+          <div class="comp-name">Kore.ai</div>
+          <div class="comp-meta">Founded 2014 · Orlando, FL · Global enterprise AI platform</div>
+          <div class="badges">
+            <span class="badge-pill badge-saffron">$300M Raised</span>
+            <span class="badge-pill badge-teal">$100M ARR</span>
+            <span class="badge-pill badge-gold">NVIDIA-backed</span>
+            <span class="badge-pill badge-green">Fortune 2000 Clients</span>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--t3);text-align:right">Series D $150M · Jan 2024<br>FTV Capital · NVIDIA</div>
+      </div>
+      <div class="comp-grid">
+        <div class="comp-fact"><div class="cf-label">Total Funding</div><div class="cf-val">$299.96M (11 rounds)</div></div>
+        <div class="comp-fact"><div class="cf-label">ARR</div><div class="cf-val">$100M (2023), triple-digit YoY</div></div>
+        <div class="comp-fact"><div class="cf-label">Customer Profile</div><div class="cf-val">Fortune 2000, PNC Bank, AT&T, Cigna</div></div>
+        <div class="comp-fact"><div class="cf-label">Platform</div><div class="cf-val">XO Platform — enterprise AI agents</div></div>
+        <div class="comp-fact"><div class="cf-label">India Office</div><div class="cf-val">Hyderabad (founded by Raj Koneru)</div></div>
+        <div class="comp-fact"><div class="cf-label">Verticals</div><div class="cf-val">Banking, Insurance, Telecom, Retail</div></div>
+      </div>
+      <div class="sw-grid">
+        <div class="sw-box str"><h4>✦ Strengths</h4><ul><li>$100M ARR — proven enterprise scale</li><li>NVIDIA strategic partnership</li><li>Deep banking and insurance deployments (US)</li><li>Full-stack: contact center + employee AI</li><li>India HQ gives cost and talent advantage</li></ul></div>
+        <div class="sw-box weak"><h4>✦ Weaknesses vs Vaani AI</h4><ul><li>Primarily English / US-market oriented</li><li>Weak native Indic language support</li><li>Complex enterprise implementation cycles</li><li>Pricing out of reach for Indian SMBs</li><li>Not optimised for Indian telephony (BSNL, Jio)</li></ul></div>
+      </div>
+    </div>
+
+    <!-- Uniphore -->
+    <div class="competitor-card">
+      <div class="comp-header">
+        <div>
+          <div class="comp-name">Uniphore</div>
+          <div class="comp-meta">Founded 2008 · Chennai (India) → Palo Alto · Global enterprise</div>
+          <div class="badges">
+            <span class="badge-pill badge-saffron">$870M Raised</span>
+            <span class="badge-pill badge-teal">$2.5B Valuation</span>
+            <span class="badge-pill badge-gold">NVIDIA + AMD-backed</span>
+            <span class="badge-pill badge-green">2,000+ Businesses</span>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--t3);text-align:right">Series F $260M · Oct 2025<br>NVIDIA, AMD, Snowflake</div>
+      </div>
+      <div class="comp-grid">
+        <div class="comp-fact"><div class="cf-label">Total Funding</div><div class="cf-val">$870M total ($260M Series F)</div></div>
+        <div class="comp-fact"><div class="cf-label">Valuation</div><div class="cf-val">$2.5B (Oct 2025)</div></div>
+        <div class="comp-fact"><div class="cf-label">Platform</div><div class="cf-val">Business AI Cloud — sovereign AI</div></div>
+        <div class="comp-fact"><div class="cf-label">Special Capability</div><div class="cf-val">Emotion AI + voice biometrics</div></div>
+        <div class="comp-fact"><div class="cf-label">Indian Origin</div><div class="cf-val">Founded Chennai, early Indic ASR focus</div></div>
+        <div class="comp-fact"><div class="cf-label">Revenue (FY24)</div><div class="cf-val">~₹314 Cr (~$37.5M) Indian entity</div></div>
+      </div>
+      <div class="sw-grid">
+        <div class="sw-box str"><h4>✦ Strengths</h4><ul><li>India-founded, deep BFSI & contact center DNA</li><li>Emotion AI — detects customer frustration</li><li>$870M raised, NVIDIA/AMD strategic backing</li><li>Sovereign data compliance story</li><li>2,000+ global enterprise customers</li></ul></div>
+        <div class="sw-box weak"><h4>✦ Weaknesses vs Vaani AI</h4><ul><li>Pivoted away from India focus → US enterprise</li><li>Valuation at same level as 2022 ($2.5B) — flat</li><li>Complex implementation, long sales cycles</li><li>Not real-time voice agent; more analytics-first</li><li>Limited Indic language breadth today</li></ul></div>
+      </div>
+    </div>
+
+    <!-- Gnani.ai -->
+    <div class="competitor-card">
+      <div class="comp-header">
+        <div>
+          <div class="comp-name">Gnani.ai</div>
+          <div class="comp-meta">Founded ~2017 · Bengaluru · India-first voice AI for BFSI</div>
+          <div class="badges">
+            <span class="badge-pill badge-saffron">$7.7M Raised</span>
+            <span class="badge-pill badge-teal">₹57 Cr Revenue (FY25)</span>
+            <span class="badge-pill badge-gold">100+ Enterprise Clients</span>
+            <span class="badge-pill badge-green">12 Indic TTS Languages</span>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--t3);text-align:right">Series A · InfoEdge<br>Fintech + BFSI focus</div>
+      </div>
+      <div class="comp-grid">
+        <div class="comp-fact"><div class="cf-label">Total Funding</div><div class="cf-val">$7.72M (5 rounds, 25 investors)</div></div>
+        <div class="comp-fact"><div class="cf-label">Revenue</div><div class="cf-val">₹57 Cr (~$7M) FY2025</div></div>
+        <div class="comp-fact"><div class="cf-label">BFSI Impact</div><div class="cf-val">$2B+ collected via voice AI (6 months)</div></div>
+        <div class="comp-fact"><div class="cf-label">TTS</div><div class="cf-val">Vachana TTS — 12 Indian languages, &lt;10s clone</div></div>
+        <div class="comp-fact"><div class="cf-label">Latest Product</div><div class="cf-val">AI Digital Human (HumanOS) — GFF 2025</div></div>
+        <div class="comp-fact"><div class="cf-label">Clients</div><div class="cf-val">100+ enterprise — BFSI, telecom, healthcare</div></div>
+      </div>
+      <div class="sw-grid">
+        <div class="sw-box str"><h4>✦ Strengths</h4><ul><li>Closest India competitor to Vaani AI</li><li>Proven BFSI debt collection at scale</li><li>Vachana TTS — world-class Indic voice cloning</li><li>100+ enterprise clients — real market traction</li><li>India-born, deeply Indic-language native</li></ul></div>
+        <div class="sw-box weak"><h4>✦ Weaknesses vs Vaani AI</h4><ul><li>Only $7.7M raised — severely capital-constrained</li><li>No automotive / non-BFSI vertical play</li><li>Small team — scaling risk</li><li>No published self-learning architecture</li><li>Limited global / multilingual (non-Indic) reach</li></ul></div>
+      </div>
+    </div>
+
+    <!-- SquadStack -->
+    <div class="competitor-card">
+      <div class="comp-header">
+        <div>
+          <div class="comp-name">SquadStack</div>
+          <div class="comp-meta">Founded ~2015 · Delhi · AI + human hybrid calling platform</div>
+          <div class="badges">
+            <span class="badge-pill badge-saffron">$24.7M Raised</span>
+            <span class="badge-pill badge-teal">₹43.7 Cr Revenue (FY25)</span>
+            <span class="badge-pill badge-gold">100+ Enterprise Clients</span>
+            <span class="badge-pill badge-green">India BFSI Focus</span>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--t3);text-align:right">Series B · Bertelsmann<br>Chiratae Ventures</div>
+      </div>
+      <div class="comp-grid">
+        <div class="comp-fact"><div class="cf-label">Total Funding</div><div class="cf-val">$24.7M ($17.6M Series B, Aug 2022)</div></div>
+        <div class="comp-fact"><div class="cf-label">Revenue</div><div class="cf-val">₹43.7 Cr FY25, 3x YoY growth</div></div>
+        <div class="comp-fact"><div class="cf-label">Model</div><div class="cf-val">AI + human hybrid calling</div></div>
+        <div class="comp-fact"><div class="cf-label">Key Clients</div><div class="cf-val">Axis Bank, HDFC, Bajaj Broking, Moneyview</div></div>
+        <div class="comp-fact"><div class="cf-label">Focus</div><div class="cf-val">Sales, collections, customer support</div></div>
+        <div class="comp-fact"><div class="cf-label">Differentiator</div><div class="cf-val">AI quality-checks human agent calls in real-time</div></div>
+      </div>
+      <div class="sw-grid">
+        <div class="sw-box str"><h4>✦ Strengths</h4><ul><li>Proven AI outsells humans in Indian fintech</li><li>Strong BFSI client roster (Axis, HDFC, Bajaj)</li><li>Hybrid model reduces hallucination risk</li><li>Rapid revenue growth (3x YoY)</li><li>Deep India telephony integration</li></ul></div>
+        <div class="sw-box weak"><h4>✦ Weaknesses vs Vaani AI</h4><ul><li>Hybrid = still needs human agents → higher cost floor</li><li>Not a true autonomous real-time AI agent</li><li>No multi-language / Indic code-switching</li><li>No automotive or non-BFSI vertical play</li><li>Limited product IP vs pure AI platform</li></ul></div>
+      </div>
+    </div>
+
+    <!-- CoRover -->
+    <div class="competitor-card">
+      <div class="comp-header">
+        <div>
+          <div class="comp-name">CoRover.ai / BharatGPT</div>
+          <div class="comp-meta">Founded ~2016 · Bengaluru · India's first LLM + Govtech AI</div>
+          <div class="badges">
+            <span class="badge-pill badge-saffron">$4M Raised</span>
+            <span class="badge-pill badge-teal">Google DeepMind-backed</span>
+            <span class="badge-pill badge-gold">IRCTC, NPCI, LIC</span>
+            <span class="badge-pill badge-green">Govt + Enterprise</span>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--t3);text-align:right">Series A · Venture Catalysts<br>Google DeepMind investor</div>
+      </div>
+      <div class="comp-grid">
+        <div class="comp-fact"><div class="cf-label">Total Funding</div><div class="cf-val">$4M Series A + Google DeepMind</div></div>
+        <div class="comp-fact"><div class="cf-label">Key Products</div><div class="cf-val">BharatGPT (LLM), CoroAssist (Enterprise)</div></div>
+        <div class="comp-fact"><div class="cf-label">Govt Clients</div><div class="cf-val">IRCTC (AskDISHA), NPCI (Ask PAi), LIC, SEBI, DMRC</div></div>
+        <div class="comp-fact"><div class="cf-label">Revenue Mix</div><div class="cf-val">75% private sector, 25% government</div></div>
+        <div class="comp-fact"><div class="cf-label">Technology</div><div class="cf-val">Human-Centric Conversational AI Platform</div></div>
+        <div class="comp-fact"><div class="cf-label">Notable</div><div class="cf-val">India's first LLM claim; Google Cloud partner</div></div>
+      </div>
+      <div class="sw-grid">
+        <div class="sw-box str"><h4>✦ Strengths</h4><ul><li>Google DeepMind investment — technology validation</li><li>Unrivalled government relationships (IRCTC, NPCI, LIC)</li><li>BharatGPT — proprietary Indian LLM</li><li>Proven at massive scale (IRCTC millions of queries)</li><li>Google Cloud partnership</li></ul></div>
+        <div class="sw-box weak"><h4>✦ Weaknesses vs Vaani AI</h4><ul><li>Only $4M raised — very capital-constrained</li><li>Primarily text/chat; real-time voice is secondary</li><li>Government focus = slow sales cycles</li><li>Limited BFSI enterprise (RBI-regulated) traction</li><li>No real-time sub-500ms voice agent proof</li></ul></div>
+      </div>
+    </div>
+
+    <!-- Devnagri -->
+    <div class="competitor-card">
+      <div class="comp-header">
+        <div>
+          <div class="comp-name">Devnagri</div>
+          <div class="comp-meta">Founded ~2017 · Noida · Indic NLP + GenAI translation platform</div>
+          <div class="badges">
+            <span class="badge-pill badge-saffron">Pre-Series A (2024)</span>
+            <span class="badge-pill badge-teal">Shark Tank India Alumni</span>
+            <span class="badge-pill badge-gold">NASSCOM Emerging NLP</span>
+            <span class="badge-pill badge-green">Indic Language Focus</span>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--t3);text-align:right">Pre-Series A · IPV<br>Inflection Point Ventures</div>
+      </div>
+      <div class="comp-grid">
+        <div class="comp-fact"><div class="cf-label">Total Funding</div><div class="cf-val">$600K seed + undisclosed Pre-Series A</div></div>
+        <div class="comp-fact"><div class="cf-label">Core Focus</div><div class="cf-val">AI translation + localisation for Indic</div></div>
+        <div class="comp-fact"><div class="cf-label">Technology</div><div class="cf-val">NLP + Small Language Models (SLM)</div></div>
+        <div class="comp-fact"><div class="cf-label">Market</div><div class="cf-val">$100B global, $53B India by 2030</div></div>
+        <div class="comp-fact"><div class="cf-label">Recognition</div><div class="cf-val">TieCon 2024, Shark Tank India, NASSCOM</div></div>
+        <div class="comp-fact"><div class="cf-label">Deployment</div><div class="cf-val">Private + Government infrastructure</div></div>
+      </div>
+      <div class="sw-grid">
+        <div class="sw-box str"><h4>✦ Strengths</h4><ul><li>Deep Indic NLP and translation expertise</li><li>Government infrastructure deployments</li><li>Strong brand recognition (Shark Tank, awards)</li><li>SLM approach — efficient, deployable on-device</li></ul></div>
+        <div class="sw-box weak"><h4>✦ Weaknesses vs Vaani AI</h4><ul><li>Translation platform ≠ real-time voice agent</li><li>No real-time ASR or TTS capability</li><li>Very early stage, minimal enterprise revenue</li><li>No voice/telephony product</li></ul></div>
+      </div>
+    </div>
+
+    <!-- Google CCAI -->
+    <div class="competitor-card">
+      <div class="comp-header">
+        <div>
+          <div class="comp-name">Google Cloud CCAI / Customer Engagement Suite</div>
+          <div class="comp-meta">Alphabet Inc · Mountain View, CA · Mumbai GCP region</div>
+          <div class="badges">
+            <span class="badge-pill badge-saffron">Trillion $ Company</span>
+            <span class="badge-pill badge-teal">Gemini-Powered</span>
+            <span class="badge-pill badge-gold">Global #1 Cloud</span>
+            <span class="badge-pill badge-green">11 Indic Languages (Chirp)</span>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--t3);text-align:right">GCP Mumbai Region<br>Dialogflow CX + Chirp</div>
+      </div>
+      <div class="comp-grid">
+        <div class="comp-fact"><div class="cf-label">Pricing</div><div class="cf-val">~$0.10–0.20/min all-in; $100–200/agent/month</div></div>
+        <div class="comp-fact"><div class="cf-label">ASR</div><div class="cf-val">Google STT Chirp — 11+ Indic languages</div></div>
+        <div class="comp-fact"><div class="cf-label">LLM</div><div class="cf-val">Gemini 1.5/2.0 (latest)</div></div>
+        <div class="comp-fact"><div class="cf-label">Platform</div><div class="cf-val">CCAI + Dialogflow CX + Agent Builder</div></div>
+        <div class="comp-fact"><div class="cf-label">India</div><div class="cf-val">GCP Mumbai (ap-south-1), local data residency</div></div>
+        <div class="comp-fact"><div class="cf-label">Compliance</div><div class="cf-val">SOC2, ISO27001, GDPR; India data localisation</div></div>
+      </div>
+      <div class="sw-grid">
+        <div class="sw-box str"><h4>✦ Strengths</h4><ul><li>World's best ASR quality (Chirp) + Gemini LLM</li><li>Full-stack: Dialogflow + STT + TTS + Analytics</li><li>GCP Mumbai for India data residency</li><li>Largest enterprise sales force globally</li><li>Deepest integration with Google Workspace / Maps</li></ul></div>
+        <div class="sw-box weak"><h4>✦ Weaknesses vs Vaani AI</h4><ul><li>No native Indic code-switching (expects one language)</li><li>High complexity — needs significant integration effort</li><li>Expensive for India SMBs and mid-market</li><li>Not telephony-first for India (Twilio/Exotel gaps)</li><li>No domain-specific BFSI / Automotive knowledge base</li></ul></div>
+      </div>
+    </div>
+
+  </div><!-- /section-body -->
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ MATRIX -->
+<div class="section" id="comparison-matrix">
+  <div class="section-header"><div class="num">5</div><h2>Multi-Dimension Comparison Matrix</h2></div>
+  <div class="section-body">
+    <div class="table-wrap">
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th style="min-width:130px">Company</th>
+          <th>Stage</th>
+          <th>Funding</th>
+          <th>Revenue</th>
+          <th>India Focus</th>
+          <th>Indic Lang</th>
+          <th>Real-Time Voice</th>
+          <th>Code-Switch</th>
+          <th>BFSI</th>
+          <th>Automotive</th>
+          <th>Self-Learning</th>
+          <th>Telephony-First</th>
+          <th>RBI/IRDAI</th>
+          <th>Pricing Model</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="vaani">
+          <td>⭐ Vaani AI</td>
+          <td><span class="badge-pill badge-saffron" style="font-size:10px">MVP</span></td>
+          <td>Seed</td>
+          <td>Pre-revenue</td>
+          <td><span class="check">●●●●●</span></td>
+          <td><span class="check">20+</span></td>
+          <td><span class="check">✔ &lt;500ms</span></td>
+          <td><span class="check">✔ Native</span></td>
+          <td><span class="check">✔ Built-in</span></td>
+          <td><span class="check">✔ Built-in</span></td>
+          <td><span class="check">✔ RLHF</span></td>
+          <td><span class="check">✔ 8kHz</span></td>
+          <td><span class="check">✔ Native</span></td>
+          <td>₹/call SaaS</td>
+        </tr>
+        <tr>
+          <td>ElevenLabs</td>
+          <td><span class="badge-pill badge-teal" style="font-size:10px">Series D</span></td>
+          <td>$781M</td>
+          <td>$330M ARR</td>
+          <td><span class="partial">●●○○○</span></td>
+          <td><span class="partial">Partial (10 Indic)</span></td>
+          <td><span class="check">✔ TTS only</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td>Credits/API</td>
+        </tr>
+        <tr>
+          <td>Sarvam AI</td>
+          <td><span class="badge-pill badge-teal" style="font-size:10px">Series A</span></td>
+          <td>$41M</td>
+          <td>Early</td>
+          <td><span class="check">●●●●●</span></td>
+          <td><span class="check">22 Indian</span></td>
+          <td><span class="partial">✔ (latency unverified)</span></td>
+          <td><span class="partial">Partial</span></td>
+          <td><span class="partial">Early</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗ (not published)</span></td>
+          <td><span class="partial">Partial</span></td>
+          <td><span class="partial">SOC2</span></td>
+          <td>₹1/min API</td>
+        </tr>
+        <tr>
+          <td>Yellow.ai</td>
+          <td><span class="badge-pill badge-gold" style="font-size:10px">Series C</span></td>
+          <td>$133M</td>
+          <td>$79.5M</td>
+          <td><span class="check">●●●●○</span></td>
+          <td><span class="partial">Limited</span></td>
+          <td><span class="partial">VoiceX (newer)</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✔ HDFC, Bajaj</span></td>
+          <td><span class="partial">Honda only</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="partial">Partial</span></td>
+          <td><span class="partial">Partial</span></td>
+          <td>SaaS/Enterprise</td>
+        </tr>
+        <tr>
+          <td>Kore.ai</td>
+          <td><span class="badge-pill badge-gold" style="font-size:10px">Series D</span></td>
+          <td>$300M</td>
+          <td>$100M ARR</td>
+          <td><span class="partial">●●○○○</span></td>
+          <td><span class="cross">✗ (English-first)</span></td>
+          <td><span class="check">✔ Enterprise</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✔ US Banks</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="partial">Partial</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗ (US-focused)</span></td>
+          <td>Enterprise License</td>
+        </tr>
+        <tr>
+          <td>Uniphore</td>
+          <td><span class="badge-pill badge-gold" style="font-size:10px">Series F</span></td>
+          <td>$870M</td>
+          <td>~$37M (India)</td>
+          <td><span class="partial">●●●○○</span></td>
+          <td><span class="partial">Some Indic</span></td>
+          <td><span class="partial">Analytics-first</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✔ BFSI</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="partial">Partial</span></td>
+          <td><span class="partial">Partial</span></td>
+          <td><span class="partial">SOC2</span></td>
+          <td>Enterprise License</td>
+        </tr>
+        <tr>
+          <td>Gnani.ai</td>
+          <td><span class="badge-pill badge-saffron" style="font-size:10px">Series A</span></td>
+          <td>$7.7M</td>
+          <td>₹57 Cr</td>
+          <td><span class="check">●●●●●</span></td>
+          <td><span class="check">12 Indic</span></td>
+          <td><span class="check">✔ Voice AI</span></td>
+          <td><span class="partial">Partial</span></td>
+          <td><span class="check">✔ BFSI ($2B)</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗ (not documented)</span></td>
+          <td><span class="check">✔ Telephony</span></td>
+          <td><span class="partial">Partial</span></td>
+          <td>Per call</td>
+        </tr>
+        <tr>
+          <td>SquadStack</td>
+          <td><span class="badge-pill badge-saffron" style="font-size:10px">Series B</span></td>
+          <td>$24.7M</td>
+          <td>₹43.7 Cr</td>
+          <td><span class="check">●●●●●</span></td>
+          <td><span class="partial">Hindi-focused</span></td>
+          <td><span class="partial">AI+Human hybrid</span></td>
+          <td><span class="partial">Partial</span></td>
+          <td><span class="check">✔ BFSI</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="partial">Partial (human-loop)</span></td>
+          <td><span class="check">✔ India Telephony</span></td>
+          <td><span class="partial">Partial</span></td>
+          <td>Per call / seat</td>
+        </tr>
+        <tr>
+          <td>CoRover</td>
+          <td><span class="badge-pill badge-saffron" style="font-size:10px">Series A</span></td>
+          <td>$4M</td>
+          <td>Early</td>
+          <td><span class="check">●●●●●</span></td>
+          <td><span class="check">Multi-Indic</span></td>
+          <td><span class="partial">Chat-first</span></td>
+          <td><span class="partial">Partial</span></td>
+          <td><span class="partial">LIC, SEBI</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="partial">Partial</span></td>
+          <td><span class="partial">Partial</span></td>
+          <td>Enterprise/Govt</td>
+        </tr>
+        <tr>
+          <td>Google CCAI</td>
+          <td><span class="badge-pill badge-green" style="font-size:10px">Mature</span></td>
+          <td>Trillion $</td>
+          <td>~$1B+ CCAI</td>
+          <td><span class="partial">●●●○○</span></td>
+          <td><span class="check">11 Indic (Chirp)</span></td>
+          <td><span class="check">✔ Gemini</span></td>
+          <td><span class="cross">✗ (one language)</span></td>
+          <td><span class="check">✔ Global banks</span></td>
+          <td><span class="partial">Partial</span></td>
+          <td><span class="partial">AutoML only</span></td>
+          <td><span class="partial">Partial</span></td>
+          <td><span class="check">✔ GCP Mumbai</span></td>
+          <td>Pay-per-use</td>
+        </tr>
+        <tr>
+          <td>Devnagri</td>
+          <td><span class="badge-pill badge-saffron" style="font-size:10px">Pre-A</span></td>
+          <td>&lt;$1M</td>
+          <td>Early</td>
+          <td><span class="check">●●●●●</span></td>
+          <td><span class="check">Multi-Indic (text)</span></td>
+          <td><span class="cross">✗ (text only)</span></td>
+          <td><span class="partial">Text NLP</span></td>
+          <td><span class="partial">Partial</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td>API/Enterprise</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <p style="font-size:11px;color:var(--t3);margin-top:10px">● = coverage level (●●●●● = full, ●●○○○ = partial, ○○○○○ = none) | Data sourced from public disclosures, press releases, and company websites (March 2026)</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ FUNDING SCALE -->
+<div class="section" id="funding-scale">
+  <div class="section-header"><div class="num">6</div><h2>Funding &amp; Scale Analysis</h2></div>
+  <div class="section-body">
+    <div class="sec-label">Total Funding Raised (Verified Public Data)</div>
+    <div class="fund-bar-wrap" style="margin-bottom:24px">
+      <div class="fund-row"><div class="name">Uniphore</div><div class="bar-bg"><div class="bar-fill" style="width:95%;background:linear-gradient(90deg,#0D3B47,var(--teal))">$870M</div></div><div class="amt">$870M</div></div>
+      <div class="fund-row"><div class="name">ElevenLabs</div><div class="bar-bg"><div class="bar-fill" style="width:85%;background:linear-gradient(90deg,var(--saffron),var(--gold))">$781M</div></div><div class="amt">$781M</div></div>
+      <div class="fund-row"><div class="name">Kore.ai</div><div class="bar-bg"><div class="bar-fill" style="width:33%;background:linear-gradient(90deg,var(--teal),#4ECDC4)">$300M</div></div><div class="amt">$300M</div></div>
+      <div class="fund-row"><div class="name">Yellow.ai</div><div class="bar-bg"><div class="bar-fill" style="width:15%;background:linear-gradient(90deg,var(--gold),var(--saffron))">$133M</div></div><div class="amt">$133M</div></div>
+      <div class="fund-row"><div class="name">Sarvam AI</div><div class="bar-bg"><div class="bar-fill" style="width:5%;background:linear-gradient(90deg,var(--green),#78C9A4)">$41M</div></div><div class="amt">$41M (+$250M pipeline)</div></div>
+      <div class="fund-row"><div class="name">SquadStack</div><div class="bar-bg"><div class="bar-fill" style="width:3%;background:var(--teal)">$25M</div></div><div class="amt">$25M</div></div>
+      <div class="fund-row"><div class="name">Gnani.ai</div><div class="bar-bg"><div class="bar-fill" style="width:1%;background:var(--gold);min-width:30px">$7.7M</div></div><div class="amt">$7.7M</div></div>
+      <div class="fund-row"><div class="name">CoRover</div><div class="bar-bg"><div class="bar-fill" style="width:0.5%;background:var(--purple);min-width:30px">$4M</div></div><div class="amt">$4M</div></div>
+      <div class="fund-row"><div class="name">Devnagri</div><div class="bar-bg"><div class="bar-fill" style="width:0.1%;background:var(--red);min-width:16px">&nbsp;</div></div><div class="amt">&lt;$1M</div></div>
+    </div>
+    <div style="background:rgba(244,146,58,.08);border:1px solid rgba(244,146,58,.2);border-radius:10px;padding:16px">
+      <p style="font-size:.85rem;color:var(--t2);line-height:1.7"><strong style="color:var(--saffron)">Strategic Insight:</strong> The India-focused players (Sarvam, Gnani, SquadStack, CoRover) are dramatically under-capitalised relative to the market opportunity and global competitors. Sarvam at $41M is the best-funded India-native player. This represents a window for Vaani AI to raise strategically and outinvest the Indian competition before they secure their next rounds.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ TECH -->
+<div class="section" id="tech-comparison">
+  <div class="section-header"><div class="num">7</div><h2>Technology Depth Comparison</h2></div>
+  <div class="section-body">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+      <div>
+        <div class="sec-label">ASR Maturity</div>
+        <div class="market-bar"><div class="lbl"><span>Google Chirp</span><span style="color:var(--green)">★★★★★</span></div><div class="track"><div class="fill" style="width:95%;background:var(--green)"></div></div></div>
+        <div class="market-bar"><div class="lbl"><span>Sarvam Saaras</span><span style="color:var(--teal)">★★★★☆</span></div><div class="track"><div class="fill" style="width:80%;background:var(--teal)"></div></div></div>
+        <div class="market-bar"><div class="lbl"><span>Gnani (Indic)</span><span style="color:var(--teal)">★★★★☆</span></div><div class="track"><div class="fill" style="width:78%;background:var(--teal)"></div></div></div>
+        <div class="market-bar"><div class="lbl"><span>Kore.ai / Yellow.ai</span><span style="color:var(--gold)">★★★☆☆</span></div><div class="track"><div class="fill" style="width:55%;background:var(--gold)"></div></div></div>
+        <div class="market-bar"><div class="lbl"><span>SquadStack</span><span style="color:var(--gold)">★★★☆☆</span></div><div class="track"><div class="fill" style="width:50%;background:var(--gold)"></div></div></div>
+      </div>
+      <div>
+        <div class="sec-label">TTS Quality (Indic)</div>
+        <div class="market-bar"><div class="lbl"><span>ElevenLabs</span><span style="color:var(--green)">★★★★★</span></div><div class="track"><div class="fill" style="width:95%;background:var(--green)"></div></div></div>
+        <div class="market-bar"><div class="lbl"><span>Gnani Vachana</span><span style="color:var(--teal)">★★★★☆</span></div><div class="track"><div class="fill" style="width:80%;background:var(--teal)"></div></div></div>
+        <div class="market-bar"><div class="lbl"><span>Sarvam TTS</span><span style="color:var(--teal)">★★★★☆</span></div><div class="track"><div class="fill" style="width:78%;background:var(--teal)"></div></div></div>
+        <div class="market-bar"><div class="lbl"><span>Google TTS Chirp</span><span style="color:var(--gold)">★★★★☆</span></div><div class="track"><div class="fill" style="width:75%;background:var(--gold)"></div></div></div>
+        <div class="market-bar"><div class="lbl"><span>Azure Neural TTS</span><span style="color:var(--gold)">★★★☆☆</span></div><div class="track"><div class="fill" style="width:65%;background:var(--gold)"></div></div></div>
+      </div>
+      <div>
+        <div class="sec-label">Dialogue / Agent Intelligence</div>
+        <div class="market-bar"><div class="lbl"><span>Google CCAI+Gemini</span><span style="color:var(--green)">★★★★★</span></div><div class="track"><div class="fill" style="width:95%;background:var(--green)"></div></div></div>
+        <div class="market-bar"><div class="lbl"><span>Kore.ai XO</span><span style="color:var(--teal)">★★★★☆</span></div><div class="track"><div class="fill" style="width:80%;background:var(--teal)"></div></div></div>
+        <div class="market-bar"><div class="lbl"><span>Yellow.ai</span><span style="color:var(--teal)">★★★★☆</span></div><div class="track"><div class="fill" style="width:78%;background:var(--teal)"></div></div></div>
+        <div class="market-bar"><div class="lbl"><span>Sarvam Agents</span><span style="color:var(--gold)">★★★☆☆</span></div><div class="track"><div class="fill" style="width:60%;background:var(--gold)"></div></div></div>
+        <div class="market-bar"><div class="lbl"><span>Gnani.ai</span><span style="color:var(--gold)">★★★☆☆</span></div><div class="track"><div class="fill" style="width:55%;background:var(--gold)"></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ VAANI POSITIONING -->
+<div class="section" id="vaani-positioning">
+  <div class="section-header"><div class="num">8</div><h2>Vaani AI Competitive Positioning &amp; Moats</h2></div>
+  <div class="section-body">
+    <div class="positioning-box">
+      <h3 style="color:var(--saffron);margin-bottom:12px;font-size:1.1rem">The Vaani AI Thesis</h3>
+      <p style="color:var(--t2);font-size:.9rem;line-height:1.75;margin-bottom:16px">Vaani AI is not competing against ElevenLabs on TTS or against Kore.ai on enterprise workflow automation. Vaani AI owns the specific intersection that no one else has built: <strong style="color:var(--t1)">a real-time (&lt;500ms), full-stack, Indic-native conversational voice agent with enterprise BFSI/Automotive compliance and a self-improving intelligence loop</strong> — delivered as a B2B SaaS at Indian price points.</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+        <div style="background:rgba(0,0,0,.2);border-radius:8px;padding:14px">
+          <div style="color:var(--saffron);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Moat 1: Indic-Native</div>
+          <p style="font-size:12px;color:var(--t2);line-height:1.6">Native code-switching (Hinglish, Tanglish) without model switching. 8kHz telephony-optimised. No one else does this end-to-end in real-time.</p>
+        </div>
+        <div style="background:rgba(0,0,0,.2);border-radius:8px;padding:14px">
+          <div style="color:var(--teal);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Moat 2: Self-Learning</div>
+          <p style="font-size:12px;color:var(--t2);line-height:1.6">Every call improves the agent via RLHF. Competitors offer static models. Vaani AI gets smarter with volume — creating a data flywheel that widens the moat over time.</p>
+        </div>
+        <div style="background:rgba(0,0,0,.2);border-radius:8px;padding:14px">
+          <div style="color:var(--gold);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Moat 3: Domain Intelligence</div>
+          <p style="font-size:12px;color:var(--t2);line-height:1.6">Pre-built BFSI and Automotive knowledge bases, call scripts, compliance hooks (RBI/IRDAI). Competitors need 6–18 months of custom implementation. Vaani AI deploys in weeks.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ GAPS -->
+<div class="section" id="strategic-gaps">
+  <div class="section-header"><div class="num">9</div><h2>Strategic Gaps &amp; Opportunities</h2></div>
+  <div class="section-body">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div>
+        <div class="sec-label">Gaps in the Market (Vaani AI's Opportunity)</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="background:rgba(76,175,125,.06);border:1px solid rgba(76,175,125,.15);border-radius:8px;padding:14px;font-size:13px;color:var(--t2)"><strong style="color:var(--green)">Gap 1:</strong> No one provides sub-500ms Indic voice agents with code-switching for Indian telephony at &lt;₹5/call.</div>
+          <div style="background:rgba(76,175,125,.06);border:1px solid rgba(76,175,125,.15);border-radius:8px;padding:14px;font-size:13px;color:var(--t2)"><strong style="color:var(--green)">Gap 2:</strong> Indian players (Gnani, SquadStack) are BFSI-only. Automotive is wide open for an Indic AI agent.</div>
+          <div style="background:rgba(76,175,125,.06);border:1px solid rgba(76,175,125,.15);border-radius:8px;padding:14px;font-size:13px;color:var(--t2)"><strong style="color:var(--green)">Gap 3:</strong> No Indian player has a proven self-learning loop from call outcomes (CSAT → fine-tuning → deployment).</div>
+          <div style="background:rgba(76,175,125,.06);border:1px solid rgba(76,175,125,.15);border-radius:8px;padding:14px;font-size:13px;color:var(--t2)"><strong style="color:var(--green)">Gap 4:</strong> SMB and mid-market Indian enterprises (regional banks, tier-2 dealers) have NO viable AI voice agent at affordable pricing.</div>
+        </div>
+      </div>
+      <div>
+        <div class="sec-label">Competitive Risks to Monitor</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="background:rgba(224,82,82,.06);border:1px solid rgba(224,82,82,.15);border-radius:8px;padding:14px;font-size:13px;color:var(--t2)"><strong style="color:var(--red)">Risk 1:</strong> Sarvam AI closes $250M round → suddenly has capital to build full BFSI vertical. Timeline: 6–12 months.</div>
+          <div style="background:rgba(224,82,82,.06);border:1px solid rgba(224,82,82,.15);border-radius:8px;padding:14px;font-size:13px;color:var(--t2)"><strong style="color:var(--red)">Risk 2:</strong> Google adds native Indic code-switching to CCAI + targets Indian market aggressively.</div>
+          <div style="background:rgba(224,82,82,.06);border:1px solid rgba(224,82,82,.15);border-radius:8px;padding:14px;font-size:13px;color:var(--t2)"><strong style="color:var(--red)">Risk 3:</strong> ElevenLabs acquires Gnani.ai or Sarvam → instant India + full-stack positioning.</div>
+          <div style="background:rgba(224,82,82,.06);border:1px solid rgba(224,82,82,.15);border-radius:8px;padding:14px;font-size:13px;color:var(--t2)"><strong style="color:var(--red)">Risk 4:</strong> Yellow.ai doubles down on VoiceX + Indic with Salesforce Ventures resources.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<footer class="footer">
+  Vaani AI · Competitive &amp; Market Analysis · v1.0 · March 2026 · Confidential<br>
+  <span style="font-size:10px;margin-top:4px;display:block">Data sourced from: ElevenLabs Blog, Sacra, GetLatka, TechCrunch, Inc42, Crunchbase, Grand View Research, IMARC Group, company websites and press releases.</span>
+</footer>
+
+<nav class="vb-nav" aria-label="Page navigation">
+  <a href="index.html" title="Home">&#127968; Home</a>
+  <button onclick="history.back()" title="Back">&#8592; Back</button>
+  <button onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Top">&#8593; Top</button>
+</nav>
+
+</body>
+</html>
