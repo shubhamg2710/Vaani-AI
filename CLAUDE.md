@@ -1,118 +1,143 @@
-# RTCA Project — Claude Code Instructions & Checklists
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+---
 
 ## Project Context
-VoxBharat — Real-Time Multilingual Conversational AI Platform (B2B SaaS)
-- MVP: Cascaded STS (Speech→ASR→LLM→TTS→Speech)
-- Industries: BFSI + Automotive (Phase 1), others (Phase 2)
-- Docs location: `RTCA/docs/`
+
+**Vaani AI** (वाणी — Voice of Intelligence) — Real-Time Multilingual Conversational AI Platform (B2B SaaS)
+
+- **Product:** Cascaded STS pipeline — Speech → ASR → LLM → TTS → Speech
+- **MVP verticals:** BFSI + Automotive (Phase 1); Government, Healthcare (Phase 2)
+- **Target:** B2B customers — Startups, SMBs, Enterprise across India + global markets
+- **Docs location:** `docs/` (all HTML files are self-contained, no build step)
+- **Git remote:** `https://github.com/shubhamg2710/Vaani-AI.git`
 
 ---
 
-## CRITICAL CHECKLIST — Before Creating Multi-File Deliverables
+## Repository Structure
 
-When asked to create multiple HTML/file deliverables in one request, follow this checklist:
+```
+docs/
+├── index.html                        # Hub / navigation (dark Indic Minimalist theme)
+├── 01_FRD.html                       # Functional Requirements (F1–F18)          ~103KB
+├── 02_Design_Doc.html                # Technical Architecture & Tech Stack         ~82KB
+├── 03_Call_Templates.html            # Call Flow Templates (Universal+BFSI+Auto)   ~63KB
+├── 04_Call_Scripts.html              # 20 Call Scripts (12 BFSI + 8 Automotive)    ~96KB
+├── 05_Knowledge_Bank.html            # RAG Training Data (BFSI + Automotive)       ~62KB
+├── 06_Business_Document.html         # Executive / Investor Pitch                  ~75KB
+├── 07_Competitive_Analysis.html      # 11-competitor analysis, live data           ~64KB
+└── scripts/                          # 35 call scripts in plain-text (.txt)
+    ├── 04_Call_Scripts_BFSI_01to12.txt
+    ├── 04_Call_Scripts_Automotive_13to20.txt
+    ├── BFSI_Loan_PreQualification_Scripts.txt
+    ├── Automotive_Routine_Service_Booking_Scripts.txt
+    └── Automotive_Sales_Lead_TestDrive_Scripts.txt
+```
 
-### ✅ Pre-Creation
-- [ ] Create the target directory first (`mkdir -p`) and verify it exists
-- [ ] List any existing files in that directory before starting
-- [ ] Plan ALL file names upfront and confirm with user if uncertain
+---
 
-### ✅ File Creation
-- [ ] **Use Write tool directly** for files < 50KB — do NOT rely on background agents for file creation
-- [ ] **Use foreground agents** (not background) when delegating large file writes — background agents time out silently
-- [ ] If using parallel foreground agents: run all in a single message, wait for ALL to complete before responding
-- [ ] After each Write/agent completion: immediately verify file exists with `ls`
+## Design System (all CSS must be inline — no external stylesheets)
 
-### ✅ Post-Creation Verification (ALWAYS run before telling user it's done)
+**index.html** uses a dark Indic Minimalist AI theme:
+- Background: `#061A1E` (deep teal-black)
+- Cards: `#0D2B32` / `#112F37`
+- Accent 1 — Saffron: `#F4923A`
+- Accent 2 — Teal/Peacock: `#26C6DA`
+- Accent 3 — Gold: `#E9C46A`
+- Logo mark: `वा` in saffron-gold gradient
+
+**All 6 doc pages** use a light Indic theme:
+- Body background: `#FAF8F4` (warm ivory)
+- Header gradient: `#0D3B47 → #0A8EA0` (peacock teal)
+- Agent speech: `#DCF0F3` bg, `#0A8EA0` left border
+- User speech: `#dcfce7` bg, `#22c55e` left border
+- System actions: `#f3f4f6` bg, italic
+- Hinglish variations: `#fdf4ff` bg, `#a855f7` border
+
+**Floating nav bar** (`.vb-nav`) is present on all pages — fixed bottom-right:
+- Doc pages: Home (`index.html`) + Back (`history.back()`) + Top (scroll)
+- `index.html`: Back + Top only (no Home — it is home)
+
+---
+
+## Scripting on This Machine
+
+Python is available as `python` (not `python3`):
 ```bash
-# 1. Confirm all expected files exist
-ls -lh /path/to/docs/*.html
+python script.py
+```
+Windows paths use forward slashes in bash: `C:/Users/...`
 
-# 2. Confirm no file is 0 bytes or suspiciously small
-# (< 5KB for a "comprehensive" doc = likely failed/truncated)
+Bulk HTML operations (colour replacement, nav injection, name rename) use Python directly:
+```python
+# Pattern for reading/writing HTML files
+with open("C:/Users/shubhamgoel/Documents/AI_Coding/Personal/RTCA/Vaani-AI/docs/file.html", "r", encoding="utf-8") as f:
+    content = f.read()
+# ... modify content ...
+with open(path, "w", encoding="utf-8") as f:
+    f.write(content)
+# Use print() with ASCII only — Windows cp1252 console chokes on ✔ ✗ etc.
+```
 
-# 3. Confirm all HTML files are properly closed
-for f in /path/*.html; do
-  echo -n "$f: "
-  tail -3 "$f" | grep -q "</html>" && echo "COMPLETE" || echo "INCOMPLETE ⚠️"
+---
+
+## Multi-File HTML Checklist (run before telling user it's done)
+
+### Creation
+- Use `Write` tool directly for files — do **not** use `run_in_background: true` agents for file creation (they silently time out on large outputs)
+- Foreground agents are safe; run all in parallel in one message
+- After every Write: verify with `ls -lh docs/*.html`
+
+### Post-creation verification
+```bash
+# All files exist and are non-trivial in size
+ls -lh docs/*.html
+
+# All HTML files are properly closed
+for f in docs/*.html; do
+  tail -3 "$f" | grep -q "</html>" && echo "OK: $f" || echo "INCOMPLETE: $f"
 done
 
-# 4. For documents with numbered content (scripts, requirements), count them
-grep -c "SCRIPT [0-9]" file.html  # should match expected count
+# Count numbered items (scripts, requirements) to catch truncation
+grep -c "SCRIPT [0-9]" docs/04_Call_Scripts.html   # expect 20+
 ```
 
-### ✅ Index / Navigation Pages
-- [ ] Only add links in index.html AFTER confirming target files exist
-- [ ] Documents must be listed in sequential numeric order (01, 02, 03... not 01, 02, 06, 03)
-- [ ] Test that href values exactly match actual filenames (case-sensitive on Linux)
-- [ ] "File not found" errors = href mismatch or file not yet created
-
-### ✅ Anchor Link Validation (ALWAYS run for HTML with Table of Contents)
-When an HTML file has a TOC with `href="#anchorId"` links AND script/section divs with `id="anchorId"`,
-the IDs **must match exactly** — especially when content is written in multiple parts or by different agents.
-
-**Root cause of broken anchors:** Part 1 uses `id="s1"` style; Part 2 appended later uses `id="script-13"` style → TOC links `#s13` break.
-
-**Validation command — run after every multi-part HTML file is assembled:**
+### Anchor link validation (run after any multi-part HTML assembly)
 ```bash
-FILE="/path/to/file.html"
+FILE="docs/04_Call_Scripts.html"
+MISSING=$(comm -23 \
+  <(grep -o 'href="#[^"]*"' "$FILE" | sed 's/href="#//;s/"//' | sort) \
+  <(grep -o 'id="[^"]*"'   "$FILE" | sed 's/id="//;s/"//'   | sort))
+[ -z "$MISSING" ] && echo "ALL ANCHORS VALID" || echo "BROKEN: $MISSING"
+```
+Root cause of broken anchors: Part 1 uses `id="s1"` but Part 2 appended later uses `id="script-13"`. Always use the shorter `id="s{N}"` convention.
 
-# Extract TOC hrefs (e.g. href="#s13" → s13)
-TOC=$(grep -o 'href="#[^"]*"' "$FILE" | sed 's/href="#//;s/"//' | sort)
+### Index ordering
+- `index.html` doc cards must be in sequential numeric order: 01, 02, 03 … 07
+- Only add a card to `index.html` **after** confirming the target file exists
 
-# Extract div/section IDs
-IDS=$(grep -o 'id="[^"]*"' "$FILE" | sed 's/id="//;s/"//' | sort)
+---
 
-# Find TOC links with no matching ID
-MISSING=$(comm -23 <(echo "$TOC") <(echo "$IDS"))
-if [ -z "$MISSING" ]; then
-  echo "ALL ANCHOR LINKS VALID ✔"
-else
-  echo "BROKEN ANCHORS ⚠️: $MISSING"
-fi
+## Content Rules (no hallucination)
+
+Call scripts and Knowledge Bank entries must use **real, verifiable data**:
+- Real company names: SBI, HDFC Bank, Maruti Suzuki, Tata Motors, Hyundai India, etc.
+- Real approximate rates: SBI home loan ~8.50% p.a., FD 7.00% (2-year), Nexon EV from ₹14.49L
+- Real regulatory references: RBI chargeback SLA (7 working days), IRDAI survey SLA (7 working days), Section 80E
+- Competitive data sourced from public disclosures — cite sources in the document footer
+
+---
+
+## Git Workflow
+
+Repo root for git operations: `C:/Users/shubhamgoel/Documents/AI_Coding/Personal/RTCA/Vaani-AI`
+
+```bash
+git -C "C:/Users/shubhamgoel/Documents/AI_Coding/Personal/RTCA/Vaani-AI" add docs/ CLAUDE.md
+git -C "C:/Users/shubhamgoel/Documents/AI_Coding/Personal/RTCA/Vaani-AI" commit -m "message"
+git -C "C:/Users/shubhamgoel/Documents/AI_Coding/Personal/RTCA/Vaani-AI" push origin main
 ```
 
-**Fix pattern:** If TOC uses `#s13` but div has `id="script-13"`, pick one convention and align both.
-Prefer the shorter `id="s{N}"` form (matches existing Part 1 style in this project).
-
-### ✅ Content Completeness
-- [ ] If an agent returns "exceeded token limit" or "connection refused": the file may be incomplete
-  - Check file size vs expected
-  - Check for cut-off markers like `<!-- PART 2 CONTINUES BELOW -->`
-  - Append missing content manually with Edit tool
-- [ ] For numbered sequences (20 scripts, 18 requirements): always grep-count after creation
-
----
-
-## Document Map — RTCA/docs/
-
-| File | Purpose | Size |
-|------|---------|------|
-| `index.html` | Hub / navigation | ~14KB |
-| `01_FRD.html` | Functional Requirements (F1–F18) | ~102KB |
-| `02_Design_Doc.html` | Technical Architecture & Stack | ~81KB |
-| `03_Call_Templates.html` | Call Flow Templates (Universal + BFSI + Auto) | ~62KB |
-| `04_Call_Scripts.html` | 20 Call Scripts (12 BFSI + 8 Automotive) | ~95KB |
-| `05_Knowledge_Bank.html` | RAG Training Data (BFSI + Automotive) | ~61KB |
-| `06_Business_Document.html` | Executive/Investor Pitch | ~73KB |
-
----
-
-## Agent Usage Rules (Lessons Learned)
-
-1. **Background agents (`run_in_background: true`)** — Do NOT use for file creation tasks. They silently time out on large outputs. Use only for research/read-only tasks.
-2. **Foreground agents** — Safe for file creation, but run all in parallel in one message to avoid sequential blocking.
-3. **Token limit errors** — If an agent hits "exceeded 32000 output tokens", the file will be truncated. Always verify completeness post-run.
-4. **Connection refused errors** — Transient; retry the specific agent/Write that failed.
-5. **Large files (>50KB HTML)** — Better to Write directly with content than delegate to an agent.
-
----
-
-## Coding Style for This Project
-
-- All HTML documents: light theme, white cards, navy-to-blue gradient header (#1a3a5c → #2563eb)
-- Agent speech: blue bg (#dbeafe), blue left border (#3b82f6)
-- User speech: green bg (#dcfce7), green left border (#22c55e)
-- System actions: gray bg (#f3f4f6), italic text
-- Hinglish variations: purple bg (#fdf4ff), purple border (#a855f7)
-- All CSS inline (no external stylesheets) — documents must be self-contained
+Do **not** add `.claude/` (local settings) to git.
